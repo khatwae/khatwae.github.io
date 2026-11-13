@@ -166,6 +166,7 @@ h1,h2,h3{line-height:1.45;margin:0}
 .treat-btn .chev{flex:none;color:var(--teal);transition:transform .25s ease}
 .treat.open .chev{transform:rotate(180deg)}
 .treat-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.treat.open .treat-body{max-height:600px}
 .treat-body-in{padding:0 16px 18px;color:var(--ink-soft);font-size:.88rem;line-height:1.9}
 .treat-body-in p{margin:0}
 
@@ -305,7 +306,6 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 
 <style>
 /* Static-content overrides: services, gallery and reviews are plain HTML, visible even with JavaScript disabled. */
-.treat-body{max-height:none!important}
 .rev-track{display:block!important;transform:none!important}
 .rev-slide{display:block!important}
 .rev-nav{display:none!important}
@@ -325,7 +325,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <span class="brand-name"><span data-ar="عيادة الماهر في طب الأسنان" data-en="The Professional for Dental Care">عيادة الماهر في طب الأسنان</span><small><span data-ar="د. ماهر البندقجي — خلدا" data-en="Dr. Maher Bondokji — Khalda">د. ماهر البندقجي — خلدا</span></small></span>
     </a>
     <div class="top-actions">
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language" onclick="window.__toggleLang&&window.__toggleLang()">EN</button>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
       <a class="top-call" href="tel:+962797911100">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span data-ar="احجز موعدك" data-en="Book an appointment">احجز موعدك</span>
@@ -400,7 +400,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <p data-ar="اضغط على أي خدمة لقراءة نبذة سريعة عنها. للحجز والاستفسار عن حالتك، اتصل بالعيادة مباشرة." data-en="Tap any service for a quick overview. To book or ask about your case, call the clinic directly.">اضغط على أي خدمة لقراءة نبذة سريعة عنها. للحجز والاستفسار عن حالتك، اتصل بالعيادة مباشرة.</p>
     </div>
     <div class="treat-grid" id="treatGrid">
-<article class="treat">
+<article class="treat open">
 <button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-0">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/><path d="M9 15a3 3 0 0 0 2.5 3"/></svg></span>
 <h3 data-ar="تنظيف إيرفلو (Airflow)" data-en="Airflow cleaning">تنظيف إيرفلو (Airflow)</h3>
@@ -409,7 +409,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-0"><div class="treat-body-in"><p data-ar="تنظيف لطيف للأسنان واللثة بتقنية إيرفلو، يزيل التصبغات والجير بلطف — لأسنان أنظف وشعور بالانتعاش بعد الجلسة." data-en="A gentle Airflow clean for teeth and gums, removing stains and tartar — leaving your teeth cleaner and your mouth feeling fresh.">تنظيف لطيف للأسنان واللثة بتقنية إيرفلو، يزيل التصبغات والجير بلطف — لأسنان أنظف وشعور بالانتعاش بعد الجلسة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-1">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-1">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span>
 <h3 data-ar="تبييض الأسنان" data-en="Teeth whitening">تبييض الأسنان</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -417,7 +417,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-1"><div class="treat-body-in"><p data-ar="إجراء تجميلي يهدف إلى تفتيح لون الأسنان والتقليل من التصبغات الناتجة عن القهوة والشاي وعوامل أخرى، للحصول على ابتسامة أكثر إشراقاً." data-en="A cosmetic treatment that brightens the shade of your teeth and reduces staining from coffee, tea and other causes — for a brighter smile.">إجراء تجميلي يهدف إلى تفتيح لون الأسنان والتقليل من التصبغات الناتجة عن القهوة والشاي وعوامل أخرى، للحصول على ابتسامة أكثر إشراقاً.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-2">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-2">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21 14 10"/><path d="m15 4 5 5"/><path d="M19 8l-2-2 3-3 2 2z"/><path d="M6 18h.01M10 14h.01"/></svg></span>
 <h3 data-ar="قص اللثة بالليزر — تصحيح الابتسامة اللثوية" data-en="Laser gum reshaping — gummy-smile correction">قص اللثة بالليزر — تصحيح الابتسامة اللثوية</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -623,6 +623,63 @@ var btn = document.getElementById("langToggle");
 if (btn && btn.addEventListener) btn.addEventListener("click", window.__toggleLang);
 })();
 </script>
+<script>
+/* Motion restore (2026-11-13): count-up numbers + service accordion.
+   Enhancement only: final numbers are already in the HTML and service
+   descriptions stay in the DOM, so the page works fully without JS. */
+(function(){
+"use strict";
+try{
+  var spans = document.querySelectorAll("[data-count]");
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function animate(el){
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    if (isNaN(target)) return;
+    var start = null, dur = 1200;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++){
+        if (entries[i].isIntersecting){
+          animate(entries[i].target);
+          io.unobserve(entries[i].target);
+        }
+      }
+    }, {threshold: 0.3});
+    for (var i = 0; i < spans.length; i++) io.observe(spans[i]);
+  } else {
+    for (var j = 0; j < spans.length; j++) animate(spans[j]);
+  }
+  var btns = document.querySelectorAll(".treat-btn");
+  for (var k = 0; k < btns.length; k++){
+    (function(btn){
+      btn.addEventListener("click", function(){
+        var art = btn.closest ? btn.closest(".treat") : btn.parentNode;
+        if (!art) return;
+        var isOpen = (" " + art.className + " ").indexOf(" open ") !== -1;
+        if (isOpen){
+          art.className = (" " + art.className + " ").replace(" open ", " ").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "false");
+        } else {
+          art.className = (art.className + " open").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    })(btns[k]);
+  }
+}catch(e){ /* motion is enhancement only */ }
+})();
+</script>
+
 <script>
 /* Optional enhancement: lightbox reads images + captions from the static gallery.
    Fully wrapped — a failure here can never affect the toggle or the content. */

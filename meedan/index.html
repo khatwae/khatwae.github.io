@@ -95,6 +95,7 @@ h1,h2,h3{line-height:1.45;margin:0}
 .treat-btn .chev{flex:none;color:var(--acc);transition:transform .25s ease}
 .treat.open .chev{transform:rotate(180deg)}
 .treat-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.treat.open .treat-body{max-height:600px}
 .treat-body-in{padding:0 16px 18px;color:var(--ink-soft);font-size:.88rem;line-height:1.9}
 .treat-body-in p{margin:0}
 .cta-band{background:linear-gradient(120deg,var(--acc-dark),var(--acc) 55%,var(--acc-bright));border-radius:26px;padding:36px 26px;color:#fff;text-align:center;box-shadow:var(--shadow)}
@@ -163,7 +164,6 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 
 <style>
 /* Static-content overrides: services, gallery and reviews are plain HTML, visible even with JavaScript disabled. */
-.treat-body{max-height:none!important}
 .rev-track{display:block!important;transform:none!important}
 .rev-slide{display:block!important}
 .rev-nav{display:none!important}
@@ -180,7 +180,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <span class="brand-name"><span data-ar="ميدان" data-en="Meedan">ميدان</span><small class="ltr">MEEDAN — MMA & STRENGTH</small></span>
     </a>
     <div class="top-actions">
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language" onclick="window.__toggleLang&&window.__toggleLang()">EN</button>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
       <a class="top-call" href="tel:+962791299306">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span data-ar="احجز مكانك" data-en="Book your spot">احجز مكانك</span>
@@ -254,7 +254,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <p data-ar="اضغط على أي تدريب لقراءة نبذة سريعة عنه. للحجز والاستفسار عن الحصص، اتصل بالنادي مباشرة." data-en="Tap any discipline for a quick overview. To book or ask about classes, call the gym directly.">اضغط على أي تدريب لقراءة نبذة سريعة عنه. للحجز والاستفسار عن الحصص، اتصل بالنادي مباشرة.</p>
     </div>
     <div class="treat-grid" id="treatGrid">
-<article class="treat">
+<article class="treat open">
 <button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-0">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
 <h3 data-ar="الفنون القتالية المختلطة MMA" data-en="Mixed Martial Arts (MMA)">الفنون القتالية المختلطة MMA</h3>
@@ -263,7 +263,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-0"><div class="treat-body-in"><p data-ar="تدريب متكامل يجمع الضرب والرمي والقتال الأرضي — الانضباط الكامل للمقاتل، يُدرَّس كوحدة واحدة." data-en="Complete training combining striking, takedowns and ground fighting — the full fighter&#x27;s discipline, taught as one.">تدريب متكامل يجمع الضرب والرمي والقتال الأرضي — الانضباط الكامل للمقاتل، يُدرَّس كوحدة واحدة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-1">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-1">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
 <h3 data-ar="الملاكمة" data-en="Boxing">الملاكمة</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -271,7 +271,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-1"><div class="treat-body-in"><p data-ar="تعلّم أساسيات الملاكمة: الوقفة واللكمات وحركة القدمين والدفاع، مع تدريب لياقة يبني القوة والتحمّل." data-en="Learn boxing fundamentals: stance, punches, footwork and defence, with conditioning that builds strength and stamina.">تعلّم أساسيات الملاكمة: الوقفة واللكمات وحركة القدمين والدفاع، مع تدريب لياقة يبني القوة والتحمّل.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-2">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-2">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10z"/><path d="m9 11.5 2 2 4-4.5"/></svg></span>
 <h3 data-ar="الجوجيتسو البرازيلي BJJ" data-en="Brazilian Jiu-Jitsu (BJJ)">الجوجيتسو البرازيلي BJJ</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -279,7 +279,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-2"><div class="treat-body-in"><p data-ar="فن القتال الأرضي: السيطرة والتثبيت والإخضاع — تدريب ذكي يعلّمك كيف تستخدم التقنية قبل القوة." data-en="The ground-fighting art: control, pins and submissions — smart training that teaches you to use technique before strength.">فن القتال الأرضي: السيطرة والتثبيت والإخضاع — تدريب ذكي يعلّمك كيف تستخدم التقنية قبل القوة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-3">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-3">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg></span>
 <h3 data-ar="القوة واللياقة" data-en="Strength &amp; conditioning">القوة واللياقة</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -287,7 +287,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-3"><div class="treat-body-in"><p data-ar="برامج قوة ولياقة بأسلوب الكروسفت: تمارين مركّبة وتدريب وظيفي يرفع مستوى لياقتك وقوتك العامة." data-en="CrossFit-style strength and conditioning: compound lifts and functional training that raise your overall fitness and power.">برامج قوة ولياقة بأسلوب الكروسفت: تمارين مركّبة وتدريب وظيفي يرفع مستوى لياقتك وقوتك العامة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-4">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-4">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
 <h3 data-ar="رفع الأثقال" data-en="Weightlifting">رفع الأثقال</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -295,7 +295,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-4"><div class="treat-body-in"><p data-ar="رفع أثقال بأوزان حرة وتقنية صحيحة تحت إشراف مدربين، لبناء القوة العضلية بشكل آمن ومتدرّج." data-en="Free-weight lifting with correct technique under coaches&#x27; supervision, building muscle strength safely and progressively.">رفع أثقال بأوزان حرة وتقنية صحيحة تحت إشراف مدربين، لبناء القوة العضلية بشكل آمن ومتدرّج.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-5">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-5">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
 <h3 data-ar="الصالة العائلية" data-en="Family gym">الصالة العائلية</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -490,6 +490,63 @@ var btn = document.getElementById("langToggle");
 if (btn && btn.addEventListener) btn.addEventListener("click", window.__toggleLang);
 })();
 </script>
+<script>
+/* Motion restore (2026-11-13): count-up numbers + service accordion.
+   Enhancement only: final numbers are already in the HTML and service
+   descriptions stay in the DOM, so the page works fully without JS. */
+(function(){
+"use strict";
+try{
+  var spans = document.querySelectorAll("[data-count]");
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function animate(el){
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    if (isNaN(target)) return;
+    var start = null, dur = 1200;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++){
+        if (entries[i].isIntersecting){
+          animate(entries[i].target);
+          io.unobserve(entries[i].target);
+        }
+      }
+    }, {threshold: 0.3});
+    for (var i = 0; i < spans.length; i++) io.observe(spans[i]);
+  } else {
+    for (var j = 0; j < spans.length; j++) animate(spans[j]);
+  }
+  var btns = document.querySelectorAll(".treat-btn");
+  for (var k = 0; k < btns.length; k++){
+    (function(btn){
+      btn.addEventListener("click", function(){
+        var art = btn.closest ? btn.closest(".treat") : btn.parentNode;
+        if (!art) return;
+        var isOpen = (" " + art.className + " ").indexOf(" open ") !== -1;
+        if (isOpen){
+          art.className = (" " + art.className + " ").replace(" open ", " ").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "false");
+        } else {
+          art.className = (art.className + " open").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    })(btns[k]);
+  }
+}catch(e){ /* motion is enhancement only */ }
+})();
+</script>
+
 <script>
 /* Optional enhancement: lightbox reads images + captions from the static gallery.
    Fully wrapped — a failure here can never affect the toggle or the content. */

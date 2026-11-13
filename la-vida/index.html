@@ -166,6 +166,7 @@ h1,h2,h3{line-height:1.45;margin:0}
 .treat-btn .chev{flex:none;color:var(--teal);transition:transform .25s ease}
 .treat.open .chev{transform:rotate(180deg)}
 .treat-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.treat.open .treat-body{max-height:600px}
 .treat-body-in{padding:0 16px 18px;color:var(--ink-soft);font-size:.88rem;line-height:1.9}
 .treat-body-in p{margin:0}
 
@@ -301,7 +302,6 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 
 <style>
 /* Static-content overrides: services, gallery and reviews are plain HTML, visible even with JavaScript disabled. */
-.treat-body{max-height:none!important}
 .rev-track{display:block!important;transform:none!important}
 .rev-slide{display:block!important}
 .rev-nav{display:none!important}
@@ -324,7 +324,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <span class="brand-name"><span data-ar="لا فيدا كيك" data-en="La Vida Cake">لا فيدا كيك</span><small data-ar="كيك وحلويات — جندويل" data-en="Cakes &amp; desserts — Jandaweel">كيك وحلويات — جندويل</small></span>
     </a>
     <div class="top-actions">
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language" onclick="window.__toggleLang&&window.__toggleLang()">EN</button>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
       <a class="top-call" href="https://wa.me/c/962776326671" target="_blank" rel="noopener">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         <span data-ar="اطلب واتساب" data-en="Order on WhatsApp">اطلب واتساب</span>
@@ -399,7 +399,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <p data-ar="اضغط على أي منتج لقراءة نبذة سريعة عنه. للطلب، راسلنا واتساب." data-en="Tap any product for a quick note about it. To order, message us on WhatsApp.">اضغط على أي منتج لقراءة نبذة سريعة عنه. للطلب، راسلنا واتساب.</p>
     </div>
     <div class="treat-grid" id="treatGrid">
-<article class="treat">
+<article class="treat open">
 <button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-0">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16"/><path d="M5 21v-6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6"/><path d="M7 13v-2a5 5 0 0 1 10 0v2"/><path d="M12 6v-2"/><circle cx="12" cy="3" r=".6" fill="currentColor"/></svg></span>
 <h3 data-ar="كيك المناسبات" data-en="Celebration cakes">كيك المناسبات</h3>
@@ -408,7 +408,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-0"><div class="treat-body-in"><p data-ar="كيك يُجهَّز لمناسباتك — أعياد ميلاد وخطوبة وتخرج — اطلب عبر واتساب." data-en="Cakes made for your occasions — birthdays, engagements and graduations — order on WhatsApp.">كيك يُجهَّز لمناسباتك — أعياد ميلاد وخطوبة وتخرج — اطلب عبر واتساب.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-1">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-1">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/><path d="M9 6.5v.01M15.5 13v.01"/></svg></span>
 <h3 data-ar="كيك فيريرو روشيه" data-en="Ferrero Rocher cake">كيك فيريرو روشيه</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -416,7 +416,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-1"><div class="treat-body-in"><p data-ar="كيك الشوكولاتة بطعم فيريرو روشيه — من منتجاتنا المميزة." data-en="Chocolate cake with Ferrero Rocher flavour — one of our featured products.">كيك الشوكولاتة بطعم فيريرو روشيه — من منتجاتنا المميزة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-2">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-2">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c-4 0-7-3-7-7 0-5 4-9 7-11 3 2 7 6 7 11 0 4-3 7-7 7z"/><path d="M12 21v-8"/><path d="M12 10c-1.5-1-3-1-4.5 0M12 10c1.5-1 3-1 4.5 0"/></svg></span>
 <h3 data-ar="كيك الفراولة" data-en="Strawberry cake">كيك الفراولة</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -424,7 +424,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-2"><div class="treat-body-in"><p data-ar="كيك طري بنكهة الفراولة، مناسب لأعياد الميلاد وجمعات العائلة." data-en="Soft strawberry-flavoured cake, perfect for birthdays and family gatherings.">كيك طري بنكهة الفراولة، مناسب لأعياد الميلاد وجمعات العائلة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-3">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-3">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 13h12l-1.5 6a2 2 0 0 1-2 1.5h-5a2 2 0 0 1-2-1.5z"/><path d="M5 13c0-4 3-7 7-7s7 3 7 7"/><circle cx="12" cy="4" r="1" fill="currentColor" stroke="none"/></svg></span>
 <h3 data-ar="مافن الجزر" data-en="Carrot muffins">مافن الجزر</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -432,7 +432,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-3"><div class="treat-body-in"><p data-ar="مافن الجزر الطري، خيار خفيف مع القهوة أو كتحلية يومية." data-en="Soft carrot muffins — a light choice with coffee or as a daily treat.">مافن الجزر الطري، خيار خفيف مع القهوة أو كتحلية يومية.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-4">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-4">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12h10l-1.2 7a2 2 0 0 1-2 1.6H10.2a2 2 0 0 1-2-1.6z"/><path d="M6.5 12c0-3.5 2.5-6 5.5-6s5.5 2.5 5.5 6"/><circle cx="12" cy="4.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>
 <h3 data-ar="كب كيك" data-en="Cupcakes">كب كيك</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -440,7 +440,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-4"><div class="treat-body-in"><p data-ar="كب كيك بأشكال ونكهات متنوعة، مناسب للتوزيعات والمناسبات الصغيرة." data-en="Cupcakes in different shapes and flavours, ideal for giveaways and small occasions.">كب كيك بأشكال ونكهات متنوعة، مناسب للتوزيعات والمناسبات الصغيرة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-5">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-5">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4"/><path d="M5 12v9h14v-9"/><path d="M12 8v13"/><path d="M12 8s-4.5.3-4.5-2.2C7.5 3.6 11 3.5 12 8zM12 8s4.5.3 4.5-2.2C16.5 3.6 13 3.5 12 8z"/></svg></span>
 <h3 data-ar="طلبات خاصة" data-en="Custom orders">طلبات خاصة</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -660,6 +660,63 @@ var btn = document.getElementById("langToggle");
 if (btn && btn.addEventListener) btn.addEventListener("click", window.__toggleLang);
 })();
 </script>
+<script>
+/* Motion restore (2026-11-13): count-up numbers + service accordion.
+   Enhancement only: final numbers are already in the HTML and service
+   descriptions stay in the DOM, so the page works fully without JS. */
+(function(){
+"use strict";
+try{
+  var spans = document.querySelectorAll("[data-count]");
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function animate(el){
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    if (isNaN(target)) return;
+    var start = null, dur = 1200;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++){
+        if (entries[i].isIntersecting){
+          animate(entries[i].target);
+          io.unobserve(entries[i].target);
+        }
+      }
+    }, {threshold: 0.3});
+    for (var i = 0; i < spans.length; i++) io.observe(spans[i]);
+  } else {
+    for (var j = 0; j < spans.length; j++) animate(spans[j]);
+  }
+  var btns = document.querySelectorAll(".treat-btn");
+  for (var k = 0; k < btns.length; k++){
+    (function(btn){
+      btn.addEventListener("click", function(){
+        var art = btn.closest ? btn.closest(".treat") : btn.parentNode;
+        if (!art) return;
+        var isOpen = (" " + art.className + " ").indexOf(" open ") !== -1;
+        if (isOpen){
+          art.className = (" " + art.className + " ").replace(" open ", " ").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "false");
+        } else {
+          art.className = (art.className + " open").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    })(btns[k]);
+  }
+}catch(e){ /* motion is enhancement only */ }
+})();
+</script>
+
 <script>
 /* Optional enhancement: lightbox reads images + captions from the static gallery.
    Fully wrapped — a failure here can never affect the toggle or the content. */

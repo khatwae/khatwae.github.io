@@ -95,6 +95,7 @@ h1,h2,h3{line-height:1.45;margin:0}
 .treat-btn .chev{flex:none;color:var(--acc);transition:transform .25s ease}
 .treat.open .chev{transform:rotate(180deg)}
 .treat-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.treat.open .treat-body{max-height:600px}
 .treat-body-in{padding:0 16px 18px;color:var(--ink-soft);font-size:.88rem;line-height:1.9}
 .treat-body-in p{margin:0}
 .cta-band{background:linear-gradient(120deg,var(--acc-dark),var(--acc) 55%,var(--acc-bright));border-radius:26px;padding:36px 26px;color:#fff;text-align:center;box-shadow:var(--shadow)}
@@ -163,7 +164,6 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 
 <style>
 /* Static-content overrides: services, gallery and reviews are plain HTML, visible even with JavaScript disabled. */
-.treat-body{max-height:none!important}
 .rev-track{display:block!important;transform:none!important}
 .rev-slide{display:block!important}
 .rev-nav{display:none!important}
@@ -180,7 +180,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <span class="brand-name"><span data-ar="جولي فام" data-en="Jolie Femme">جولي فام</span><small class="ltr">JOLIE FEMME — HER ELEGANCE</small></span>
     </a>
     <div class="top-actions">
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language" onclick="window.__toggleLang&&window.__toggleLang()">EN</button>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
       <a class="top-call" href="tel:+96265935518">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span data-ar="احجزي موعدك" data-en="Book now">احجزي موعدك</span>
@@ -254,7 +254,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <p data-ar="اضغطي على أي خدمة لقراءة نبذة سريعة عنها. للحجز والاستفسار، اتصلي بالصالون أو راسلينا على واتساب." data-en="Tap any service for a quick overview. To book or enquire, call the salon or message us on WhatsApp.">اضغطي على أي خدمة لقراءة نبذة سريعة عنها. للحجز والاستفسار، اتصلي بالصالون أو راسلينا على واتساب.</p>
     </div>
     <div class="treat-grid" id="treatGrid">
-<article class="treat">
+<article class="treat open">
 <button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-0">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span>
 <h3 data-ar="الشعر" data-en="Hair">الشعر</h3>
@@ -263,7 +263,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-0"><div class="treat-body-in"><p data-ar="قصّ وصبغ وتصفيف الشعر بأيدي خبيرات، مع عناية بالشعر قبل التصفيف وبعده لتحافظي على صحته ولمعانه." data-en="Cutting, colouring and styling by experienced stylists, with care before and after styling to keep your hair healthy and shiny.">قصّ وصبغ وتصفيف الشعر بأيدي خبيرات، مع عناية بالشعر قبل التصفيف وبعده لتحافظي على صحته ولمعانه.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-1">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-1">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.06 11.9 19.5 1.5a2.3 2.3 0 0 1 3.25 0l.25.25a2.3 2.3 0 0 1 0 3.25L12.56 15.44"/><path d="M9.06 11.9c.6 1.9-.2 3.2-1.56 4.56C5.7 18.3 3 19 2 19c0-1 .7-3.7 2.54-5.5 1.36-1.36 2.66-2.16 4.52-1.6z"/></svg></span>
 <h3 data-ar="الأظافر" data-en="Nails">الأظافر</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -271,7 +271,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-1"><div class="treat-body-in"><p data-ar="مناكير وبديكير وتصاميم أنيقة للأظافر، بعناية فائقة بالتفاصيل والنظافة، ليدين جميلتين في كل مناسبة." data-en="Manicure, pedicure and elegant nail designs, with great attention to detail and hygiene, for beautiful hands on every occasion.">مناكير وبديكير وتصاميم أنيقة للأظافر، بعناية فائقة بالتفاصيل والنظافة، ليدين جميلتين في كل مناسبة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-2">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-2">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span>
 <h3 data-ar="الجمال والبشرة" data-en="Beauty &amp; skin">الجمال والبشرة</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -279,7 +279,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-2"><div class="treat-body-in"><p data-ar="جلسات عناية بالبشرة ومكياج ناعم للمناسبات، تبرز جمالكِ الطبيعي بإطلالة مشرقة ومتوازنة." data-en="Skin-care sessions and soft occasion makeup that bring out your natural beauty with a fresh, balanced glow.">جلسات عناية بالبشرة ومكياج ناعم للمناسبات، تبرز جمالكِ الطبيعي بإطلالة مشرقة ومتوازنة.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-3">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-3">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2.5 4 2.5 4-2.5 4-2.5"/><path d="M9 9h.01M15 9h.01"/></svg></span>
 <h3 data-ar="الحواجب" data-en="Brows">الحواجب</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -482,6 +482,63 @@ var btn = document.getElementById("langToggle");
 if (btn && btn.addEventListener) btn.addEventListener("click", window.__toggleLang);
 })();
 </script>
+<script>
+/* Motion restore (2026-11-13): count-up numbers + service accordion.
+   Enhancement only: final numbers are already in the HTML and service
+   descriptions stay in the DOM, so the page works fully without JS. */
+(function(){
+"use strict";
+try{
+  var spans = document.querySelectorAll("[data-count]");
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function animate(el){
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    if (isNaN(target)) return;
+    var start = null, dur = 1200;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++){
+        if (entries[i].isIntersecting){
+          animate(entries[i].target);
+          io.unobserve(entries[i].target);
+        }
+      }
+    }, {threshold: 0.3});
+    for (var i = 0; i < spans.length; i++) io.observe(spans[i]);
+  } else {
+    for (var j = 0; j < spans.length; j++) animate(spans[j]);
+  }
+  var btns = document.querySelectorAll(".treat-btn");
+  for (var k = 0; k < btns.length; k++){
+    (function(btn){
+      btn.addEventListener("click", function(){
+        var art = btn.closest ? btn.closest(".treat") : btn.parentNode;
+        if (!art) return;
+        var isOpen = (" " + art.className + " ").indexOf(" open ") !== -1;
+        if (isOpen){
+          art.className = (" " + art.className + " ").replace(" open ", " ").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "false");
+        } else {
+          art.className = (art.className + " open").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    })(btns[k]);
+  }
+}catch(e){ /* motion is enhancement only */ }
+})();
+</script>
+
 <script>
 /* Optional enhancement: lightbox reads images + captions from the static gallery.
    Fully wrapped — a failure here can never affect the toggle or the content. */

@@ -95,6 +95,7 @@ h1,h2,h3{line-height:1.45;margin:0}
 .treat-btn .chev{flex:none;color:var(--acc);transition:transform .25s ease}
 .treat.open .chev{transform:rotate(180deg)}
 .treat-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.treat.open .treat-body{max-height:600px}
 .treat-body-in{padding:0 16px 18px;color:var(--ink-soft);font-size:.88rem;line-height:1.9}
 .treat-body-in p{margin:0}
 .cta-band{background:linear-gradient(120deg,var(--acc-dark),var(--acc) 55%,var(--acc-bright));border-radius:26px;padding:36px 26px;color:#fff;text-align:center;box-shadow:var(--shadow)}
@@ -163,7 +164,6 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 
 <style>
 /* Static-content overrides: services, gallery and reviews are plain HTML, visible even with JavaScript disabled. */
-.treat-body{max-height:none!important}
 .rev-track{display:block!important;transform:none!important}
 .rev-slide{display:block!important}
 .rev-nav{display:none!important}
@@ -180,7 +180,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <span class="brand-name"><span data-ar="ذا سبوت" data-en="The Spot">ذا سبوت</span><small class="ltr">THE SPOT BY TALAH AL ALAMI</small></span>
     </a>
     <div class="top-actions">
-      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language" onclick="window.__toggleLang&&window.__toggleLang()">EN</button>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">EN</button>
       <a class="top-call" href="tel:+962791006968">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span data-ar="احجزي موعدك" data-en="Book now">احجزي موعدك</span>
@@ -254,7 +254,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
       <p data-ar="اضغطي على أي خدمة لقراءة نبذة سريعة عنها. للحجز والاستفسار عن موعدكِ، اتصلي بالصالون مباشرة." data-en="Tap any service for a quick overview. To book or ask about an appointment, call the salon directly.">اضغطي على أي خدمة لقراءة نبذة سريعة عنها. للحجز والاستفسار عن موعدكِ، اتصلي بالصالون مباشرة.</p>
     </div>
     <div class="treat-grid" id="treatGrid">
-<article class="treat">
+<article class="treat open">
 <button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-0">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg></span>
 <h3 data-ar="قصّ الشعر" data-en="Haircuts">قصّ الشعر</h3>
@@ -263,7 +263,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-0"><div class="treat-body-in"><p data-ar="قصّات عصرية وكلاسيكية تُصمَّم لتناسب شكل وجهكِ وطبيعة شعركِ، مع استشارة قبل القص لاختيار الإطلالة الأنسب لكِ." data-en="Modern and classic cuts tailored to your face shape and hair type, with a consultation before the cut to choose the look that suits you best.">قصّات عصرية وكلاسيكية تُصمَّم لتناسب شكل وجهكِ وطبيعة شعركِ، مع استشارة قبل القص لاختيار الإطلالة الأنسب لكِ.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-1">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-1">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></span>
 <h3 data-ar="صبغ الشعر" data-en="Hair colour">صبغ الشعر</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -271,7 +271,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-1"><div class="treat-body-in"><p data-ar="ألوان وصبغات بدرجات متنوعة — من الطبيعي الهادئ إلى الجريء — مع عناية بالشعر قبل الصبغة وبعدها للحفاظ على صحته ولمعانه." data-en="Colour and dye in a wide range of shades — from soft and natural to bold — with care before and after colouring to keep your hair healthy and shiny.">ألوان وصبغات بدرجات متنوعة — من الطبيعي الهادئ إلى الجريء — مع عناية بالشعر قبل الصبغة وبعدها للحفاظ على صحته ولمعانه.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-2">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-2">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span>
 <h3 data-ar="المكياج" data-en="Makeup">المكياج</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -279,7 +279,7 @@ footer p{color:var(--ink-soft);font-size:.86rem;margin:6px 0;max-width:60em}
 <div class="treat-body" id="treat-body-2"><div class="treat-body-in"><p data-ar="مكياج نهاري ناعم ومكياج سهرة ومناسبات، بأيدي خبيرات مكياج يبرزن ملامحكِ بإطلالة أنيقة تدوم طوال اليوم." data-en="Soft daytime makeup and glamorous evening and occasion looks, by makeup artists who enhance your features with an elegant finish that lasts all day.">مكياج نهاري ناعم ومكياج سهرة ومناسبات، بأيدي خبيرات مكياج يبرزن ملامحكِ بإطلالة أنيقة تدوم طوال اليوم.</p></div></div>
 </article>
 <article class="treat">
-<button class="treat-btn" type="button" aria-expanded="true" aria-controls="treat-body-3">
+<button class="treat-btn" type="button" aria-expanded="false" aria-controls="treat-body-3">
 <span class="treat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.06 11.9 19.5 1.5a2.3 2.3 0 0 1 3.25 0l.25.25a2.3 2.3 0 0 1 0 3.25L12.56 15.44"/><path d="M9.06 11.9c.6 1.9-.2 3.2-1.56 4.56C5.7 18.3 3 19 2 19c0-1 .7-3.7 2.54-5.5 1.36-1.36 2.66-2.16 4.52-1.6z"/></svg></span>
 <h3 data-ar="العناية بالأظافر" data-en="Nails">العناية بالأظافر</h3>
 <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -482,6 +482,63 @@ var btn = document.getElementById("langToggle");
 if (btn && btn.addEventListener) btn.addEventListener("click", window.__toggleLang);
 })();
 </script>
+<script>
+/* Motion restore (2026-11-13): count-up numbers + service accordion.
+   Enhancement only: final numbers are already in the HTML and service
+   descriptions stay in the DOM, so the page works fully without JS. */
+(function(){
+"use strict";
+try{
+  var spans = document.querySelectorAll("[data-count]");
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function animate(el){
+    var target = parseInt(el.getAttribute("data-count"), 10);
+    if (isNaN(target)) return;
+    var start = null, dur = 1200;
+    function step(ts){
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      for (var i = 0; i < entries.length; i++){
+        if (entries[i].isIntersecting){
+          animate(entries[i].target);
+          io.unobserve(entries[i].target);
+        }
+      }
+    }, {threshold: 0.3});
+    for (var i = 0; i < spans.length; i++) io.observe(spans[i]);
+  } else {
+    for (var j = 0; j < spans.length; j++) animate(spans[j]);
+  }
+  var btns = document.querySelectorAll(".treat-btn");
+  for (var k = 0; k < btns.length; k++){
+    (function(btn){
+      btn.addEventListener("click", function(){
+        var art = btn.closest ? btn.closest(".treat") : btn.parentNode;
+        if (!art) return;
+        var isOpen = (" " + art.className + " ").indexOf(" open ") !== -1;
+        if (isOpen){
+          art.className = (" " + art.className + " ").replace(" open ", " ").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "false");
+        } else {
+          art.className = (art.className + " open").replace(/^\s+|\s+$/g, "");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    })(btns[k]);
+  }
+}catch(e){ /* motion is enhancement only */ }
+})();
+</script>
+
 <script>
 /* Optional enhancement: lightbox reads images + captions from the static gallery.
    Fully wrapped — a failure here can never affect the toggle or the content. */
