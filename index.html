@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>عروض تجريبية — خطوة لفوق | Demo sites — Khatwa Lafouq</title>
+<meta name="description" content="المواقع التجريبية لدفعة 14 تشرين الثاني 2026 — عشرة أعمال في عمّان." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#FCFAF9;--ink:#111114;--muted:#5b5b60;--red:#E22032;--card:#fff;--line:#e8e4e0;--radius:16px}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Kufi Arabic",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;background:rgba(252,250,249,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+.head-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+.brand{font-weight:800;font-size:1.05rem}.brand small{display:block;font-size:.72rem;color:var(--red);font-weight:700}
+.lang-toggle{min-height:44px;padding:8px 18px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:800;font-size:.9rem;cursor:pointer;font-family:inherit}
+.hero{padding:44px 0 8px}.hero h1{font-size:clamp(1.5rem,5vw,2.1rem);margin:0}.hero h1 span{color:var(--red)}
+.hero p{color:var(--muted);margin:10px 0 0;max-width:40em}
+.grid{display:grid;gap:14px;grid-template-columns:1fr;padding:28px 0 60px}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--red)}
+.card .tag{display:inline-block;font-size:.72rem;font-weight:800;color:var(--red);background:#fdecec;border-radius:999px;padding:3px 12px;margin-bottom:8px}
+.card h2{margin:0;font-size:1.08rem}.card p{margin:4px 0 0;color:var(--muted);font-size:.88rem}
+.card .go{margin-top:10px;display:inline-block;font-weight:800;font-size:.86rem;color:var(--red)}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<header><div class="wrap head-in">
+  <div class="brand"><span data-ar="خطوة لفوق" data-en="Khatwa Lafouq">خطوة لفوق</span><small data-ar="عروض تجريبية — دفعة 14 تشرين الثاني 2026" data-en="Demo sites — batch 14 Nov 2026">عروض تجريبية — دفعة 14 تشرين الثاني 2026</small></div>
+  <button class="lang-toggle" id="langToggle" type="button">EN</button>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <h1><span data-ar="عشرة مواقع تجريبية" data-en="Ten demo websites">عشرة مواقع تجريبية</span> <span data-ar="لأعمال في عمّان" data-en="for Amman businesses">لأعمال في عمّان</span></h1>
+    <p data-ar="كل بطاقة تفتح الموقع التجريبي الخاص بالعمل — اضغط على أي بطاقة لعرض الديمو." data-en="Each card opens that business's demo website — tap any card to view the demo.">كل بطاقة تفتح الموقع التجريبي الخاص بالعمل — اضغط على أي بطاقة لعرض الديمو.</p>
+  </section>
+  <section class="grid">
+    <a class="card" href="./bondokji/"><span class="tag" data-ar="عيادة أسنان" data-en="Dental clinic">عيادة أسنان</span><h2 data-ar="د. ماهر بوندقجي" data-en="Dr. Maher Bondokji">د. ماهر بوندقجي</h2><p data-ar="خلدا، عمّان" data-en="Khalda, Amman">خلدا، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./aylord/"><span class="tag" data-ar="ورود" data-en="Florist">ورود</span><h2 data-ar="أيلورد للورد" data-en="Aylord Flower Shop">أيلورد للورد</h2><p data-ar="شارع عدن، عمّان" data-en="Adan St, Amman">شارع عدن، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./abu-mahjoub/"><span class="tag" data-ar="فلافل" data-en="Falafel">فلافل</span><h2 data-ar="أبو محجوب" data-en="Abu Mahjoub">أبو محجوب</h2><p data-ar="جبل عمّان — اللويبدة" data-en="Jabal Amman — Luweibdeh">جبل عمّان — اللويبدة</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./la-vida/"><span class="tag" data-ar="مخبز وحلويات" data-en="Bakery">مخبز وحلويات</span><h2 data-ar="لافيدا كيك" data-en="La Vida Cake">لافيدا كيك</h2><p data-ar="جندويل، عمّان" data-en="Jandaweel, Amman">جندويل، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./thespot/"><span class="tag" data-ar="صالون تجميل" data-en="Beauty salon">صالون تجميل</span><h2 data-ar="ذا سبوت" data-en="The Spot">ذا سبوت</h2><p data-ar="عبدون، عمّان" data-en="Abdoun, Amman">عبدون، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./jolie-femme/"><span class="tag" data-ar="صالون سيدات" data-en="Ladies salon">صالون سيدات</span><h2 data-ar="جولي فام" data-en="Jolie Femme">جولي فام</h2><p data-ar="عبدون، عمّان" data-en="Abdoun, Amman">عبدون، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./meedan/"><span class="tag" data-ar="جيم وفنون قتالية" data-en="Gym & MMA">جيم وفنون قتالية</span><h2 data-ar="ميدان MMA" data-en="Meedan MMA">ميدان MMA</h2><p data-ar="الدوار الثامن، عمّان" data-en="8th Circle, Amman">الدوار الثامن، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./kadamani/"><span class="tag" data-ar="عيادة أسنان" data-en="Dental clinic">عيادة أسنان</span><h2 data-ar="د. هديل قضماني" data-en="Dr. Hadeel Kadamani">د. هديل قضماني</h2><p data-ar="خلدا، عمّان" data-en="Khalda, Amman">خلدا، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./yugen/"><span class="tag" data-ar="مطعم ياباني" data-en="Omakase sushi bar">مطعم ياباني</span><h2 data-ar="يوغن" data-en="Yugen">يوغن</h2><p data-ar="الصويفية فيلج، عمّان" data-en="Sweifieh Village, Amman">الصويفية فيلج، عمّان</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+    <a class="card" href="./little-italy/"><span class="tag" data-ar="مطعم إيطالي" data-en="Italian restaurant">مطعم إيطالي</span><h2 data-ar="ليتل إيتالي" data-en="Little Italy Pizzeria">ليتل إيتالي</h2><p data-ar="عبدون والصويفية فيلج" data-en="Abdoun & Sweifieh Village">عبدون والصويفية فيلج</p><span class="go" data-ar="عرض الديمو ←" data-en="View demo →">عرض الديمو ←</span></a>
+  </section>
+</main>
+<footer><div class="wrap">
+  <p data-ar="هذه صفحة فهرس داخلية تجمع المواقع التجريبية لدفعة 14 تشرين الثاني 2026. كل ديمو موقع تجريبي وليس الموقع الرسمي للعمل." data-en="Internal index page collecting the demo websites for the 14 Nov 2026 batch. Each demo is a trial website, not the business's official site.">هذه صفحة فهرس داخلية تجمع المواقع التجريبية لدفعة 14 تشرين الثاني 2026. كل ديمو موقع تجريبي وليس الموقع الرسمي للعمل.</p>
+</div></footer>
+<script>
+(function(){
+var btn=document.getElementById("langToggle"),lang="ar";
+function apply(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=(l==="ar")?"rtl":"ltr";
+  document.querySelectorAll("[data-ar]").forEach(function(el){el.textContent=(l==="ar")?el.getAttribute("data-ar"):el.getAttribute("data-en");});
+  document.title=(l==="ar")?"عروض تجريبية — خطوة لفوق":"Demo sites — Khatwa Lafouq";
+  btn.textContent=(l==="ar")?"EN":"عربي";
+}
+btn.addEventListener("click",function(){apply(lang==="ar"?"en":"ar");});
+})();
+</script>
+</body>
+</html>
