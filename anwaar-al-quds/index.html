@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مطعم أنوار القدس | وسط البلد — عمان</title>
+<meta name="description" content="مطعم أنوار القدس — أبناء الحاج سعيد الهنيني. مشاوي ومنسف وشاورما في وسط البلد، عمان، منذ 1953.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FBF5EA;--cream2:#F3EAD7;--ink:#241610;--dark:#1D130D;--red:#A63A22;--red2:#8C2F1B;--gold:#C9A227;--gold2:#E3C565;--line:#E5D6BC}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',Tahoma,sans-serif;background:var(--cream);color:var(--ink);line-height:1.8}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(29,19,13,.96);backdrop-filter:blur(6px);color:#F7EEDC}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;padding-bottom:10px}
+.brand{font-family:'Aref Ruqaa',serif;font-size:26px;line-height:1.2;color:var(--gold2)}
+.brand small{display:block;font-family:'Cairo',sans-serif;font-size:11px;letter-spacing:0;color:#D8C9A8}
+html[lang="en"] .brand small{letter-spacing:.14em}
+nav{display:flex;gap:18px;font-size:15px;font-weight:700}
+nav a{opacity:.85}nav a:hover{opacity:1;color:var(--gold2)}
+.head-actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-block;padding:10px 20px;border-radius:999px;font-weight:700;font-size:15px;border:2px solid transparent;cursor:pointer}
+.btn-gold{background:var(--gold);color:#241610}
+.btn-outline{border-color:#D8C9A8;color:#F7EEDC}
+.btn-red{background:var(--red);color:#fff}
+.toggle{background:transparent;border:1.5px solid #D8C9A8;color:#F7EEDC;border-radius:999px;padding:7px 14px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+/* hero */
+.hero{background:var(--dark);color:#F7EEDC;padding:74px 0 66px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,rgba(201,162,39,.28),transparent 55%),radial-gradient(circle at 85% 110%,rgba(166,58,34,.35),transparent 50%)}
+.hero .wrap{position:relative}
+.badge{display:inline-block;background:rgba(201,162,39,.16);border:1px solid var(--gold);color:var(--gold2);border-radius:999px;padding:6px 18px;font-weight:700;font-size:15px;margin-bottom:18px}
+.hero h1{font-family:'Aref Ruqaa',serif;font-size:clamp(44px,9vw,84px);line-height:1.25;color:#FBF5EA}
+.hero h1 span{color:var(--gold2)}
+.hero p.lead{font-size:clamp(17px,2.6vw,22px);color:#E9DCC0;max-width:640px;margin:14px auto 0}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.hero .meta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px;font-size:14px;color:#D8C9A8}
+.hero .meta span{background:rgba(251,245,234,.08);border:1px solid rgba(216,201,168,.35);border-radius:999px;padding:6px 14px}
+/* sections */
+section{padding:64px 0}
+h2{font-size:clamp(26px,4.5vw,38px);font-weight:900;text-align:center;margin-bottom:8px}
+.sub{text-align:center;color:#6B5847;max-width:620px;margin:0 auto 36px;font-size:17px}
+.kicker{text-align:center;color:var(--red);font-weight:900;font-size:15px;margin-bottom:6px}
+/* story */
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:stretch}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px}
+.card h3{font-size:22px;font-weight:900;margin-bottom:10px;color:var(--red2)}
+.card p{color:#4A3A2E;font-size:16.5px}
+.big-num{font-size:56px;font-weight:900;color:var(--gold);line-height:1}
+.stat{background:var(--dark);color:#F7EEDC;border-radius:20px;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.stat .row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(247,238,220,.16);padding-bottom:12px}
+.stat .row:last-child{border-bottom:0;padding-bottom:0}
+.stat b{font-size:19px}.stat span{color:#D8C9A8;font-size:15px}
+/* menu */
+.menu-cat{margin-bottom:34px}
+.menu-cat h3{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:900;margin-bottom:16px}
+.menu-cat h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.dishes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dish{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.dish b{font-size:18px;display:block}
+.dish p{color:#6B5847;font-size:15px;line-height:1.7}
+.price{background:var(--cream2);color:var(--red2);font-weight:900;border-radius:999px;padding:4px 12px;white-space:nowrap;font-size:15px}
+.tag{display:inline-block;background:var(--red);color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;margin-inline-start:8px;vertical-align:middle}
+.note{text-align:center;color:#6B5847;font-size:15px;margin-top:6px}
+/* hall */
+.hall{background:var(--dark);color:#F7EEDC}
+.hall h2{color:#FBF5EA}.hall .sub{color:#D8C9A8}
+.hall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.hall-item{background:rgba(251,245,234,.07);border:1px solid rgba(216,201,168,.25);border-radius:16px;padding:24px;text-align:center}
+.hall-item .ic{font-size:34px;margin-bottom:8px}
+.hall-item b{display:block;font-size:18px;margin-bottom:4px}
+.hall-item p{color:#D8C9A8;font-size:15px}
+/* info */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.info-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px}
+.info-card h3{font-size:20px;font-weight:900;margin-bottom:12px}
+.info-card p{color:#4A3A2E;font-size:16.5px}
+.info-card .phone{font-size:26px;font-weight:900;color:var(--red2);direction:ltr;text-align:right}
+html[lang="en"] .info-card .phone{text-align:left}
+.hours-row{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:8px 0;font-size:16px}
+.hours-row:last-child{border-bottom:0}
+.order-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;justify-content:center}
+/* footer */
+footer{background:var(--dark);color:#CBBEA3;text-align:center;padding:34px 0 40px;font-size:15px}
+footer .brand{font-size:30px}
+footer a{color:var(--gold2);font-weight:700}
+.call-float{position:fixed;bottom:20px;inset-inline-start:20px;z-index:60;background:var(--red);color:#fff;font-weight:900;border-radius:999px;padding:13px 22px;box-shadow:0 8px 24px rgba(0,0,0,.3);font-size:16px}
+@media(max-width:760px){
+  nav{display:none}
+  .story-grid,.info-grid{grid-template-columns:1fr}
+  .dishes{grid-template-columns:1fr}
+  .hall-grid{grid-template-columns:1fr}
+  section{padding:48px 0}
+  .brand{font-size:21px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top" data-ar="أنوار القدس" data-en="Anwaar Al-Quds">أنوار القدس<small data-ar="أبناء الحاج سعيد الهنيني — منذ 1953" data-en="Sons of Hajj Saeed Al-Henini — Since 1953">أبناء الحاج سعيد الهنيني — منذ 1953</small></a>
+    <nav>
+      <a href="#story" data-ar="قصتنا" data-en="Our story">قصتنا</a>
+      <a href="#menu" data-ar="المنيو" data-en="Menu">المنيو</a>
+      <a href="#hall" data-ar="الصالة" data-en="The hall">الصالة</a>
+      <a href="#info" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a>
+    </nav>
+    <div class="head-actions">
+      <button class="toggle" id="langToggle" type="button">English</button>
+      <a class="btn btn-gold" href="tel:+962798850410" data-ar="اتصل الآن" data-en="Call now">اتصل الآن</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="badge" data-ar="✦ وسط البلد — عمان · منذ 1953" data-en="✦ Downtown — Amman · Since 1953">✦ وسط البلد — عمان · منذ 1953</div>
+    <h1 data-ar="مطعم <span>أنوار القدس</span>" data-en="Anwaar <span>Al-Quds</span> Restaurant">مطعم <span>أنوار القدس</span></h1>
+    <p class="lead" data-ar="طعم البلد الأصلي: مشاوي على الفحم، منسف، وشاورما — بنفس المكان وبنفس النكهة من أكثر من سبعين سنة." data-en="The original downtown taste: charcoal grills, mansaf and shawarma — same place, same flavour for over seventy years.">طعم البلد الأصلي: مشاوي على الفحم، منسف، وشاورما — بنفس المكان وبنفس النكهة من أكثر من سبعين سنة.</p>
+    <div class="cta">
+      <a class="btn btn-gold" href="#menu" data-ar="شوف المنيو" data-en="See the menu">شوف المنيو</a>
+      <a class="btn btn-outline" href="tel:+962798850410" data-ar="📞 079 885 04 10" data-en="📞 079 885 04 10">📞 079 885 04 10</a>
+    </div>
+    <div class="meta">
+      <span data-ar="🕕 يومياً 6 صباحاً – 12 ليلاً" data-en="🕕 Daily 6 AM – 12 AM">🕕 يومياً 6 صباحاً – 12 ليلاً</span>
+      <span data-ar="📍 شارع الملك طلال — بجانب سينما الحمراء" data-en="📍 King Talal St — next to Al-Hamra Cinema">📍 شارع الملك طلال — بجانب سينما الحمراء</span>
+      <span data-ar="🚚 توصيل 7 صباحاً – 12 ليلاً" data-en="🚚 Delivery 7 AM – 12 AM">🚚 توصيل 7 صباحاً – 12 ليلاً</span>
+    </div>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <div class="kicker" data-ar="قصتنا" data-en="Our story">قصتنا</div>
+    <h2 data-ar="من 1953… ولسا الطعم نفسه" data-en="Since 1953… and the taste never changed">من 1953… ولسا الطعم نفسه</h2>
+    <p class="sub" data-ar="مطعم عائلي بقلب وسط البلد — ريحة المشاوي، خبز طازج من الفرن، وطاولات بتجمع الحبايب." data-en="A family restaurant in the heart of downtown — the smell of the grill, fresh bread from the oven, and tables that bring loved ones together.">مطعم عائلي بقلب وسط البلد — ريحة المشاوي، خبز طازج من الفرن، وطاولات بتجمع الحبايب.</p>
+    <div class="story-grid">
+      <div class="card">
+        <h3 data-ar="أبناء الحاج سعيد الهنيني" data-en="Sons of Hajj Saeed Al-Henini">أبناء الحاج سعيد الهنيني</h3>
+        <p data-ar="من أكثر من سبعين سنة ونحن بنفس المكان بشارع الملك طلال: لحم طازج، فحم حقيقي، وخبز بينخبز قدامك. زبايننا بيجوا من كل عمان — والسياح بيلاقونا من ريحة المشاوي قبل ما يشوفوا اللافتة." data-en="For over seventy years, in the same spot on King Talal Street: fresh meat, real charcoal, and bread baked in front of you. Our guests come from all over Amman — and visitors find us by the smell of the grill before they see the sign.">من أكثر من سبعين سنة ونحن بنفس المكان بشارع الملك طلال: لحم طازج، فحم حقيقي، وخبز بينخبز قدامك. زبايننا بيجوا من كل عمان — والسياح بيلاقونا من ريحة المشاوي قبل ما يشوفوا اللافتة.</p>
+      </div>
+      <div class="stat">
+        <div class="row"><b data-ar="سنة التأسيس" data-en="Founded">سنة التأسيس</b><span class="big-num">1953</span></div>
+        <div class="row"><b data-ar="تقييم الزباين" data-en="Guest rating">تقييم الزباين</b><span>★ 4.7 / 5</span></div>
+        <div class="row"><b data-ar="الدوام" data-en="Open">الدوام</b><span data-ar="كل يوم 6 ص – 12 م" data-en="Every day 6 AM – 12 AM">كل يوم 6 ص – 12 م</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="menu" style="background:#fff">
+  <div class="wrap">
+    <div class="kicker" data-ar="المنيو" data-en="Menu">المنيو</div>
+    <h2 data-ar="شو نفسك اليوم؟" data-en="What are you craving today?">شو نفسك اليوم؟</h2>
+    <p class="sub" data-ar="أكل بلدي أصلي — مشاوي، أطباق أردنية، وسندويشات سريعة للي ماشي بوسط البلد." data-en="Authentic local food — grills, Jordanian dishes, and quick sandwiches for a downtown walk.">أكل بلدي أصلي — مشاوي، أطباق أردنية، وسندويشات سريعة للي ماشي بوسط البلد.</p>
+
+    <div class="menu-cat">
+      <h3 data-ar="🔥 المشاوي" data-en="🔥 Grills">🔥 المشاوي</h3>
+      <div class="dishes">
+        <div class="dish"><div><b data-ar="مشاوي مشكلة" data-en="Mixed grill">مشاوي مشكلة</b><p data-ar="كباب وشيش طاووق على الفحم مع خبز طازج" data-en="Kebab and shish tawook over charcoal, with fresh bread">كباب وشيش طاووق على الفحم مع خبز طازج</p></div></div>
+        <div class="dish"><div><b data-ar="كباب" data-en="Kebab">كباب</b><p data-ar="كباب لحم طازج مشوي على الفحم" data-en="Fresh minced lamb kebab grilled over charcoal">كباب لحم طازج مشوي على الفحم</p></div></div>
+        <div class="dish"><div><b data-ar="شيش طاووق" data-en="Shish tawook">شيش طاووق</b><p data-ar="قطع دجاج متبلة ومشوية على الفحم" data-en="Marinated chicken pieces grilled over charcoal">قطع دجاج متبلة ومشوية على الفحم</p></div></div>
+        <div class="dish"><div><b data-ar="شاورما" data-en="Shawarma">شاورما</b><p data-ar="شاورما لحم ودجاج — سندويش أو صحن" data-en="Beef and chicken shawarma — sandwich or plate">شاورما لحم ودجاج — سندويش أو صحن</p></div></div>
+        <div class="dish"><div><b data-ar="عرايس لحمة" data-en="Arayes">عرايس لحمة<span class="tag" data-ar="الأكثر طلباً" data-en="Most ordered">الأكثر طلباً</span></b><p data-ar="خبز محشي لحم متبل ومشوي — جربتها من عنا؟" data-en="Pita stuffed with spiced meat, grilled — have you tried ours?">خبز محشي لحم متبل ومشوي — جربتها من عنا؟</p></div></div>
+        <div class="dish"><div><b data-ar="دجاج مشوي" data-en="Grilled chicken">دجاج مشوي</b><p data-ar="دجاج كامل على الفحم مع الأرز" data-en="Whole chicken over charcoal, served with rice">دجاج كامل على الفحم مع الأرز</p></div></div>
+      </div>
+    </div>
+
+    <div class="menu-cat">
+      <h3 data-ar="🍲 الأطباق الأردنية" data-en="🍲 Jordanian dishes">🍲 الأطباق الأردنية</h3>
+      <div class="dishes">
+        <div class="dish"><div><b data-ar="منسف" data-en="Mansaf">منسف<span class="tag" data-ar="الأشهر بوسط البلد" data-en="Downtown's favourite">الأشهر بوسط البلد</span></b><p data-ar="لحم بلدي مع جميد وأرز ولوز — الطبق الوطني" data-en="Lamb with jameed, rice and almonds — the national dish">لحم بلدي مع جميد وأرز ولوز — الطبق الوطني</p></div></div>
+        <div class="dish"><div><b data-ar="كبسة" data-en="Kabsa">كبسة</b><p data-ar="أرز بالبهارات مع دجاج أو لحم" data-en="Spiced rice with chicken or lamb">أرز بالبهارات مع دجاج أو لحم</p></div></div>
+        <div class="dish"><div><b data-ar="مقلوبة" data-en="Maqluba">مقلوبة</b><p data-ar="أرز وخضار ودجاج — بتتقلب قدامك" data-en="Rice, vegetables and chicken — flipped at the table">أرز وخضار ودجاج — بتتقلب قدامك</p></div></div>
+        <div class="dish"><div><b data-ar="مسخن" data-en="Musakhan">مسخن</b><p data-ar="خبز طابون مع دجاج وسماق وبصل وزيت زيتون" data-en="Taboon bread with chicken, sumac, onion and olive oil">خبز طابون مع دجاج وسماق وبصل وزيت زيتون</p></div></div>
+      </div>
+    </div>
+
+    <div class="menu-cat">
+      <h3 data-ar="🥙 سندويشات ومقبلات" data-en="🥙 Sandwiches &amp; sides">🥙 سندويشات ومقبلات</h3>
+      <div class="dishes">
+        <div class="dish"><div><b data-ar="حواوشي" data-en="Hawawshi">حواوشي</b><p data-ar="رغيف محشي لحم متبل — طعم فخم بسعر على قد الإيد" data-en="Spiced meat-stuffed loaf — big taste, small price">رغيف محشي لحم متبل — طعم فخم بسعر على قد الإيد</p></div><span class="price">0.80 د.أ</span></div>
+        <div class="dish"><div><b data-ar="بطاطا ودجز بالصوصات" data-en="Loaded wedges">بطاطا ودجز بالصوصات</b><p data-ar="بطاطا ودجز غرقانة صوصات — بتلف فيها وسط البلد" data-en="Potato wedges drowning in sauces — a downtown walk classic">بطاطا ودجز غرقانة صوصات — بتلف فيها وسط البلد</p></div></div>
+        <div class="dish"><div><b data-ar="خبز طازج من الفرن" data-en="Fresh bread">خبز طازج من الفرن</b><p data-ar="بينخبز عندنا كل يوم — سخن على طاولتك" data-en="Baked fresh every day — warm on your table">بينخبز عندنا كل يوم — سخن على طاولتك</p></div></div>
+        <div class="dish"><div><b data-ar="مخللات ومقبلات" data-en="Pickles &amp; mezze">مخللات ومقبلات</b><p data-ar="مخلل بلدي وخضار طازجة مع كل وجبة" data-en="Local pickles and fresh vegetables with every meal">مخلل بلدي وخضار طازجة مع كل وجبة</p></div></div>
+      </div>
+    </div>
+    <p class="note" data-ar="الأسعار الكاملة والأصناف الموسمية حسب قائمة المطعم — اتصل فينا لأي استفسار." data-en="Full prices and seasonal items follow the restaurant's menu — call us with any question.">الأسعار الكاملة والأصناف الموسمية حسب قائمة المطعم — اتصل فينا لأي استفسار.</p>
+  </div>
+</section>
+
+<section class="hall" id="hall">
+  <div class="wrap">
+    <div class="kicker" data-ar="الصالة" data-en="The hall">الصالة</div>
+    <h2 data-ar="صالة أنوار القدس بتجمع الحبايب" data-en="Our hall brings loved ones together">صالة أنوار القدس بتجمع الحبايب</h2>
+    <p class="sub" data-ar="صالة عائلات واسعة بقلب البلد — للعيلة، للأصحاب، وللي جاي من سفر." data-en="A spacious family hall in the heart of downtown — for family, friends, and travellers passing through.">صالة عائلات واسعة بقلب البلد — للعيلة، للأصحاب، وللي جاي من سفر.</p>
+    <div class="hall-grid">
+      <div class="hall-item"><div class="ic">👨‍👩‍👧‍👦</div><b data-ar="صالة عائلات" data-en="Family hall">صالة عائلات</b><p data-ar="طاولات خشبية واسعة للعيلة والمجموعات" data-en="Wide wooden tables for families and groups">طاولات خشبية واسعة للعيلة والمجموعات</p></div>
+      <div class="hall-item"><div class="ic">🕌</div><b data-ar="بقلب وسط البلد" data-en="Heart of downtown">بقلب وسط البلد</b><p data-ar="خطوات من المسجد الحسيني الكبير وسينما الحمراء" data-en="Steps from Al-Husseini Mosque and Al-Hamra Cinema">خطوات من المسجد الحسيني الكبير وسينما الحمراء</p></div>
+      <div class="hall-item"><div class="ic">🚚</div><b data-ar="توصيل سريع" data-en="Fast delivery">توصيل سريع</b><p data-ar="اطلب بالتلفون — من 7 صباحاً لـ 12 ليلاً" data-en="Order by phone — 7 AM to 12 AM">اطلب بالتلفون — من 7 صباحاً لـ 12 ليلاً</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="info">
+  <div class="wrap">
+    <div class="kicker" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</div>
+    <h2 data-ar="تعال جرب… أو اطلب" data-en="Come try us… or order in">تعال جرب… أو اطلب</h2>
+    <p class="sub" data-ar="موجودين كل يوم من الصبح لنص الليل — أهلاً وسهلاً فيك بأي وقت." data-en="Here every day from morning to midnight — welcome any time.">موجودين كل يوم من الصبح لنص الليل — أهلاً وسهلاً فيك بأي وقت.</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3 data-ar="📞 اتصل أو اطلب" data-en="📞 Call or order">📞 اتصل أو اطلب</h3>
+        <p class="phone">079 885 04 10</p>
+        <p class="phone">06 465 31 21</p>
+        <p style="margin-top:10px" data-ar="توصيل: 7 صباحاً – 12 ليلاً" data-en="Delivery: 7 AM – 12 AM">توصيل: 7 صباحاً – 12 ليلاً</p>
+      </div>
+      <div class="info-card">
+        <h3 data-ar="📍 العنوان" data-en="📍 Address">📍 العنوان</h3>
+        <p data-ar="عمان، وسط البلد — شارع الملك طلال، الدخلة الرابعة بعد المسجد الحسيني الكبير (دخلة جسر الحمام)، بجانب سينما الحمراء." data-en="Amman, Downtown — King Talal Street, 4th entrance after Al-Husseini Grand Mosque (Jisr Al-Hammam entrance), next to Al-Hamra Cinema.">عمان، وسط البلد — شارع الملك طلال، الدخلة الرابعة بعد المسجد الحسيني الكبير (دخلة جسر الحمام)، بجانب سينما الحمراء.</p>
+        <div style="margin-top:14px">
+          <div class="hours-row"><span data-ar="السبت – الخميس" data-en="Saturday – Thursday">السبت – الخميس</span><b>6:00 – 24:00</b></div>
+          <div class="hours-row"><span data-ar="الجمعة" data-en="Friday">الجمعة</span><b>6:00 – 24:00</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="order-row">
+      <a class="btn btn-red" href="tel:+962798850410" data-ar="📞 اطلب بالتلفون" data-en="📞 Order by phone">📞 اطلب بالتلفون</a>
+      <a class="btn btn-gold" href="https://www.talabat.com/ar/jordan/restaurant/623885/anwar-alquds-downtown" target="_blank" rel="noopener" data-ar="اطلب عبر طلبات" data-en="Order on Talabat">اطلب عبر طلبات</a>
+      <a class="btn btn-outline" style="border-color:var(--red);color:var(--red2)" href="https://www.facebook.com/AQR1A" target="_blank" rel="noopener" data-ar="فيسبوك المطعم" data-en="Restaurant Facebook">فيسبوك المطعم</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand">أنوار القدس</div>
+    <p style="margin-top:8px" data-ar="أبناء الحاج سعيد الهنيني — وسط البلد، عمان — منذ 1953" data-en="Sons of Hajj Saeed Al-Henini — Downtown, Amman — Since 1953">أبناء الحاج سعيد الهنيني — وسط البلد، عمان — منذ 1953</p>
+    <p style="margin-top:6px">079 885 04 10 · 06 465 31 21 · <a href="https://www.facebook.com/AQR1A" target="_blank" rel="noopener">Facebook</a></p>
+  </div>
+</footer>
+
+<a class="call-float" href="tel:+962798850410" data-ar="📞 اتصل" data-en="📞 Call">📞 اتصل</a>
+
+<script>
+(function(){
+  var btn=document.getElementById('langToggle');
+  var html=document.documentElement;
+  function apply(lang){
+    var en=(lang==='en');
+    html.setAttribute('lang',en?'en':'ar');
+    html.setAttribute('dir',en?'ltr':'rtl');
+    btn.textContent=en?'عربي':'English';
+    document.querySelectorAll('[data-ar]').forEach(function(el){
+      var v=el.getAttribute(en?'data-en':'data-ar');
+      if(v!==null){el.innerHTML=v;}
+    });
+  }
+  btn.addEventListener('click',function(){
+    apply(html.getAttribute('lang')==='ar'?'en':'ar');
+  });
+})();
+</script>
+</body>
+</html>
