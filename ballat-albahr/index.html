@@ -1182,6 +1182,12 @@
           std(0xffffff, { roughness: 0.9 }),
           TOTAL
         );
+        // إصلاح جذري للون الأسود: setColorAt بـ three r128 بيخلق مخزن ألوان النسخ بحجم
+        // this.count لحظة أول استدعاء — والكود تحت بيصفّر count قبل أول رسم، فالمخزن كان
+        // بينخلق فاضي (طول 0) وكل الألوان بتنكتب برّا حدوده وبتضيع، والبلاطات بتترندر سودا.
+        // الحل: تخصيص المخزن بالسعة الكاملة هون، قبل أي setColorAt وقبل تصفير العدد.
+        tileEdgeMesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(TOTAL * 3), 3);
+        tileTopMesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(TOTAL * 3), 3);
         var tileDummy = new THREE.Object3D();
         var edgeBase = new THREE.Color(0xc75b2a), edgeAlt = new THREE.Color(0xbd5324);
         var topBase = new THREE.Color(0xe9d6a4), topAlt = new THREE.Color(0xe0c891);
