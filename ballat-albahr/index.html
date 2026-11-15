@@ -1,0 +1,1704 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>بلّط البحر — اللعبة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --ink: #0c2b33;
+        --ink-soft: #3d5a63;
+        --line: rgba(160, 200, 210, 0.55);
+        --hud-bg: rgba(255, 255, 255, 0.88);
+        --yt: #ff0033;
+        --gold: #d97706;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ink: #eaf6f8;
+          --ink-soft: #a8c8cf;
+          --line: rgba(90, 140, 155, 0.5);
+          --hud-bg: rgba(8, 32, 42, 0.88);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Rubik", system-ui, sans-serif;
+        background: #0b5e74;
+        color: var(--ink);
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      /* ---------- مسرح اللعبة: ملء الشاشة من أول لحظة ---------- */
+      .stage {
+        position: fixed;
+        inset: 0;
+        height: 100dvh;
+        overflow: hidden;
+        background: linear-gradient(180deg, #79c7e3 0%, #3d9dbd 55%, #12809e 100%);
+        outline: none;
+        -webkit-touch-callout: none;
+      }
+      .stage:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+      #gl { position: absolute; inset: 0; z-index: 1; }
+      #gl canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+      .gl-fallback {
+        position: absolute; inset: 0; z-index: 1;
+        display: none;
+        align-items: center; justify-content: center;
+        text-align: center; padding: 24px;
+        background: linear-gradient(180deg, #79c7e3, #12809e);
+        color: #fff; font-weight: 800; font-size: 1.05rem;
+      }
+
+      /* ---------- شاشة التحميل (إحساس لعبة) ---------- */
+      .loader {
+        position: absolute; inset: 0; z-index: 60;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 14px;
+        background: linear-gradient(180deg, #8fd0ea 0%, #4aa8c6 45%, #0e6e8c 100%);
+        transition: opacity 0.7s ease;
+        text-align: center; padding: 24px;
+      }
+      .loader.done { opacity: 0; pointer-events: none; }
+      .loader .l-title {
+        font-size: clamp(2.4rem, 9vw, 3.6rem);
+        font-weight: 900; color: #fff; line-height: 1.15;
+        text-shadow: 0 3px 0 rgba(8, 70, 90, 0.35), 0 10px 26px rgba(8, 70, 90, 0.35);
+      }
+      .loader .l-sub { color: rgba(255,255,255,0.92); font-weight: 700; font-size: 1rem; }
+      .loader .l-bar {
+        width: min(260px, 70vw); height: 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.3);
+        border: 2px solid rgba(255,255,255,0.65);
+        overflow: hidden;
+      }
+      .loader .l-bar > i {
+        display: block; height: 100%; width: 0%;
+        background: #ffb340;
+        border-radius: 999px;
+        transition: width 0.35s ease;
+      }
+      .loader .l-waves { font-size: 1.5rem; letter-spacing: 6px; opacity: 0.85; animation: bob 1.6s ease-in-out infinite; }
+      @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+      /* ---------- HUD العلوي: عدّاد صغير بس ---------- */
+      .hud-top {
+        position: absolute;
+        top: calc(env(safe-area-inset-top, 0px) + 10px);
+        inset-inline-start: 10px;
+        inset-inline-end: 10px;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        pointer-events: none;
+      }
+      .chip {
+        pointer-events: auto;
+        display: inline-flex; align-items: center; gap: 8px;
+        background: var(--hud-bg);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 14px 6px 10px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        font-family: inherit;
+        color: var(--ink);
+        box-shadow: 0 6px 18px rgba(6, 45, 60, 0.25);
+      }
+      button.chip { cursor: pointer; }
+      button.chip:active { transform: scale(0.96); }
+      .chip .play {
+        width: 26px; height: 26px; border-radius: 50%;
+        background: var(--yt); color: #fff;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 0.72rem; flex: none;
+        box-shadow: 0 3px 8px rgba(200, 0, 40, 0.4);
+      }
+      .chip .c-num { font-weight: 900; font-size: 1.02rem; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .chip .c-lab { font-size: 0.68rem; font-weight: 700; color: var(--ink-soft); line-height: 1.1; white-space: nowrap; }
+      .chip .c-txt { display: flex; flex-direction: column; }
+      .chip .mini-bar { width: 74px; height: 5px; border-radius: 999px; background: rgba(120,160,170,0.35); overflow: hidden; margin-top: 3px; }
+      .chip .mini-bar > i { display: block; height: 100%; width: 0%; background: var(--yt); transition: width 1.2s ease; }
+      .chip.chest { border-color: rgba(217, 119, 6, 0.55); font-weight: 800; font-size: 0.86rem; padding: 8px 14px; }
+      .chip.chest .lock { font-size: 1rem; }
+
+      /* ---------- أزرار اللعب السفلية ---------- */
+      .sub-btn {
+        position: absolute;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+        inset-inline-start: 14px;
+        z-index: 10;
+        display: inline-flex; align-items: center; gap: 9px;
+        background: var(--yt); color: #fff;
+        font-weight: 900; font-size: 1rem;
+        padding: 13px 22px; border-radius: 999px;
+        text-decoration: none;
+        box-shadow: 0 10px 24px rgba(160, 0, 30, 0.45);
+        border: 2px solid rgba(255,255,255,0.5);
+      }
+      .sub-btn:active { transform: scale(0.96); }
+      @keyframes subPulse {
+        0% { box-shadow: 0 10px 24px rgba(160, 0, 30, 0.45), 0 0 0 0 rgba(255, 0, 51, 0.55); }
+        70% { box-shadow: 0 10px 24px rgba(160, 0, 30, 0.45), 0 0 0 16px rgba(255, 0, 51, 0); }
+        100% { box-shadow: 0 10px 24px rgba(160, 0, 30, 0.45), 0 0 0 0 rgba(255, 0, 51, 0); }
+      }
+      .sub-btn { animation: subPulse 2.2s ease-out infinite; font-size: 1.08rem; padding: 15px 26px; z-index: 12; }
+      @media (prefers-reduced-motion: reduce) { .sub-btn { animation: none; } }
+      .stage.expanded-fixed { position: fixed; inset: 0; height: 100dvh; z-index: 999; }
+      body.locked { overflow: hidden; }
+      .sub-btn .play {
+        width: 24px; height: 24px; border-radius: 50%;
+        background: #fff; color: var(--yt);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 0.66rem;
+      }
+      .cambtns {
+        position: absolute;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+        inset-inline-end: 14px;
+        z-index: 10;
+        display: flex; flex-direction: column; gap: 8px;
+      }
+      .cambtns button {
+        width: 48px; height: 48px; border-radius: 50%;
+        border: 1px solid var(--line);
+        background: var(--hud-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: var(--ink);
+        font-family: inherit;
+        font-size: 1.4rem; font-weight: 800; line-height: 1;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 6px 16px rgba(6, 45, 60, 0.28);
+      }
+      .cambtns button:active { transform: scale(0.92); }
+      .cambtns button.small { font-size: 1.02rem; }
+      .cambtns button.sound { font-size: 1.15rem; position: relative; }
+      .cambtns button.sound.muted { opacity: 0.62; }
+      .cambtns button.sound.muted::after {
+        content: ""; position: absolute; left: 9px; right: 9px; top: 50%;
+        height: 3px; border-radius: 2px; background: #e23b3b;
+        transform: rotate(-38deg);
+      }
+
+      .hint {
+        position: absolute;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+        left: 50%; transform: translateX(-50%);
+        z-index: 9;
+        background: rgba(6, 40, 52, 0.55);
+        color: #eaf6f8;
+        border-radius: 999px;
+        padding: 7px 18px;
+        font-size: 0.85rem; font-weight: 700;
+        white-space: nowrap;
+        pointer-events: none;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        transition: opacity 1s ease;
+      }
+      .hint.faded { opacity: 0; }
+      @media (max-width: 760px) { .hint { display: none; } }
+
+      .toast {
+        position: absolute;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 78px);
+        left: 50%; transform: translate(-50%, 12px);
+        z-index: 11;
+        max-width: min(92vw, 520px);
+        background: var(--hud-bg);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        border-radius: 16px;
+        padding: 10px 18px;
+        font-weight: 700; font-size: 0.95rem;
+        text-align: center;
+        box-shadow: 0 10px 26px rgba(6, 45, 60, 0.3);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+      }
+      .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+      /* ---------- عصا التجوّل ---------- */
+      .stick {
+        position: absolute;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
+        inset-inline-start: 18px;
+        z-index: 10;
+        width: 118px; height: 118px; border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        display: none;
+        touch-action: none;
+      }
+      .stage.explore .stick { display: block; }
+      .stick .knob {
+        position: absolute; left: 50%; top: 50%;
+        width: 52px; height: 52px; border-radius: 50%;
+        background: var(--hud-bg);
+        border: 1px solid var(--line);
+        box-shadow: 0 4px 12px rgba(6, 45, 60, 0.35);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      .stick .knob::after {
+        content: ""; position: absolute; inset: 15px;
+        border-radius: 50%; background: #12809e; opacity: 0.55;
+      }
+      /* زر الاشتراك بيضل ظاهر دائماً — حتى بوضع التجوّل */
+    </style>
+  </head>
+  <body>
+    <div class="stage" id="stage" tabindex="0" aria-label="لعبة بلط البحر: جزيرة وسط بحر حقيقي، اسحب للتدوير حول الجزيرة وقرّب وبعّد للاستكشاف">
+      <div id="gl" aria-hidden="true"></div>
+      <div class="gl-fallback" id="glFallback">متصفحك ما بيدعم العرض ثلاثي الأبعاد هون — جرّب متصفح أحدث لتلعب.</div>
+
+      <div class="loader" id="loader" aria-hidden="true">
+        <div class="l-waves">〰️ 🌊 〰️</div>
+        <div class="l-title">بلّط البحر</div>
+        <div class="l-bar"><i id="loadFill"></i></div>
+        <div class="l-sub">عم نجهّز البحر والجزيرة…</div>
+      </div>
+
+      <div class="hud-top">
+        <button type="button" class="chip" id="counterChip" aria-label="عداد يوتيوب: اضغط لعرض البحر كله">
+          <span class="play">▶</span>
+          <span class="c-txt">
+            <span class="c-num"><span id="countNow">1</span> / 10,000</span>
+            <span class="c-lab">بلاطة بالبحر · يوتيوب</span>
+            <span class="mini-bar"><i id="miniFill"></i></span>
+          </span>
+        </button>
+        <div class="chip chest" aria-label="صندوق الكنز مقفول">
+          <span class="lock">🔒</span><span>شو فيه الصندوق؟</span>
+        </div>
+      </div>
+
+      <a class="sub-btn" id="subBtn" href="https://www.youtube.com/@ballat.albahr?sub_confirmation=1" target="_blank" rel="noopener" aria-label="اشترك بقناة بلط البحر على يوتيوب">
+        <span class="play">▶</span><span>اشترك بالقناة</span>
+      </a>
+
+      <div class="cambtns">
+        <button type="button" id="soundToggle" class="sound" aria-label="تشغيل أو كتم أصوات البحر والنوارس" aria-pressed="true" title="الصوت">🔊</button>
+        <button type="button" id="fsToggle" class="small" aria-label="ملء الشاشة والتجوّل بالجزيرة">⛶</button>
+        <button type="button" id="zoomIn" aria-label="تقريب الكاميرا">+</button>
+        <button type="button" id="zoomOut" aria-label="إبعاد الكاميرا">−</button>
+        <button type="button" id="camReset" class="small" aria-label="إعادة ضبط الكاميرا">⌖</button>
+      </div>
+
+      <div class="stick" id="stick" aria-hidden="true"><div class="knob" id="stickKnob"></div></div>
+      <div class="hint" id="hint">اسحب لتدوّر حول الجزيرة · قرّب وبعّد بإصبعين · جرّب تفتح صندوق الكنز</div>
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+
+    <audio id="salliAudio" src="data:application/octet-stream;base64,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" preload="auto" aria-hidden="true"></audio>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      // ======= بيانات التحدي =======
+      var TOTAL = 10000;
+      var COUNT = 1; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — أول مشترك حطّ البلاطة رقم 1
+      var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
+      document.getElementById("countNow").textContent = fmt.format(COUNT);
+      requestAnimationFrame(function () {
+        document.getElementById("miniFill").style.width = (COUNT / TOTAL) * 100 + "%";
+      });
+
+      var stage = document.getElementById("stage");
+      var glHost = document.getElementById("gl");
+      var loader = document.getElementById("loader");
+      var loadFill = document.getElementById("loadFill");
+      var toast = document.getElementById("toast");
+      var toastTimer = null;
+      function showToast(msg, ms) {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove("show"); }, ms || 4200);
+      }
+      function loadProgress(p) { loadFill.style.width = Math.round(p * 100) + "%"; }
+      loadProgress(0.15);
+
+      // ======= الصوت المحيطي: بحر هادي + نوارس بعيدة — كله مولّد برمجياً وخفيف =======
+      var SoundFX = (function () {
+        var ctx = null, master = null, started = false, muted = false;
+        var gullTimer = null;
+        function ensure() {
+          if (ctx) { if (ctx.state === "suspended" && !muted) ctx.resume(); return ctx; }
+          try {
+            var AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return null;
+            ctx = new AC();
+            master = ctx.createGain();
+            master.gain.value = muted ? 0 : 1;
+            master.connect(ctx.destination);
+            startSea();
+            scheduleGull();
+            started = true;
+            if (ctx.state === "suspended" && !muted) ctx.resume();
+          } catch (e) { ctx = null; }
+          return ctx;
+        }
+        function noiseBuffer(seconds) {
+          var len = Math.floor(ctx.sampleRate * seconds);
+          var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+          var d = buf.getChannelData(0);
+          var last = 0;
+          for (var i = 0; i < len; i++) {
+            var white = Math.random() * 2 - 1;
+            last = (last + 0.02 * white) / 1.02; // ضجيج بنّي ناعم
+            d[i] = last * 3.2;
+          }
+          return buf;
+        }
+        function startSea() {
+          // موجات: ضجيج ناعم بيتنفّس ببطء — صوت بحر خفيف جداً
+          var src = ctx.createBufferSource();
+          src.buffer = noiseBuffer(4); src.loop = true;
+          var filt = ctx.createBiquadFilter();
+          filt.type = "lowpass"; filt.frequency.value = 420; filt.Q.value = 0.4;
+          var waveGain = ctx.createGain(); waveGain.gain.value = 0.045;
+          src.connect(filt); filt.connect(waveGain); waveGain.connect(master);
+          src.start();
+          var lfo = ctx.createOscillator(); lfo.type = "sine"; lfo.frequency.value = 0.09;
+          var lfoG = ctx.createGain(); lfoG.gain.value = 0.022;
+          lfo.connect(lfoG); lfoG.connect(waveGain.gain); lfo.start();
+          var lfo2 = ctx.createOscillator(); lfo2.type = "sine"; lfo2.frequency.value = 0.06;
+          var lfo2G = ctx.createGain(); lfo2G.gain.value = 150;
+          lfo2.connect(lfo2G); lfo2G.connect(filt.frequency); lfo2.start();
+          // رغوة خفيفة على الشط
+          var src2 = ctx.createBufferSource();
+          var nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+          var dd = nb.getChannelData(0);
+          for (var j = 0; j < dd.length; j++) dd[j] = Math.random() * 2 - 1;
+          src2.buffer = nb; src2.loop = true;
+          var bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 2400; bp.Q.value = 0.5;
+          var g2 = ctx.createGain(); g2.gain.value = 0.006;
+          src2.connect(bp); bp.connect(g2); g2.connect(master); src2.start();
+          var lfo3 = ctx.createOscillator(); lfo3.type = "sine"; lfo3.frequency.value = 0.13;
+          var lfo3G = ctx.createGain(); lfo3G.gain.value = 0.004;
+          lfo3.connect(lfo3G); lfo3G.connect(g2.gain); lfo3.start();
+        }
+        function gullCry(when, baseFreq, vol) {
+          var o = ctx.createOscillator(); o.type = "sine";
+          var g = ctx.createGain(); g.gain.value = 0;
+          var vib = ctx.createOscillator(); vib.frequency.value = 28;
+          var vibG = ctx.createGain(); vibG.gain.value = 22;
+          vib.connect(vibG); vibG.connect(o.frequency);
+          o.frequency.setValueAtTime(baseFreq, when);
+          o.frequency.exponentialRampToValueAtTime(baseFreq * 0.62, when + 0.42);
+          o.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, when + 0.6);
+          g.gain.setValueAtTime(0, when);
+          g.gain.linearRampToValueAtTime(vol, when + 0.07);
+          g.gain.exponentialRampToValueAtTime(0.0001, when + 0.62);
+          o.connect(g); g.connect(master);
+          o.start(when); vib.start(when); o.stop(when + 0.7); vib.stop(when + 0.7);
+        }
+        function scheduleGull() {
+          if (gullTimer) clearTimeout(gullTimer);
+          gullTimer = setTimeout(function () {
+            if (ctx && !muted && ctx.state === "running") {
+              var t0 = ctx.currentTime + 0.05;
+              var cries = 1 + Math.floor(Math.random() * 3);
+              for (var i = 0; i < cries; i++) {
+                gullCry(t0 + i * (0.55 + Math.random() * 0.25), 1250 + Math.random() * 350, 0.016 + Math.random() * 0.012);
+              }
+            }
+            scheduleGull();
+          }, 7000 + Math.random() * 11000);
+        }
+        function clank(delay, vol, freq) {
+          if (!ctx || muted) return;
+          var when = ctx.currentTime + (delay || 0);
+          // صوت معدني: نغمات عالية قصيرة + طقة ضجيج
+          [1, 1.51, 2.28].forEach(function (m, idx) {
+            var o = ctx.createOscillator(); o.type = "triangle";
+            o.frequency.value = (freq || 2100) * m;
+            var g = ctx.createGain();
+            g.gain.setValueAtTime(vol * (idx === 0 ? 1 : 0.45), when);
+            g.gain.exponentialRampToValueAtTime(0.0001, when + 0.14);
+            o.connect(g); g.connect(master); o.start(when); o.stop(when + 0.16);
+          });
+          var nb = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.05), ctx.sampleRate);
+          var dd = nb.getChannelData(0);
+          for (var i = 0; i < dd.length; i++) dd[i] = (Math.random() * 2 - 1) * (1 - i / dd.length);
+          var ns = ctx.createBufferSource(); ns.buffer = nb;
+          var bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 3200; bp.Q.value = 1.1;
+          var ng = ctx.createGain(); ng.gain.value = vol * 0.8;
+          ns.connect(bp); bp.connect(ng); ng.connect(master); ns.start(when);
+        }
+        function rattle() {
+          if (!ensure() || muted) return;
+          for (var i = 0; i < 6; i++) clank(i * 0.09 + Math.random() * 0.02, 0.05 + Math.random() * 0.03, 1900 + Math.random() * 500);
+        }
+        function slam() {
+          if (!ctx || muted) return;
+          clank(0, 0.14, 1500); clank(0.03, 0.08, 900);
+        }
+        function setMuted(m) {
+          muted = m;
+          if (m) {
+            if (ctx) ctx.suspend();
+            var a = document.getElementById("salliAudio");
+            if (a) { a.pause(); }
+          } else {
+            ensure();
+            if (ctx && ctx.state === "suspended") ctx.resume();
+          }
+        }
+        return {
+          ensure: ensure,
+          rattle: rattle,
+          slam: slam,
+          setMuted: setMuted,
+          isMuted: function () { return muted; },
+          isStarted: function () { return started; }
+        };
+      })();
+
+      // الصوت بيبدأ مع أول لمسة (المتصفحات بتمنع التشغيل التلقائي)
+      function kickAudio() { SoundFX.ensure(); }
+      window.addEventListener("pointerdown", kickAudio, { passive: true });
+      window.addEventListener("keydown", kickAudio);
+      var soundBtn = document.getElementById("soundToggle");
+      if (soundBtn) soundBtn.addEventListener("click", function () {
+        var nowMuted = !SoundFX.isMuted();
+        SoundFX.setMuted(nowMuted);
+        soundBtn.textContent = nowMuted ? "🔇" : "🔊";
+        soundBtn.classList.toggle("muted", nowMuted);
+        soundBtn.setAttribute("aria-pressed", nowMuted ? "false" : "true");
+        showToast(nowMuted ? "انكتم صوت البحر والنوارس" : "رجع صوت البحر والنوارس — خفيف وهادي", 2600);
+      });
+
+      // صوت «صلّوا على محمد» المسجّل — تشغيل واحد بكل مرة
+      var salliAudio = document.getElementById("salliAudio");
+      function playSalli() {
+        if (!salliAudio || SoundFX.isMuted()) return;
+        try {
+          salliAudio.pause();
+          salliAudio.currentTime = 0;
+          var p = salliAudio.play();
+          if (p && p.catch) p.catch(function () {});
+        } catch (e) {}
+      }
+
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function hash(n) { var x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); }
+
+      var camGoal = null, resetCamFn = null, flyToFn = null;
+
+      function initWorld() {
+        if (typeof THREE === "undefined") throw new Error("no three");
+
+        var renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.12;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        glHost.appendChild(renderer.domElement);
+
+        var scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x9fd3e8, 300, 720);
+
+        var camera = new THREE.PerspectiveCamera(55, 1, 0.5, 1500);
+
+        // ----- السماء: قبّة متدرّجة + شمس متوهّجة -----
+        (function sky() {
+          var cv = document.createElement("canvas");
+          cv.width = 32; cv.height = 512;
+          var c = cv.getContext("2d");
+          var g = c.createLinearGradient(0, 0, 0, 512);
+          g.addColorStop(0.0, "#2f7fc4");
+          g.addColorStop(0.42, "#6db9dd");
+          g.addColorStop(0.62, "#a8d9ec");
+          g.addColorStop(0.72, "#d8f0f4");
+          g.addColorStop(0.78, "#7cc0d8");
+          g.addColorStop(1.0, "#2e7ea6");
+          c.fillStyle = g; c.fillRect(0, 0, 32, 512);
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          var dome = new THREE.Mesh(
+            new THREE.SphereGeometry(760, 24, 16),
+            new THREE.MeshBasicMaterial({ map: tex, side: THREE.BackSide, fog: false })
+          );
+          scene.add(dome);
+          // توهّج الشمس
+          var sc = document.createElement("canvas");
+          sc.width = sc.height = 256;
+          var s2 = sc.getContext("2d");
+          var rg = s2.createRadialGradient(128, 128, 8, 128, 128, 128);
+          rg.addColorStop(0, "rgba(255,246,214,1)");
+          rg.addColorStop(0.25, "rgba(255,236,170,0.75)");
+          rg.addColorStop(1, "rgba(255,236,170,0)");
+          s2.fillStyle = rg; s2.fillRect(0, 0, 256, 256);
+          var stex = new THREE.CanvasTexture(sc);
+          var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: stex, transparent: true, fog: false, depthWrite: false }));
+          glow.scale.set(340, 340, 1);
+          glow.position.set(330, 330, -430);
+          scene.add(glow);
+        })();
+
+        // ----- الإضاءة -----
+        scene.add(new THREE.HemisphereLight(0xd6f1ff, 0x2e6b52, 0.75));
+        var sun = new THREE.DirectionalLight(0xfff0d0, 1.25);
+        sun.position.set(120, 150, 70);
+        sun.castShadow = true;
+        sun.shadow.mapSize.set(2048, 2048);
+        sun.shadow.camera.left = -70; sun.shadow.camera.right = 70;
+        sun.shadow.camera.top = 70; sun.shadow.camera.bottom = -70;
+        sun.shadow.camera.near = 40; sun.shadow.camera.far = 420;
+        sun.shadow.bias = -0.0006;
+        scene.add(sun);
+        var fill = new THREE.DirectionalLight(0xbfe3ff, 0.3);
+        fill.position.set(-90, 60, -100);
+        scene.add(fill);
+        var SUN_DIR = new THREE.Vector3(120, 150, 70).normalize();
+
+        function std(color, opts) {
+          var o = { color: color, roughness: 0.9, metalness: 0.0 };
+          if (opts) for (var k in opts) o[k] = opts[k];
+          return new THREE.MeshStandardMaterial(o);
+        }
+        function noiseTex(base, flecks, n, size) {
+          var cv = document.createElement("canvas");
+          cv.width = cv.height = size || 256;
+          var c = cv.getContext("2d");
+          c.fillStyle = base; c.fillRect(0, 0, cv.width, cv.height);
+          for (var i = 0; i < (n || 2600); i++) {
+            c.fillStyle = flecks[Math.floor(hash(i * 3.7) * flecks.length)];
+            c.globalAlpha = 0.12 + hash(i * 9.1) * 0.3;
+            var r = 1 + hash(i * 5.3) * 2.6;
+            c.beginPath(); c.arc(hash(i * 1.3) * cv.width, hash(i * 2.9) * cv.height, r, 0, 6.29); c.fill();
+          }
+          c.globalAlpha = 1;
+          var tex = new THREE.CanvasTexture(cv);
+          tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+          tex.encoding = THREE.sRGBEncoding;
+          return tex;
+        }
+
+        var ISLAND_R = 21, TOP = 2.9;
+
+        // ----- الجزيرة: رمل + عشب بتفاصيل -----
+        var island = new THREE.Group();
+        var sandTex = noiseTex("#eedcae", ["#d9c48c", "#fff3cf", "#c9ae74"], 3200);
+        sandTex.repeat.set(3, 1);
+        var sand = new THREE.Mesh(
+          new THREE.CylinderGeometry(ISLAND_R, ISLAND_R + 6, 6.5, 48),
+          new THREE.MeshStandardMaterial({ map: sandTex, roughness: 1 })
+        );
+        sand.position.y = 0.1;
+        sand.receiveShadow = true;
+        island.add(sand);
+        var grassTex = noiseTex("#5da75e", ["#4c9450", "#7cc47a", "#3e8547"], 4200);
+        grassTex.repeat.set(4, 4);
+        var grass = new THREE.Mesh(
+          new THREE.CircleGeometry(ISLAND_R - 4.2, 44),
+          new THREE.MeshStandardMaterial({ map: grassTex, roughness: 1 })
+        );
+        grass.rotation.x = -Math.PI / 2;
+        grass.position.y = TOP + 0.02;
+        grass.receiveShadow = true;
+        island.add(grass);
+        // حلقة رمل الشط
+        var shoreTex = noiseTex("#f2e2b6", ["#e3cf9a", "#fff6da"], 2000);
+        var shore = new THREE.Mesh(
+          new THREE.RingGeometry(ISLAND_R - 4.4, ISLAND_R + 0.4, 44),
+          new THREE.MeshStandardMaterial({ map: shoreTex, roughness: 1 })
+        );
+        shore.rotation.x = -Math.PI / 2;
+        shore.position.y = TOP - 0.12;
+        shore.receiveShadow = true;
+        island.add(shore);
+        scene.add(island);
+
+        // خصل عشب + حصى + أصداف عالشط
+        var tuftMat = std(0x3e9e57, { roughness: 1 });
+        var tuftGeo = new THREE.ConeGeometry(0.55, 1.5, 5);
+        for (var ti = 0; ti < 42; ti++) {
+          var ta = hash(ti * 7.7) * Math.PI * 2;
+          var tr = 6 + hash(ti * 3.1) * (ISLAND_R - 9);
+          var tuft = new THREE.Mesh(tuftGeo, tuftMat);
+          tuft.position.set(Math.cos(ta) * tr, TOP + 0.6, Math.sin(ta) * tr);
+          tuft.rotation.set((hash(ti) - 0.5) * 0.4, 0, (hash(ti * 2) - 0.5) * 0.4);
+          tuft.scale.setScalar(0.7 + hash(ti * 5) * 0.8);
+          tuft.castShadow = true;
+          scene.add(tuft);
+        }
+        var pebbleMat = std(0xb9c0c4, { roughness: 0.95 });
+        for (var pi = 0; pi < 26; pi++) {
+          var pa = hash(pi * 11.3) * Math.PI * 2;
+          var pr = ISLAND_R - 3.4 + hash(pi * 4.7) * 2.2;
+          var peb = new THREE.Mesh(new THREE.SphereGeometry(0.28 + hash(pi) * 0.4, 7, 6), pebbleMat);
+          peb.position.set(Math.cos(pa) * pr, TOP - 0.25, Math.sin(pa) * pr);
+          peb.scale.y = 0.55;
+          peb.castShadow = true;
+          scene.add(peb);
+        }
+
+        loadProgress(0.35);
+
+        // ----- النخيل والأشجار -----
+        var trunkTex = noiseTex("#8a6b45", ["#75572f", "#9c7d52"], 700, 128);
+        function palm(x, z, s, flip) {
+          var g = new THREE.Group();
+          var trunkMat = new THREE.MeshStandardMaterial({ map: trunkTex, roughness: 1 });
+          var px = 0;
+          for (var i = 0; i < 5; i++) {
+            var seg = new THREE.Mesh(new THREE.CylinderGeometry(0.52 - i * 0.06, 0.66 - i * 0.06, 2.3, 8), trunkMat);
+            px += flip * i * 0.3;
+            seg.position.set(px, 1.05 + i * 2.0, 0);
+            seg.rotation.z = flip * -0.11;
+            seg.castShadow = true;
+            g.add(seg);
+          }
+          var topX = px + flip * 0.55, topY = 10.6;
+          var leafMat = std(0x2e9e63, { roughness: 0.85, side: THREE.DoubleSide });
+          var leafMat2 = std(0x37b06c, { roughness: 0.85, side: THREE.DoubleSide });
+          for (var j = 0; j < 9; j++) {
+            var a = (j / 9) * Math.PI * 2 + hash(j * 3) * 0.4;
+            var leaf = new THREE.Mesh(new THREE.SphereGeometry(1, 7, 5), j % 2 ? leafMat : leafMat2);
+            leaf.scale.set(5.4, 0.42, 1.3);
+            leaf.position.set(topX + Math.cos(a) * 3.6, topY + 0.55 - Math.abs(Math.sin(a)) * 0.5, Math.sin(a) * 3.6);
+            leaf.rotation.y = -a;
+            leaf.rotation.z = -0.42 * Math.cos(a);
+            leaf.castShadow = true;
+            g.add(leaf);
+          }
+          var nutMat = std(0x6b4a2a, { roughness: 0.8 });
+          [[-0.6, -0.5], [0.6, -0.4], [0, -0.8]].forEach(function (o) {
+            var nut = new THREE.Mesh(new THREE.SphereGeometry(0.52, 8, 7), nutMat);
+            nut.position.set(topX + o[0], topY + o[1], o[0] * 0.5);
+            nut.castShadow = true;
+            g.add(nut);
+          });
+          g.position.set(x, TOP, z);
+          g.scale.setScalar(s);
+          scene.add(g);
+          return g;
+        }
+        function leafyTree(x, z, s) {
+          var g = new THREE.Group();
+          var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.9, 4.8, 8), std(0x7a5230, { roughness: 1 }));
+          trunk.position.y = 2.4; trunk.castShadow = true;
+          g.add(trunk);
+          var fol = std(0x3f9e57, { roughness: 0.95 });
+          var fol2 = std(0x4cb364, { roughness: 0.95 });
+          [[0, 7.2, 0, 3.3], [2.0, 5.8, 0.6, 2.3], [-1.9, 6.0, -0.5, 2.4], [0.4, 6.2, -1.8, 2.0]].forEach(function (b, bi) {
+            var m = new THREE.Mesh(new THREE.IcosahedronGeometry(b[3], 1), bi % 2 ? fol2 : fol);
+            m.position.set(b[0], b[1], b[2]);
+            m.castShadow = true;
+            g.add(m);
+          });
+          g.position.set(x, TOP, z);
+          g.scale.setScalar(s);
+          scene.add(g);
+          return g;
+        }
+        var palms = [palm(-11, -6, 1.05, 1), palm(12.5, -9, 0.92, -1), palm(-13.5, 7.5, 0.84, 1), palm(6, -14.5, 0.7, -1)];
+        leafyTree(10, 9.5, 1.0);
+        leafyTree(-4, -13, 0.85);
+        leafyTree(14.5, 2.5, 0.72);
+
+        // صخور
+        var rockMat = std(0x939da3, { roughness: 0.95, flatShading: true });
+        [[17, -3, 1.5], [-17.5, 1, 1.05], [5, 17.5, 1.25], [-7, -17.5, 0.95], [18.5, 6, 0.8]].forEach(function (r) {
+          var rock = new THREE.Mesh(new THREE.DodecahedronGeometry(r[2], 0), rockMat);
+          rock.position.set(r[0], TOP - 0.7, r[1]);
+          rock.rotation.set(hash(r[0]) * 2, hash(r[1]) * 2, 0);
+          rock.castShadow = true; rock.receiveShadow = true;
+          scene.add(rock);
+        });
+
+        // لافتة الجزيرة الخشبية
+        (function () {
+          var cv = document.createElement("canvas");
+          cv.width = 512; cv.height = 150;
+          var c = cv.getContext("2d");
+          c.fillStyle = "#a4713b"; c.fillRect(6, 6, 500, 138);
+          c.strokeStyle = "#7a5230"; c.lineWidth = 10; c.strokeRect(6, 6, 500, 138);
+          c.fillStyle = "#fff7e8";
+          c.font = "900 62px Rubik, sans-serif";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          c.fillText("بلّط البحر", 256, 78);
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.3, 4.8, 8), std(0x7a5230));
+          pole.position.set(-6, TOP + 2.4, 12);
+          pole.castShadow = true;
+          scene.add(pole);
+          var boardMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(7.6, 2.25, 0.3),
+            [std(0x7a5230), std(0x7a5230), std(0x7a5230), std(0x7a5230),
+             new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9 }), std(0x7a5230)]
+          );
+          boardMesh.position.set(-6, TOP + 4.9, 12);
+          boardMesh.rotation.y = 0.5;
+          boardMesh.castShadow = true;
+          scene.add(boardMesh);
+        })();
+
+        // ----- الشخصية: واقفة عالجزيرة بتلوّح وحاملة بلاطة -----
+        var hero = new THREE.Group();
+        var waveArm;
+        (function () {
+          var skin = std(0xf6cfa3, { roughness: 0.65 }), shirt = std(0x12809e, { roughness: 0.8 }),
+              pants = std(0x33566e), capM = std(0xd96f32, { roughness: 0.8 }), dark = std(0x22303a, { roughness: 0.5 });
+          var body = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.28, 2.6, 14), shirt);
+          body.position.y = 2.5; body.castShadow = true; hero.add(body);
+          var head = new THREE.Mesh(new THREE.SphereGeometry(1.15, 20, 14), skin);
+          head.position.y = 4.9; head.castShadow = true; hero.add(head);
+          // عيون + ابتسامة
+          [[-0.42], [0.42]].forEach(function (e) {
+            var eye = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 8), dark);
+            eye.position.set(e[0], 5.05, 1.05);
+            hero.add(eye);
+          });
+          var smile = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.07, 6, 14, Math.PI), dark);
+          smile.position.set(0, 4.62, 1.08);
+          smile.rotation.z = Math.PI;
+          hero.add(smile);
+          var capTop = new THREE.Mesh(new THREE.SphereGeometry(1.19, 18, 10, 0, Math.PI * 2, 0, Math.PI / 2), capM);
+          capTop.position.y = 5.18; capTop.castShadow = true; hero.add(capTop);
+          var brim = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.02, 0.14, 14, 1, false, 0, Math.PI), capM);
+          brim.position.set(0, 5.22, 0.78); brim.rotation.x = 0.12; hero.add(brim);
+          var legL = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.36, 1.5, 9), pants);
+          legL.position.set(-0.5, 0.75, 0); legL.castShadow = true; hero.add(legL);
+          var legR = legL.clone(); legR.position.x = 0.5; hero.add(legR);
+          [[-0.52], [0.52]].forEach(function (s) {
+            var shoe = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.3, 1.05), std(0xf2f2f2, { roughness: 0.6 }));
+            shoe.position.set(s[0], 0.16, 0.18);
+            hero.add(shoe);
+          });
+          var armL = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 2.1, 9), shirt);
+          armL.position.set(-1.45, 3.1, 0); armL.rotation.z = 0.35; armL.castShadow = true; hero.add(armL);
+          waveArm = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 2.2, 9), shirt);
+          waveArm.geometry.translate(0, 1.0, 0);
+          waveArm.position.set(1.35, 3.7, 0);
+          waveArm.castShadow = true;
+          hero.add(waveArm);
+          var handTile = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 0.35), std(0xd96f32, { roughness: 0.7 }));
+          handTile.position.set(-2.3, 2.2, 0.3);
+          handTile.rotation.z = 0.2;
+          handTile.castShadow = true;
+          hero.add(handTile);
+        })();
+        hero.position.set(3.5, TOP, 5);
+        hero.rotation.y = -0.5;
+        scene.add(hero);
+
+        // ----- صندوق الكنز الغامض — مقفول حتى 10,000 بلاطة -----
+        var treasureChest = new THREE.Group();
+        var treasureGlow = null;
+        var chestLidGroup = null, chestLockBody = null, chestShackle = null;
+        var chestAttempt = null; // حالة محاولة الفتح: {start: ثواني}
+        (function buildChest() {
+          var wood = std(0x8a5a2b, { roughness: 0.85 });
+          var woodDark = std(0x6f4520, { roughness: 0.85 });
+          var metal = std(0x454e57, { roughness: 0.45, metalness: 0.75 });
+          var gold = std(0xd9a441, { roughness: 0.3, metalness: 0.85 });
+          var base = new THREE.Mesh(new THREE.BoxGeometry(4.4, 2.0, 3.0), wood);
+          base.position.y = 1.0; base.castShadow = true; base.receiveShadow = true;
+          treasureChest.add(base);
+          // الغطا بمجموعة مفصلية من الخلف — بيحاول يرتفع وبيخبط راجع وقت التفاعل
+          chestLidGroup = new THREE.Group();
+          chestLidGroup.position.set(0, 2.0, -1.6);
+          var lid = new THREE.Mesh(new THREE.BoxGeometry(4.6, 1.0, 3.2), woodDark);
+          lid.position.set(0, 0.5, 1.6); lid.castShadow = true;
+          chestLidGroup.add(lid);
+          var lidTop = new THREE.Mesh(new THREE.BoxGeometry(3.9, 0.55, 2.7), wood);
+          lidTop.position.set(0, 1.22, 1.6); lidTop.castShadow = true;
+          chestLidGroup.add(lidTop);
+          treasureChest.add(chestLidGroup);
+          [-1.45, 1.45].forEach(function (bx) {
+            var band = new THREE.Mesh(new THREE.BoxGeometry(0.55, 3.15, 3.28), metal);
+            band.position.set(bx, 1.85, 0); band.castShadow = true;
+            treasureChest.add(band);
+          });
+          var seam = new THREE.Mesh(new THREE.BoxGeometry(4.65, 0.28, 3.25), metal);
+          seam.position.y = 2.02;
+          treasureChest.add(seam);
+          var lockBody = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.15, 0.34), gold);
+          lockBody.position.set(0, 1.62, 1.66); lockBody.castShadow = true;
+          treasureChest.add(lockBody);
+          chestLockBody = lockBody;
+          var lockHole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.1, 10), std(0x2b2f36, { roughness: 0.4 }));
+          lockHole.rotation.x = Math.PI / 2;
+          lockHole.position.set(0, 1.68, 1.86);
+          treasureChest.add(lockHole);
+          var shackle = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.11, 8, 16, Math.PI), metal);
+          shackle.position.set(0, 2.2, 1.66);
+          treasureChest.add(shackle);
+          chestShackle = shackle;
+          [[-2.05, 0.45, 1.53], [2.05, 0.45, 1.53], [-2.05, 2.85, 1.63], [2.05, 2.85, 1.63]].forEach(function (pt) {
+            var rivet = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 6), gold);
+            rivet.position.set(pt[0], pt[1], pt[2]);
+            treasureChest.add(rivet);
+          });
+          treasureChest.position.set(-8.5, TOP, 2.5);
+          treasureChest.rotation.y = 0.65;
+          treasureChest.scale.setScalar(1.6); // أكبر وأوضح على الجزيرة
+          scene.add(treasureChest);
+          treasureGlow = new THREE.PointLight(0xffc94d, 0.85, 30);
+          treasureGlow.position.set(-8.5, TOP + 4.5, 2.5);
+          scene.add(treasureGlow);
+        })();
+
+        // حلقة ذهبية نابضة تحت الصندوق + سهم نطّاط فوقه — عشان العين تروح له دغري
+        var chestRing = (function () {
+          var ring = new THREE.Mesh(
+            new THREE.RingGeometry(4.6, 5.5, 40),
+            new THREE.MeshBasicMaterial({ color: 0xffc94d, transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false })
+          );
+          ring.rotation.x = -Math.PI / 2;
+          ring.position.set(-8.5, TOP + 0.16, 2.5);
+          scene.add(ring);
+          return ring;
+        })();
+        var chestArrow = (function () {
+          var arrow = new THREE.Mesh(
+            new THREE.ConeGeometry(0.85, 2.0, 4),
+            new THREE.MeshBasicMaterial({ color: 0xffb340 })
+          );
+          arrow.rotation.x = Math.PI; // راسه لتحت، بيشير عالصندوق
+          arrow.rotation.y = Math.PI / 4;
+          arrow.position.set(-8.5, TOP + 7.6, 2.5);
+          scene.add(arrow);
+          return arrow;
+        })();
+        // نجوم لمعة بتبرق حول الصندوق
+        var chestSparkles = [];
+        (function () {
+          var sc = document.createElement("canvas");
+          sc.width = sc.height = 64;
+          var c2 = sc.getContext("2d");
+          var rg = c2.createRadialGradient(32, 32, 2, 32, 32, 30);
+          rg.addColorStop(0, "rgba(255,240,190,1)");
+          rg.addColorStop(0.4, "rgba(255,205,80,0.75)");
+          rg.addColorStop(1, "rgba(255,205,80,0)");
+          c2.fillStyle = rg; c2.fillRect(0, 0, 64, 64);
+          var stex = new THREE.CanvasTexture(sc);
+          for (var si = 0; si < 16; si++) {
+            var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: stex, transparent: true, depthWrite: false }));
+            var ang = hash(si * 7.3) * Math.PI * 2;
+            var rad = 3.6 + hash(si * 3.1) * 2.6;
+            spr.position.set(-8.5 + Math.cos(ang) * rad, TOP + 1 + hash(si * 5.7) * 5.5, 2.5 + Math.sin(ang) * rad);
+            spr.scale.setScalar(0.9 + hash(si) * 0.9);
+            spr.userData.phase = hash(si * 11) * 6.28;
+            scene.add(spr);
+            chestSparkles.push(spr);
+          }
+        })();
+        // نص «صلّوا على محمد ﷺ» — بيطفو فوق الصندوق وقت محاولة الفتح بس
+        var salliSprite = (function () {
+          var cv = document.createElement("canvas");
+          cv.width = 640; cv.height = 176;
+          var c = cv.getContext("2d");
+          c.beginPath();
+          if (c.roundRect) c.roundRect(6, 6, 628, 164, 40); else c.rect(6, 6, 628, 164);
+          c.fillStyle = "rgba(12,43,51,0.92)"; c.fill();
+          c.strokeStyle = "#ffc94d"; c.lineWidth = 6; c.stroke();
+          c.fillStyle = "#ffe9a8";
+          c.font = "900 64px Rubik, sans-serif";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          c.fillText("صلّوا على محمد ﷺ", 320, 92);
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthTest: false }));
+          spr.scale.set(19, 5.2, 1);
+          spr.position.set(-8.5, TOP + 15.2, 2.5);
+          spr.renderOrder = 13;
+          scene.add(spr);
+          return spr;
+        })();
+        function chestLabelSprite() {
+          var cv = document.createElement("canvas");
+          cv.width = 640; cv.height = 264;
+          var c = cv.getContext("2d");
+          var r = 34;
+          c.beginPath();
+          c.moveTo(r, 4); c.lineTo(640 - r, 4); c.arcTo(636, 4, 636, r, r);
+          c.lineTo(636, 264 - r); c.arcTo(636, 260, 640 - r, 260, r);
+          c.lineTo(r, 260); c.arcTo(4, 260, 4, 264 - r, r);
+          c.lineTo(4, r); c.arcTo(4, 4, r, 4, r); c.closePath();
+          c.fillStyle = "rgba(255,255,255,0.94)"; c.fill();
+          c.fillStyle = "#d97706";
+          c.beginPath(); c.rect(4, 4, 632, 26); c.fill();
+          c.fillStyle = "#0c2b33";
+          c.font = "900 58px Rubik, sans-serif";
+          c.textAlign = "center";
+          c.fillText("صندوق الكنز 🔒", 320, 92);
+          c.fillStyle = "#3d5a63";
+          c.font = "700 40px Rubik, sans-serif";
+          c.fillText("بيفتح عند " + fmt.format(TOTAL) + " بلاطة", 320, 152);
+          c.fillStyle = "#b97a14";
+          c.font = "800 38px Rubik, sans-serif";
+          c.fillText("شو فيه الصندوق؟ 🤔", 320, 208);
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+          spr.scale.set(22, 9.1, 1);
+          spr.position.set(-8.5, TOP + 12.2, 2.5);
+          spr.renderOrder = 11;
+          scene.add(spr);
+        }
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(chestLabelSprite);
+        else chestLabelSprite();
+
+        // ----- رصيف خشبي + قارب صغير -----
+        var boat = new THREE.Group();
+        (function dockAndBoat() {
+          var plankMat = std(0x9a7443, { roughness: 0.95 });
+          for (var i = 0; i < 6; i++) {
+            var plank = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.28, 1.7), plankMat);
+            plank.position.set(0, 1.15, ISLAND_R - 2 + i * 1.85);
+            plank.castShadow = true; plank.receiveShadow = true;
+            scene.add(plank);
+          }
+          [[-1.5], [1.5]].forEach(function (px) {
+            [ISLAND_R + 1, ISLAND_R + 7].forEach(function (pz) {
+              var post = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 2.6, 7), std(0x75572f));
+              post.position.set(px[0], 0.1, pz);
+              scene.add(post);
+            });
+          });
+          var hull = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.1, 6.4), std(0xc4502e, { roughness: 0.6 }));
+          hull.position.y = 0.55; hull.castShadow = true;
+          boat.add(hull);
+          var rim = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.35, 6.8), std(0x8a3a20, { roughness: 0.6 }));
+          rim.position.y = 1.15;
+          boat.add(rim);
+          var bench = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.22, 1.0), std(0x9a7443));
+          bench.position.y = 0.95;
+          boat.add(bench);
+          var mast = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 4.4, 6), std(0x75572f));
+          mast.position.set(0, 3.1, -0.8);
+          boat.add(mast);
+          var flagCv = document.createElement("canvas");
+          flagCv.width = 96; flagCv.height = 64;
+          var fc = flagCv.getContext("2d");
+          fc.fillStyle = "#ff0033"; fc.fillRect(0, 0, 96, 64);
+          fc.fillStyle = "#fff";
+          fc.beginPath(); fc.moveTo(34, 20); fc.lineTo(34, 44); fc.lineTo(58, 32); fc.closePath(); fc.fill();
+          var ftex = new THREE.CanvasTexture(flagCv);
+          var flag = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 1.1), new THREE.MeshBasicMaterial({ map: ftex, side: THREE.DoubleSide }));
+          flag.position.set(0.9, 4.9, -0.8);
+          boat.add(flag);
+          boat.position.set(5.5, 0.1, ISLAND_R + 9);
+          boat.rotation.y = 0.5;
+          scene.add(boat);
+        })();
+
+        loadProgress(0.55);
+
+        // ----- البحر الحقيقي: ميّ بشيدر — أمواج متحركة + انعكاس شمس + رغوة شط -----
+        var waterUniforms = THREE.UniformsUtils.merge([
+          THREE.UniformsLib.fog,
+          {
+            uTime: { value: 0 },
+            uDeep: { value: new THREE.Color(0x0a5d7d) },
+            uMid: { value: new THREE.Color(0x12809e) },
+            uShallow: { value: new THREE.Color(0x3fb6c4) },
+            uSky: { value: new THREE.Color(0xbfe6f5) },
+            uSunDir: { value: SUN_DIR.clone() },
+            uIslandR: { value: ISLAND_R + 4.5 }
+          }
+        ]);
+        var waterMat = new THREE.ShaderMaterial({
+          uniforms: waterUniforms,
+          fog: true,
+          vertexShader: [
+            "uniform float uTime;",
+            "varying vec3 vWorld;",
+            "varying vec3 vNorm;",
+            "#include <fog_pars_vertex>",
+            "float wheight(vec2 p) {",
+            "  float h = 0.0;",
+            "  h += sin(p.x * 0.055 + uTime * 1.05) * 0.34;",
+            "  h += sin(p.y * 0.075 - uTime * 0.85) * 0.26;",
+            "  h += sin((p.x + p.y) * 0.028 + uTime * 0.55) * 0.42;",
+            "  h += sin(length(p) * 0.045 - uTime * 0.7) * 0.22;",
+            "  h += sin(p.x * 0.21 + uTime * 1.7) * 0.07;",
+            "  h += sin(p.y * 0.26 - uTime * 1.4) * 0.06;",
+            "  return h;",
+            "}",
+            "void main() {",
+            "  vec4 wp = modelMatrix * vec4(position, 1.0);",
+            "  float e = 2.4;",
+            "  float h  = wheight(wp.xz);",
+            "  float hx = wheight(wp.xz + vec2(e, 0.0));",
+            "  float hz = wheight(wp.xz + vec2(0.0, e));",
+            "  wp.y += h;",
+            "  vNorm = normalize(vec3(h - hx, e, h - hz));",
+            "  vWorld = wp.xyz;",
+            "  vec4 mvPosition = viewMatrix * wp;",
+            "  gl_Position = projectionMatrix * mvPosition;",
+            "  #include <fog_vertex>",
+            "}"
+          ].join("\n"),
+          fragmentShader: [
+            "uniform float uTime;",
+            "uniform vec3 uDeep; uniform vec3 uMid; uniform vec3 uShallow;",
+            "uniform vec3 uSky; uniform vec3 uSunDir; uniform float uIslandR;",
+            "varying vec3 vWorld;",
+            "varying vec3 vNorm;",
+            "#include <fog_pars_fragment>",
+            "float nhash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }",
+            "float nnoise(vec2 p) {",
+            "  vec2 i = floor(p); vec2 f = fract(p);",
+            "  f = f * f * (3.0 - 2.0 * f);",
+            "  return mix(mix(nhash(i), nhash(i + vec2(1, 0)), f.x),",
+            "             mix(nhash(i + vec2(0, 1)), nhash(i + vec2(1, 1)), f.x), f.y);",
+            "}",
+            "void main() {",
+            "  vec3 V = normalize(cameraPosition - vWorld);",
+            "  vec3 N = normalize(vNorm + vec3(nnoise(vWorld.xz * 0.35 + uTime * 0.35) - 0.5, 0.0, nnoise(vWorld.zx * 0.35 - uTime * 0.3) - 0.5) * 0.35);",
+            "  float distC = length(vWorld.xz);",
+            "  float fres = pow(1.0 - max(dot(V, N), 0.0), 3.0);",
+            "  vec3 col = mix(uDeep, uMid, smoothstep(320.0, 40.0, distC));",
+            "  col = mix(col, uShallow, smoothstep(uIslandR + 55.0, uIslandR, distC) * 0.75);",
+            "  col = mix(col, uSky, fres * 0.55);",
+            "  vec3 R = reflect(-normalize(uSunDir), N);",
+            "  float spec = pow(max(dot(R, V), 0.0), 260.0) * 1.6 + pow(max(dot(R, V), 0.0), 48.0) * 0.28;",
+            "  col += vec3(1.0, 0.93, 0.78) * spec;",
+            "  float sparkle = step(0.985, nhash(floor(vWorld.xz * 2.6) + floor(uTime * 3.0))) * 0.35;",
+            "  col += vec3(sparkle);",
+            "  float foamBand = abs(distC - (uIslandR + sin(atan(vWorld.z, vWorld.x) * 7.0 + uTime * 1.3) * 1.1 + sin(uTime * 0.9) * 0.7));",
+            "  float foam = smoothstep(2.6, 0.2, foamBand) * (0.35 + 0.65 * nnoise(vWorld.xz * 0.8 + uTime * 0.55));",
+            "  float foam2 = smoothstep(1.1, 0.1, abs(distC - uIslandR - 4.5 - sin(uTime * 0.7 + distC) * 0.8)) * 0.3 * nnoise(vWorld.xz * 0.6 - uTime * 0.4);",
+            "  col = mix(col, vec3(0.97, 0.99, 1.0), clamp(foam + foam2, 0.0, 0.85));",
+            "  gl_FragColor = vec4(col, 1.0);",
+            "  #include <fog_fragment>",
+            "}"
+          ].join("\n")
+        });
+        var water = new THREE.Mesh(new THREE.PlaneGeometry(760, 760, 150, 150), waterMat);
+        water.rotation.x = -Math.PI / 2;
+        water.position.y = 0;
+        scene.add(water);
+
+        // رغوة شط إضافية: حلقتان نابضتان حول الجزيرة
+        var foamRings = [];
+        (function () {
+          var cv = document.createElement("canvas");
+          cv.width = 256; cv.height = 32;
+          var c = cv.getContext("2d");
+          c.clearRect(0, 0, 256, 32);
+          for (var i = 0; i < 46; i++) {
+            c.fillStyle = "rgba(255,255,255," + (0.25 + hash(i * 3) * 0.55) + ")";
+            c.beginPath();
+            c.ellipse(hash(i * 7) * 256, 8 + hash(i * 5) * 16, 7 + hash(i) * 13, 3 + hash(i * 2) * 3.5, 0, 0, 6.29);
+            c.fill();
+          }
+          var tex = new THREE.CanvasTexture(cv);
+          tex.wrapS = THREE.RepeatWrapping;
+          tex.repeat.set(6, 1);
+          for (var k = 0; k < 2; k++) {
+            var ring = new THREE.Mesh(
+              new THREE.RingGeometry(ISLAND_R + 3.6 + k * 1.8, ISLAND_R + 6.4 + k * 1.8, 48),
+              new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.5, depthWrite: false })
+            );
+            ring.rotation.x = -Math.PI / 2;
+            ring.position.y = 0.55 + k * 0.12;
+            ring.userData.phase = k * 1.7;
+            scene.add(ring);
+            foamRings.push(ring);
+          }
+        })();
+
+        // ----- شبكة البلاط: البحر بينقسم 100×100 بلاطة -----
+        var SEA = 200, TILE = SEA / 100;
+        (function tileGrid() {
+          var cv = document.createElement("canvas");
+          cv.width = cv.height = 1000;
+          var c = cv.getContext("2d");
+          c.clearRect(0, 0, 1000, 1000);
+          c.strokeStyle = "rgba(255,255,255,0.5)";
+          c.lineWidth = 1;
+          for (var g = 0; g <= 1000; g += 10) {
+            c.beginPath(); c.moveTo(g + 0.5, 0); c.lineTo(g + 0.5, 1000); c.stroke();
+            c.beginPath(); c.moveTo(0, g + 0.5); c.lineTo(1000, g + 0.5); c.stroke();
+          }
+          var tex = new THREE.CanvasTexture(cv);
+          tex.anisotropy = 4;
+          var grid = new THREE.Mesh(
+            new THREE.PlaneGeometry(SEA, SEA),
+            new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.055, depthWrite: false })
+          );
+          grid.rotation.x = -Math.PI / 2;
+          grid.position.y = 0.62;
+          scene.add(grid);
+        })();
+
+        // البلاطات المحطوطة فعلياً (InstancedMesh — بينرسم منها COUNT بس)
+        var tileOrder = [];
+        for (var oy = 0; oy < 100; oy++) for (var ox = 0; ox < 100; ox++) {
+          // الخانات يلي تحت الجزيرة ما بينحطّ فيها بلاط — البلاط بيبلّش من شطّ الجزيرة وبيتمدّد بالبحر
+          var wx = (ox - 49.5) * TILE, wz = (oy - 49.5) * TILE;
+          if (Math.hypot(wx, wz) < ISLAND_R + 3.5) continue;
+          tileOrder.push({ x: ox, y: oy, r: Math.max(Math.abs(ox - 49.5), Math.abs(oy - 49.5)) });
+        }
+        tileOrder.sort(function (a, b) { return (a.r - b.r) || (a.y - b.y) || (a.x - b.x); });
+        if (COUNT > 0) {
+          var tileMesh = new THREE.InstancedMesh(
+            new THREE.BoxGeometry(TILE * 0.94, 0.5, TILE * 0.94),
+            std(0xd96f32, { roughness: 0.75 }),
+            Math.min(COUNT, 10000)
+          );
+          var dummy = new THREE.Object3D();
+          var altMat = new THREE.Color(0xcf6527), baseMat = new THREE.Color(0xd96f32), tmpC = new THREE.Color();
+          for (var tn = 0; tn < Math.min(COUNT, 10000); tn++) {
+            var cell = tileOrder[tn];
+            dummy.position.set((cell.x - 49.5) * TILE, 0.55, (cell.y - 49.5) * TILE);
+            dummy.updateMatrix();
+            tileMesh.setMatrixAt(tn, dummy.matrix);
+            tmpC.copy((cell.x + cell.y) % 2 === 0 ? baseMat : altMat);
+            tileMesh.setColorAt(tn, tmpC);
+          }
+          tileMesh.castShadow = true; tileMesh.receiveShadow = true;
+          scene.add(tileMesh);
+        }
+
+        // علامة «البلاطة الجاية»: إطار نابض عند أول خانة فاضية
+        var marker = (function () {
+          var first = tileOrder[Math.min(COUNT, tileOrder.length - 1)];
+          var grp = new THREE.Group();
+          var frame = new THREE.Mesh(
+            new THREE.BoxGeometry(TILE * 1.02, 0.16, TILE * 1.02),
+            new THREE.MeshBasicMaterial({ color: 0xffc94d, wireframe: true })
+          );
+          grp.add(frame);
+          var inner = new THREE.Mesh(
+            new THREE.PlaneGeometry(TILE * 0.92, TILE * 0.92),
+            new THREE.MeshBasicMaterial({ color: 0xffc94d, transparent: true, opacity: 0.3, depthWrite: false })
+          );
+          inner.rotation.x = -Math.PI / 2;
+          grp.add(inner);
+          grp.position.set((first.x - 49.5) * TILE, 0.75, (first.y - 49.5) * TILE);
+          scene.add(grp);
+          return grp;
+        })();
+        (function markerLabel() {
+          var cv = document.createElement("canvas");
+          cv.width = 512; cv.height = 128;
+          var c = cv.getContext("2d");
+          c.beginPath();
+          if (c.roundRect) c.roundRect(4, 4, 504, 120, 30); else c.rect(4, 4, 504, 120);
+          c.fillStyle = "rgba(12,43,51,0.88)"; c.fill();
+          c.fillStyle = "#ffc94d";
+          c.font = "900 54px Rubik, sans-serif";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          c.fillText("بلاطة #" + fmt.format(COUNT + 1) + " ناطرتك", 256, 66);
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+          spr.scale.set(15, 3.75, 1);
+          spr.position.copy(marker.position).add(new THREE.Vector3(0, 4.6, 0));
+          spr.renderOrder = 10;
+          scene.add(spr);
+        })();
+
+        // عوّامات حول الجزيرة
+        var buoys = [];
+        var buoyGeo = new THREE.SphereGeometry(0.85, 12, 9);
+        var buoyMats = [std(0xffffff, { roughness: 0.5 }), std(0xe23b3b, { roughness: 0.5 })];
+        for (var b = 0; b < 16; b++) {
+          var bang = (b / 16) * Math.PI * 2;
+          var buoy = new THREE.Mesh(buoyGeo, buoyMats[b % 2]);
+          buoy.position.set(Math.cos(bang) * (ISLAND_R + 9), 0.2, Math.sin(bang) * (ISLAND_R + 9));
+          buoy.userData.phase = hash(b * 7) * 6.28;
+          buoy.castShadow = true;
+          scene.add(buoy);
+          buoys.push(buoy);
+        }
+
+        // غيوم ناعمة
+        var clouds = [];
+        var cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.92, roughness: 1, emissive: 0x8899aa, emissiveIntensity: 0.12 });
+        for (var ci = 0; ci < 8; ci++) {
+          var cl = new THREE.Group();
+          var nBlob = 3 + Math.floor(hash(ci * 3) * 2);
+          for (var bi = 0; bi < nBlob; bi++) {
+            var blob = new THREE.Mesh(new THREE.SphereGeometry(4.5 + hash(ci * 31 + bi) * 4, 12, 9), cloudMat);
+            blob.position.set(bi * 5.6 - nBlob * 2.6, hash(bi * 7 + ci) * 1.8, hash(bi * 13 + ci) * 3.4);
+            blob.scale.y = 0.52;
+            cl.add(blob);
+          }
+          var ang = hash(ci * 17) * Math.PI * 2;
+          var rad = 150 + hash(ci * 23) * 220;
+          cl.position.set(Math.cos(ang) * rad, 58 + hash(ci * 29) * 30, Math.sin(ang) * rad);
+          scene.add(cl);
+          clouds.push({ g: cl, sp: 0.8 + hash(ci * 37) * 1.0 });
+        }
+
+        loadProgress(0.8);
+
+        // ----- نوارس بتطير حول الجزيرة -----
+        var gulls = [];
+        (function () {
+          var gullMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, side: THREE.DoubleSide });
+          var tipMat = new THREE.MeshStandardMaterial({ color: 0xdfe9ec, roughness: 0.9, side: THREE.DoubleSide });
+          for (var gi = 0; gi < 6; gi++) {
+            var bird = new THREE.Group();
+            var bbody = new THREE.Mesh(new THREE.SphereGeometry(0.55, 10, 8), gullMat);
+            bbody.scale.set(1, 0.75, 2.1);
+            bird.add(bbody);
+            var beak = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.55, 6), new THREE.MeshStandardMaterial({ color: 0xf2a81d, roughness: 0.7 }));
+            beak.rotation.x = Math.PI / 2;
+            beak.position.set(0, 0, 1.35);
+            bird.add(beak);
+            var wingGeo = new THREE.PlaneGeometry(2.6, 0.85);
+            wingGeo.translate(1.3, 0, 0);
+            var wl = new THREE.Mesh(wingGeo, tipMat);
+            wl.rotation.x = -Math.PI / 2;
+            bird.add(wl);
+            var wingGeoR = new THREE.PlaneGeometry(2.6, 0.85);
+            wingGeoR.translate(-1.3, 0, 0);
+            var wr = new THREE.Mesh(wingGeoR, tipMat);
+            wr.rotation.x = -Math.PI / 2;
+            bird.add(wr);
+            bird.userData = {
+              wl: wl, wr: wr,
+              radius: 38 + hash(gi * 7) * 34,
+              height: 24 + hash(gi * 13) * 14,
+              speed: (0.05 + hash(gi * 3) * 0.035) * (gi % 2 ? 1 : -1),
+              phase: hash(gi * 17) * 6.28,
+              flap: 6 + hash(gi * 5) * 3
+            };
+            bird.position.set(Math.cos(bird.userData.phase) * bird.userData.radius, bird.userData.height, Math.sin(bird.userData.phase) * bird.userData.radius);
+            scene.add(bird);
+            gulls.push(bird);
+          }
+        })();
+
+        // ----- الكاميرا: تدوير + تقريب + تجوّل -----
+        var VW = 0, VH = 0;
+        var cam = { theta: 0.65, phi: 1.0, radius: 105, tx: 0, tz: 0 };
+        camGoal = { theta: 0.65, phi: 1.0, radius: 105, tx: 0, tz: 0 };
+        var R_MIN = 34, R_MAX = 280;
+        function fit() {
+          VW = stage.clientWidth; VH = stage.clientHeight;
+          renderer.setSize(VW, VH);
+          camera.aspect = VW / VH;
+          camera.updateProjectionMatrix();
+        }
+        window.addEventListener("resize", fit);
+        fit();
+
+        resetCamFn = function () {
+          camGoal.theta = 0.65; camGoal.phi = 1.0; camGoal.radius = 105; camGoal.tx = 0; camGoal.tz = 0;
+        };
+        flyToFn = function (tx, tz, radius, phi) {
+          camGoal.tx = tx; camGoal.tz = tz;
+          camGoal.radius = radius; camGoal.phi = phi;
+        };
+
+        var pointers = new Map();
+        var pinch = null, downInfo = null, lastInteract = performance.now();
+        var dom = renderer.domElement;
+        function ptrDist() {
+          var pts = Array.from(pointers.values());
+          return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        }
+        dom.addEventListener("pointerdown", function (e) {
+          try { stage.focus({ preventScroll: true }); } catch (err) { stage.focus(); }
+          pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          try { dom.setPointerCapture(e.pointerId); } catch (err) {}
+          lastInteract = performance.now();
+          if (pointers.size === 1) { downInfo = { id: e.pointerId, x: e.clientX, y: e.clientY, t: Date.now(), moved: 0 }; pinch = null; }
+          else if (pointers.size === 2) { pinch = { d: ptrDist(), r: camGoal.radius }; downInfo = null; }
+        });
+        dom.addEventListener("pointermove", function (e) {
+          if (!pointers.has(e.pointerId)) return;
+          var prev = pointers.get(e.pointerId);
+          var dxp = e.clientX - prev.x, dyp = e.clientY - prev.y;
+          pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          lastInteract = performance.now();
+          if (pinch && pointers.size === 2) {
+            var nd = ptrDist();
+            if (pinch.d > 0) camGoal.radius = Math.max(R_MIN, Math.min(R_MAX, pinch.r * pinch.d / nd));
+          } else if (pointers.size === 1) {
+            if (downInfo) downInfo.moved += Math.abs(dxp) + Math.abs(dyp);
+            camGoal.theta -= dxp * 0.0052;
+            camGoal.phi = Math.max(0.16, Math.min(1.38, camGoal.phi - dyp * 0.0042));
+          }
+        });
+        function ptrEnd(e) {
+          if (downInfo && e.pointerId === downInfo.id) {
+            if (Date.now() - downInfo.t < 350 && downInfo.moved < 10) pickAt(e.clientX, e.clientY);
+            downInfo = null;
+          }
+          pointers.delete(e.pointerId);
+          if (pointers.size < 2) pinch = null;
+          lastInteract = performance.now();
+        }
+        dom.addEventListener("pointerup", ptrEnd);
+        dom.addEventListener("pointercancel", ptrEnd);
+        dom.addEventListener("wheel", function (e) {
+          e.preventDefault();
+          camGoal.radius = Math.max(R_MIN, Math.min(R_MAX, camGoal.radius * Math.exp(e.deltaY * 0.0014)));
+          lastInteract = performance.now();
+        }, { passive: false });
+        dom.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+
+        document.getElementById("zoomIn").addEventListener("click", function () {
+          camGoal.radius = Math.max(R_MIN, camGoal.radius / 1.35); lastInteract = performance.now();
+        });
+        document.getElementById("zoomOut").addEventListener("click", function () {
+          camGoal.radius = Math.min(R_MAX, camGoal.radius * 1.35); lastInteract = performance.now();
+        });
+        document.getElementById("camReset").addEventListener("click", function () {
+          resetCamFn(); lastInteract = performance.now();
+        });
+        document.getElementById("counterChip").addEventListener("click", function () {
+          flyToFn(0, 0, 190, 1.05);
+          showToast(COUNT === 0
+            ? "البحر لسّا فاضي — 0 من " + fmt.format(TOTAL) + " بلاطة. أول مشترك جديد بيحطّ البلاطة رقم 1 عند الجزيرة"
+            : fmt.format(COUNT) + " بلاطة تبلّطت من " + fmt.format(TOTAL) + " · ضايل " + fmt.format(TOTAL - COUNT));
+          lastInteract = performance.now();
+        });
+
+        // ----- وضع ملء الشاشة والتجوّل -----
+        var explore = false;
+        var fsToggle = document.getElementById("fsToggle");
+        var stick = document.getElementById("stick");
+        var knob = document.getElementById("stickKnob");
+        var joy = { x: 0, y: 0 };
+        var keysDown = {};
+        var MAP_LIM = 120;
+        function setExplore(on) {
+          explore = on;
+          stage.classList.toggle("explore", on);
+          R_MIN = on ? 14 : 34;
+          if (camGoal.radius < R_MIN) camGoal.radius = R_MIN;
+          fsToggle.textContent = on ? "✕" : "⛶";
+          fsToggle.setAttribute("aria-label", on ? "تصغير الشاشة والرجوع للوضع العادي" : "ملء الشاشة والتجوّل بالجزيرة");
+          if (!on) {
+            joy.x = 0; joy.y = 0;
+            knob.style.transform = "translate(-50%,-50%)";
+            keysDown = {};
+            resetCamFn();
+          }
+          lastInteract = performance.now();
+          requestAnimationFrame(fit);
+          setTimeout(fit, 120);
+        }
+        function fixedExpand() {
+          if (explore) return;
+          stage.classList.add("expanded-fixed");
+          document.body.classList.add("locked");
+          setExplore(true);
+        }
+        function enterExpand() {
+          var p = null;
+          try {
+            if (stage.requestFullscreen) p = stage.requestFullscreen();
+            else if (stage.webkitRequestFullscreen) stage.webkitRequestFullscreen();
+          } catch (err) {}
+          if (p && p.catch) p.catch(function () { fixedExpand(); });
+          else if (!stage.requestFullscreen && !stage.webkitRequestFullscreen) fixedExpand();
+          setTimeout(function () {
+            if (!explore && document.fullscreenElement !== stage) fixedExpand();
+          }, 400);
+        }
+        function exitExpand() {
+          if (document.fullscreenElement) { try { document.exitFullscreen(); } catch (err) {} }
+          if (document.webkitFullscreenElement) { try { document.webkitExitFullscreen(); } catch (err) {} }
+          stage.classList.remove("expanded-fixed");
+          document.body.classList.remove("locked");
+          if (explore) setExplore(false);
+        }
+        fsToggle.addEventListener("click", function () {
+          if (explore || document.fullscreenElement === stage || stage.classList.contains("expanded-fixed")) exitExpand();
+          else enterExpand();
+        });
+        document.addEventListener("fullscreenchange", function () {
+          if (document.fullscreenElement === stage) setExplore(true);
+          else if (explore && !stage.classList.contains("expanded-fixed")) setExplore(false);
+          fit();
+        });
+        document.addEventListener("webkitfullscreenchange", function () {
+          if (document.webkitFullscreenElement === stage) setExplore(true);
+          fit();
+        });
+        stage.addEventListener("keydown", function (e) {
+          if (!explore) return;
+          var k = (e.key || "").toLowerCase();
+          if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].indexOf(k) >= 0) {
+            keysDown[k] = true;
+            e.preventDefault();
+            lastInteract = performance.now();
+          }
+        });
+        stage.addEventListener("keyup", function (e) { delete keysDown[(e.key || "").toLowerCase()]; });
+        window.addEventListener("blur", function () { keysDown = {}; });
+        var stickPtr = null;
+        function stickMove(e) {
+          var r = stick.getBoundingClientRect();
+          var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          var dx = e.clientX - cx, dy = e.clientY - cy;
+          var max = r.width / 2 - 10;
+          var len = Math.hypot(dx, dy);
+          if (len > max) { dx *= max / len; dy *= max / len; }
+          joy.x = dx / max; joy.y = dy / max;
+          knob.style.transform = "translate(calc(-50% + " + dx + "px), calc(-50% + " + dy + "px))";
+          lastInteract = performance.now();
+        }
+        stick.addEventListener("pointerdown", function (e) {
+          stickPtr = e.pointerId;
+          try { stick.setPointerCapture(e.pointerId); } catch (err) {}
+          stickMove(e);
+          e.preventDefault();
+        });
+        stick.addEventListener("pointermove", function (e) { if (e.pointerId === stickPtr) stickMove(e); });
+        function stickEnd(e) {
+          if (e.pointerId !== stickPtr) return;
+          stickPtr = null; joy.x = 0; joy.y = 0;
+          knob.style.transform = "translate(-50%,-50%)";
+        }
+        stick.addEventListener("pointerup", stickEnd);
+        stick.addEventListener("pointercancel", stickEnd);
+
+        // ----- الضغط على عناصر المشهد -----
+        var raycaster = new THREE.Raycaster();
+        function pickAt(cx, cy) {
+          var rect = dom.getBoundingClientRect();
+          var nd = new THREE.Vector2(
+            ((cx - rect.left) / rect.width) * 2 - 1,
+            -((cy - rect.top) / rect.height) * 2 + 1
+          );
+          raycaster.setFromCamera(nd, camera);
+          var hitChest = raycaster.intersectObject(treasureChest, true);
+          if (hitChest.length) {
+            flyToFn(-8.5, 2.5, 46, 1.05);
+            if (!chestAttempt) {
+              // محاولة فتح: بيهزّ وبيخبط القفل، الغطا بيحاول يرتفع وبيسكر — وبيضل مقفول
+              chestAttempt = { start: clock.elapsedTime, rattled: false, slammed: false, spoke: false };
+              showToast("عم تحاول تفتحه؟ القفل ماسك منيح 🔒 — بيفتح بس عند " + fmt.format(TOTAL) + " بلاطة… شو فيه الصندوق؟ 🤔", 4600);
+            }
+            return;
+          }
+          var hitHero = raycaster.intersectObject(hero, true);
+          if (hitHero.length) {
+            showToast("أهلاً فيك بجزيرة بلّط البحر! كل مشترك جديد على يوتيوب = بلاطة جديدة بالبحر");
+            return;
+          }
+          var hitWater = raycaster.intersectObject(water);
+          if (hitWater.length) {
+            var hp = hitWater[0].point;
+            if (Math.abs(hp.x) <= SEA / 2 && Math.abs(hp.z) <= SEA / 2) {
+              showToast(COUNT === 0
+                ? "هاد البحر بينتبلّط بلاطة بلاطة — لسّا 0 من " + fmt.format(TOTAL) + ". اشترك وخَلّ بلاطتك تكون الأولى"
+                : fmt.format(COUNT) + " بلاطة تبلّطت · ضايل " + fmt.format(TOTAL - COUNT) + " بلاطة لنكمّل البحر");
+            } else {
+              showToast("برّا شبكة البلاط — البحر المفتوح. البلاط بينحطّ حوالين الجزيرة بس");
+            }
+          }
+        }
+
+        // ----- حلقة الرسم -----
+        var clock = new THREE.Clock();
+        var frames = 0;
+        function animate() {
+          requestAnimationFrame(animate);
+          var dt = Math.min(0.05, clock.getDelta());
+          var t = clock.elapsedTime;
+
+          waterUniforms.uTime.value = t;
+
+          if (!reduced && !explore && performance.now() - lastInteract > 5000 && pointers.size === 0) {
+            camGoal.theta += dt * 0.045;
+          }
+          if (explore) {
+            var kx = ((keysDown["arrowright"] || keysDown["d"]) ? 1 : 0) - ((keysDown["arrowleft"] || keysDown["a"]) ? 1 : 0);
+            var kz = ((keysDown["arrowdown"] || keysDown["s"]) ? 1 : 0) - ((keysDown["arrowup"] || keysDown["w"]) ? 1 : 0);
+            var mx = joy.x + kx, mz = joy.y + kz;
+            var ml = Math.hypot(mx, mz);
+            if (ml > 0.12) {
+              if (ml > 1) { mx /= ml; mz /= ml; }
+              var spd = 65 * dt * Math.max(0.35, camGoal.radius / 105);
+              var fx = -Math.sin(camGoal.theta), fz = -Math.cos(camGoal.theta);
+              var rx = -fz, rz = fx;
+              camGoal.tx += (fx * -mz + rx * mx) * spd;
+              camGoal.tz += (fz * -mz + rz * mx) * spd;
+              camGoal.tx = Math.max(-MAP_LIM, Math.min(MAP_LIM, camGoal.tx));
+              camGoal.tz = Math.max(-MAP_LIM, Math.min(MAP_LIM, camGoal.tz));
+              lastInteract = performance.now();
+            }
+          }
+          var k = reduced ? 1 : Math.min(1, dt * 4.2);
+          cam.theta += (camGoal.theta - cam.theta) * k;
+          cam.phi += (camGoal.phi - cam.phi) * k;
+          cam.radius += (camGoal.radius - cam.radius) * k;
+          cam.tx += (camGoal.tx - cam.tx) * k;
+          cam.tz += (camGoal.tz - cam.tz) * k;
+          var sp = Math.sin(cam.phi), cp = Math.cos(cam.phi);
+          camera.position.set(
+            cam.tx + cam.radius * sp * Math.sin(cam.theta),
+            Math.max(3.5, cam.radius * cp + 2),
+            cam.tz + cam.radius * sp * Math.cos(cam.theta)
+          );
+          camera.lookAt(cam.tx, 1, cam.tz);
+
+          if (!reduced) {
+            buoys.forEach(function (buoy) {
+              buoy.position.y = 0.2 + Math.sin(t * 1.6 + buoy.userData.phase) * 0.24;
+              buoy.rotation.z = Math.sin(t * 1.3 + buoy.userData.phase) * 0.16;
+            });
+            foamRings.forEach(function (ring) {
+              var s = 1 + Math.sin(t * 0.9 + ring.userData.phase) * 0.03;
+              ring.scale.set(s, s, 1);
+              ring.material.opacity = 0.34 + Math.sin(t * 0.9 + ring.userData.phase) * 0.16;
+            });
+            hero.position.y = TOP + Math.sin(t * 1.8) * 0.07;
+            if (waveArm) waveArm.rotation.z = -2.25 + Math.sin(t * 3.4) * 0.38;
+            palms.forEach(function (p, i) { p.rotation.z = Math.sin(t * 0.9 + i * 1.7) * 0.012; });
+            // الصندوق: خمول خفيف — أو محاولة فتح كاملة إذا انضغط
+            if (chestAttempt) {
+              var el = t - chestAttempt.start;
+              if (!chestAttempt.rattled && el > 0.02) { chestAttempt.rattled = true; SoundFX.rattle(); }
+              if (el < 0.65) {
+                // اهتزاز وخبطات القفل
+                var shake = Math.sin(el * 55) * 0.045 * (1 - el / 0.65);
+                treasureChest.rotation.z = shake;
+                treasureChest.position.x = -8.5 + Math.sin(el * 47) * 0.14 * (1 - el / 0.65);
+                treasureChest.position.y = TOP + Math.abs(Math.sin(el * 40)) * 0.12;
+                if (chestLockBody) chestLockBody.position.x = Math.sin(el * 60) * 0.07;
+                if (chestShackle) chestShackle.rotation.z = Math.sin(el * 52) * 0.22;
+                if (chestLidGroup) chestLidGroup.rotation.x = 0;
+              } else if (el < 1.25) {
+                // الغطا بيحاول يرتفع… وبيقاوم
+                var lp = (el - 0.65) / 0.6;
+                var lift = Math.sin(lp * Math.PI * 0.85) * 0.34;
+                if (chestLidGroup) chestLidGroup.rotation.x = -lift;
+                treasureChest.rotation.z = Math.sin(el * 30) * 0.012;
+                treasureChest.position.x = -8.5;
+                treasureChest.position.y = TOP + lift * 0.2;
+              } else if (el < 1.45) {
+                // …وبيخبط راجع مسكّر
+                if (!chestAttempt.slammed) {
+                  chestAttempt.slammed = true;
+                  SoundFX.slam();
+                  if (chestLidGroup) chestLidGroup.rotation.x = 0;
+                }
+                treasureChest.position.y = TOP + Math.max(0, 0.1 - (el - 1.25) * 0.5);
+              } else {
+                treasureChest.rotation.z = 0;
+                treasureChest.position.x = -8.5;
+                treasureChest.position.y = TOP;
+                if (chestLockBody) chestLockBody.position.x = 0;
+                if (chestShackle) chestShackle.rotation.z = 0;
+                if (!chestAttempt.spoke && el > 1.5) {
+                  chestAttempt.spoke = true;
+                  playSalli(); // «صلّوا على محمد ﷺ» بصوت مسجّل + النص بيطفو فوق الصندوق
+                }
+                if (el > 4.4) chestAttempt = null;
+              }
+              // نص الصلاة بيطفو وبيختفي ببطء
+              if (salliSprite) {
+                var so = el < 1.5 ? 0 : el < 1.9 ? (el - 1.5) / 0.4 : el > 3.9 ? Math.max(0, 1 - (el - 3.9) / 0.5) : 1;
+                salliSprite.material.opacity = so;
+                salliSprite.position.y = TOP + 15.2 + (el > 1.5 ? Math.min(1, (el - 1.5) / 3) * 0.9 : 0);
+              }
+              if (treasureGlow) treasureGlow.intensity = 1.1 + Math.sin(t * 6) * 0.4;
+            } else {
+              treasureChest.rotation.z = Math.sin(t * 1.7) * 0.03;
+              treasureChest.position.y = TOP + Math.abs(Math.sin(t * 1.7)) * 0.08;
+              treasureChest.position.x = -8.5;
+              if (salliSprite) salliSprite.material.opacity = Math.max(0, salliSprite.material.opacity - dt * 2);
+              if (treasureGlow) treasureGlow.intensity = 0.8 + Math.sin(t * 2.3) * 0.35;
+            }
+            if (chestRing) {
+              var rs = 1 + Math.sin(t * 2.0) * 0.07;
+              chestRing.scale.set(rs, rs, 1);
+              chestRing.material.opacity = 0.4 + Math.sin(t * 2.0) * 0.18;
+            }
+            if (chestArrow) {
+              chestArrow.position.y = TOP + 7.6 + Math.abs(Math.sin(t * 2.4)) * 0.85;
+              chestArrow.rotation.y = Math.PI / 4 + Math.sin(t * 1.8) * 0.2;
+            }
+            chestSparkles.forEach(function (spr) {
+              var tw = 0.5 + 0.5 * Math.sin(t * 3 + spr.userData.phase);
+              spr.material.opacity = 0.25 + tw * 0.75;
+              var ss = (0.9 + (spr.userData.phase % 0.9)) * (0.7 + tw * 0.55);
+              spr.scale.set(ss, ss, 1);
+            });
+            gulls.forEach(function (bird) {
+              var u = bird.userData;
+              var ga = u.phase + t * u.speed;
+              bird.position.set(Math.cos(ga) * u.radius, u.height + Math.sin(t * 0.9 + u.phase) * 1.6, Math.sin(ga) * u.radius);
+              bird.rotation.y = -ga - (u.speed > 0 ? 0 : Math.PI);
+              var flapA = Math.sin(t * u.flap + u.phase) * 0.65;
+              if (u.wl) u.wl.rotation.z = flapA;
+              if (u.wr) u.wr.rotation.z = -flapA;
+            });
+            boat.position.y = 0.1 + Math.sin(t * 1.25) * 0.22;
+            boat.rotation.z = Math.sin(t * 1.1) * 0.045;
+            boat.rotation.x = Math.sin(t * 0.9 + 1) * 0.03;
+            marker.position.y = 0.75 + Math.sin(t * 2.2) * 0.16;
+            marker.rotation.y = t * 0.7;
+            clouds.forEach(function (cl) {
+              cl.g.position.x += dt * cl.sp;
+              if (cl.g.position.x > 420) cl.g.position.x = -420;
+            });
+          }
+          // مع تقليل الحركة: محاولة الفتح بتصير بلا اهتزاز — بس خبطة القفل والصوت والنص الطافي
+          if (reduced && chestAttempt) {
+            var rel = t - chestAttempt.start;
+            if (!chestAttempt.rattled) { chestAttempt.rattled = true; SoundFX.rattle(); }
+            if (!chestAttempt.slammed && rel > 0.7) { chestAttempt.slammed = true; SoundFX.slam(); }
+            if (!chestAttempt.spoke && rel > 1.0) { chestAttempt.spoke = true; playSalli(); }
+            if (salliSprite) salliSprite.material.opacity = rel < 1.0 ? 0 : rel > 3.9 ? Math.max(0, 1 - (rel - 3.9) / 0.5) : 1;
+            if (rel > 4.4) chestAttempt = null;
+          }
+          renderer.render(scene, camera);
+
+          frames++;
+          if (frames === 3) {
+            loadProgress(1);
+            setTimeout(function () { loader.classList.add("done"); }, 250);
+            setTimeout(function () {
+              showToast("أهلاً فيك باللعبة! اسحب ودوّر حول الجزيرة — وكل اشتراك جديد على يوتيوب بيحطّ بلاطة بالبحر", 5200);
+            }, 1000);
+          }
+        }
+        animate();
+      }
+
+      try {
+        initWorld();
+      } catch (err) {
+        loader.classList.add("done");
+        document.getElementById("glFallback").style.display = "flex";
+      }
+
+      // تلميح التحكم بيختفي بعد شوي
+      setTimeout(function () { document.getElementById("hint").classList.add("faded"); }, 9000);
+
+      // زر الاشتراك: بعد الضغط، تذكير إنو البلاطة بتنحسب
+      var subBtn = document.getElementById("subBtn");
+      if (subBtn) subBtn.addEventListener("click", function () {
+        showToast("إذا اشتركت بالقناة، بلاطتك بتنحطّ بالبحر مع الدفعة الجاية — ارجع وشوف العدّاد", 5000);
+      });
+    </script>
+  </body>
+</html>
