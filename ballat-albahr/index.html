@@ -283,7 +283,7 @@
         <button type="button" class="chip" id="counterChip" aria-label="عداد يوتيوب: اضغط لعرض البحر كله">
           <span class="play">▶</span>
           <span class="c-txt">
-            <span class="c-num"><span id="countNow">6</span> / 10,000</span>
+            <span class="c-num"><span id="countNow">7</span> / 10,000</span>
             <span class="c-lab">بلاطة بالبحر · يوتيوب</span>
             <span class="mini-bar"><i id="miniFill"></i></span>
           </span>
@@ -315,7 +315,7 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 6; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 6 مشتركين = 6 بلاطات مرسومة، والجاية رقم 7
+      var COUNT = 7; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 7 مشتركين = 7 بلاطات مرسومة، والجاية رقم 8
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
       requestAnimationFrame(function () {
@@ -1377,6 +1377,8 @@
         var whalePitch = new THREE.Group(); // ميلان الطلوع المقوّس والغطس
         var whaleTail = null, whaleBlowMark = null;
         var spray = null, sprayData = null;
+        var sprayCone = null, sprayConeMats = [];
+        var blowFoam = null;
         var sprayPuffs = [];
         var whaleRipples = [];
         (function buildWhale() {
@@ -1447,16 +1449,63 @@
           rg.addColorStop(1, "rgba(235,248,255,0)");
           c.fillStyle = rg; c.fillRect(0, 0, 64, 64);
           var tex = new THREE.CanvasTexture(cv);
-          var N = 170;
+          var N = 440;
           var pos = new Float32Array(N * 3);
           sprayData = [];
           for (var i = 0; i < N; i++) { pos[i * 3 + 1] = -60; sprayData.push({ vx: 0, vy: 0, vz: 0, life: 0 }); }
           var geo = new THREE.BufferGeometry();
           geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-          spray = new THREE.Points(geo, new THREE.PointsMaterial({ size: 1.8, map: tex, transparent: true, opacity: 0, depthWrite: false, color: 0xffffff }));
+          spray = new THREE.Points(geo, new THREE.PointsMaterial({ size: 3.6, map: tex, transparent: true, opacity: 0, depthWrite: false, color: 0xffffff }));
           spray.frustumCulled = false;
           scene.add(spray);
-          for (var p = 0; p < 3; p++) {
+          // نافورة البخّ: مخروطان أبيضان متدرّجان فوق فتحة النفخ — عمود مي واضح ما بينفوت حتى من بعيد
+          (function buildCone() {
+            var cc = document.createElement("canvas");
+            cc.width = 128; cc.height = 256;
+            var cx = cc.getContext("2d");
+            var lg = cx.createLinearGradient(0, 256, 0, 0);
+            lg.addColorStop(0, "rgba(255,255,255,0.98)");
+            lg.addColorStop(0.45, "rgba(245,252,255,0.72)");
+            lg.addColorStop(0.8, "rgba(235,248,255,0.28)");
+            lg.addColorStop(1, "rgba(235,248,255,0)");
+            cx.fillStyle = lg; cx.fillRect(0, 0, 128, 256);
+            // خطوط عمودية بتعطي إحساس خيوط المي المتدفقة
+            for (var s = 0; s < 46; s++) {
+              cx.strokeStyle = "rgba(255,255,255," + (0.10 + hash(s * 3.3) * 0.30) + ")";
+              cx.lineWidth = 1 + hash(s * 7.1) * 2.4;
+              var sx = hash(s * 5.7) * 128;
+              cx.beginPath(); cx.moveTo(sx, 256);
+              cx.quadraticCurveTo(sx + (hash(s) - 0.5) * 22, 130, sx + (hash(s * 9.3) - 0.5) * 40, 8 + hash(s * 4.1) * 60);
+              cx.stroke();
+            }
+            var ctex = new THREE.CanvasTexture(cc);
+            sprayCone = new THREE.Group();
+            [[3.9, 0.55, 13.5, 0.80], [1.9, 0.34, 11.0, 0.95]].forEach(function (cd) {
+              var cg = new THREE.CylinderGeometry(cd[0], cd[1], cd[2], 14, 1, true);
+              cg.translate(0, cd[2] / 2, 0);
+              var cm = new THREE.MeshBasicMaterial({ map: ctex, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+              sprayConeMats.push({ mat: cm, peak: cd[3] });
+              var cone = new THREE.Mesh(cg, cm);
+              cone.renderOrder = 6;
+              sprayCone.add(cone);
+            });
+            sprayCone.position.set(0, 2.05, 8.2); // نفس نقطة فتحة النفخ
+            whalePitch.add(sprayCone);
+            // رغوة بيضا عند فتحة النفخ نفسها — فقاعة رغوة نابضة بتظهر مع البخّ
+            blowFoam = new THREE.Group();
+            var foamMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
+            sprayConeMats.push({ mat: foamMat, peak: 0.95, foam: true });
+            [[0, 0, 0, 3.1, 1.05], [1.5, -0.15, 0.7, 1.7, 0.7], [-1.4, -0.1, -0.6, 1.5, 0.62]].forEach(function (fb) {
+              var blob = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 9), foamMat);
+              blob.scale.set(fb[3], fb[4], fb[3]);
+              blob.position.set(fb[0], fb[1], fb[2]);
+              blob.renderOrder = 7;
+              blowFoam.add(blob);
+            });
+            blowFoam.position.set(0, 2.35, 8.2);
+            whalePitch.add(blowFoam);
+          })();
+          for (var p = 0; p < 5; p++) {
             var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false }));
             scene.add(spr);
             sprayPuffs.push(spr);
@@ -1528,10 +1577,16 @@
           // الميلان: الراس بيطلع أول، بعدين بيقوّس ظهره وبيغطس والذيل بيودّع آخر شي
           whalePitch.rotation.x = whaleKey([[0, 0], [0.16, -0.21], [0.36, -0.03], [0.55, 0.08], [0.74, 0.5], [0.88, 0.6], [1, 0.25]], u);
           if (whaleTail) whaleTail.rotation.x = whaleKey([[0, 0], [0.55, 0.05], [0.78, 0.55], [0.92, 0.75], [1, 0.3]], u) + Math.sin(t * 2.1) * 0.04;
-          // البخّ: نفثة مي من فوق الراس بمنتصف الطلعة
-          var blowing = u > 0.29 && u < 0.53;
-          var bI = Math.min(Math.max(0, (u - 0.29) / 0.05), Math.max(0, (0.53 - u) / 0.07), 1);
-          spray.material.opacity = 0.95 * bI;
+          // البخّ: نفثة مي كبيرة من فوق الراس — بتضل ظاهرة فترة طويلة بوسط الطلعة
+          var blowing = u > 0.28 && u < 0.62;
+          var bI = Math.min(Math.max(0, (u - 0.28) / 0.05), Math.max(0, (0.62 - u) / 0.09), 1);
+          spray.material.opacity = bI;
+          // نافورة المخروط + رغوة فتحة النفخ بيشتغلوا مع شدة البخّ، مع نبض خفيف بيخلي العمود حيّ
+          if (sprayCone) {
+            sprayCone.scale.set(1 + Math.sin(t * 26) * 0.06, 0.7 + 0.38 * bI, 1 + Math.cos(t * 22) * 0.06);
+            blowFoam.scale.setScalar(0.75 + 0.4 * bI + Math.sin(t * 17) * 0.06 * bI);
+            for (var ci2 = 0; ci2 < sprayConeMats.length; ci2++) sprayConeMats[ci2].mat.opacity = sprayConeMats[ci2].peak * bI;
+          }
           if (blowing) whaleBlowMark.getWorldPosition(whaleTmpV);
           var posAttr = spray.geometry.getAttribute("position");
           var arr = posAttr.array;
@@ -1544,26 +1599,26 @@
               arr[si * 3 + 1] += p.vy * dt;
               arr[si * 3 + 2] += p.vz * dt;
               if (p.life <= 0 || arr[si * 3 + 1] < 0.1) { p.life = 0; arr[si * 3 + 1] = -60; }
-            } else if (blowing && Math.random() < 0.55) {
-              p.life = 0.75 + Math.random() * 0.65;
-              p.vx = (Math.random() - 0.5) * 3.6 + whaleState.hx * 1.2;
-              p.vz = (Math.random() - 0.5) * 3.6 + whaleState.hz * 1.2;
-              p.vy = 7.5 + Math.random() * 4.5;
-              arr[si * 3] = whaleTmpV.x + (Math.random() - 0.5) * 0.7;
+            } else if (blowing && Math.random() < 0.85) {
+              p.life = 1.0 + Math.random() * 0.9;
+              p.vx = (Math.random() - 0.5) * 5.2 + whaleState.hx * 1.0;
+              p.vz = (Math.random() - 0.5) * 5.2 + whaleState.hz * 1.0;
+              p.vy = 11.5 + Math.random() * 7.0;
+              arr[si * 3] = whaleTmpV.x + (Math.random() - 0.5) * 0.9;
               arr[si * 3 + 1] = whaleTmpV.y;
-              arr[si * 3 + 2] = whaleTmpV.z + (Math.random() - 0.5) * 0.7;
+              arr[si * 3 + 2] = whaleTmpV.z + (Math.random() - 0.5) * 0.9;
             }
           }
           posAttr.needsUpdate = true;
           // نفخات ضبابية بتكبر وبتدوب فوق فتحة النفخ
           sprayPuffs.forEach(function (spr, idx) {
-            var pp = (u - 0.30 - idx * 0.045) / 0.16;
+            var pp = (u - 0.29 - idx * 0.05) / 0.24;
             if (pp > 0 && pp < 1) {
               whaleBlowMark.getWorldPosition(whaleTmpV);
-              spr.position.set(whaleTmpV.x, whaleTmpV.y + 0.6 + pp * 3.4, whaleTmpV.z);
-              var sc = 2.2 + pp * 6.5;
-              spr.scale.set(sc, sc * 0.8, 1);
-              spr.material.opacity = (1 - pp) * 0.5;
+              spr.position.set(whaleTmpV.x, whaleTmpV.y + 1.2 + pp * 6.5, whaleTmpV.z);
+              var sc = 3.5 + pp * 12;
+              spr.scale.set(sc, sc * 0.75, 1);
+              spr.material.opacity = (1 - pp) * 0.65 * Math.min(1, bI + 0.35);
             } else spr.material.opacity = 0;
           });
           // دوائر مي بتتوسّع حول الحوت وهو قريب من السطح
