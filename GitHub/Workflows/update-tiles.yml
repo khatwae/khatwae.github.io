@@ -1,0 +1,33 @@
+name: Update tile count
+
+# كل 10 دقائق: افحص عدد مشتركين قناة بلّط البحر وحدّث ballat-albahr/count.json
+# إذا زاد العدد. الصفحة بتقرأ count.json عند الفتح وكل دقيقة، فالبلاطات
+# بتظهر لحالها بدون إعادة بناء أو إعادة نشر.
+# ملاحظة: القراءة من الصفحة العامة دقيقة بس تحت 1,000 مشترك — فوقها يوتيوب
+# بيختصر الرقم (1.2K) والسكربت بيوقف التحديث بدل ما يخمّن. قبل ما نوصل
+# لـ 1,000 مشترك لازم نبدّل المصدر لـ YouTube Data API بمفتاح رسمي.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-count:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check subscribers and update count.json
+        run: python .github/scripts/update_count.py
+      - name: Commit if changed
+        run: |
+          git config user.name "ballat-albahr-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add ballat-albahr/count.json
+          git diff --cached --quiet || git commit -m "بلّط البحر: تحديث عدد البلاطات"
+          git push
