@@ -1149,7 +1149,7 @@
           scene.add(grid);
         })();
 
-        // البلاطات المحطوطة فعلياً (InstancedMesh — بينرسم منها COUNT بس)
+        // البلاطات المحطوطة فعلياً (InstancedMesh — بينرسم منها COUNT بس، والسعة الكاملة جاهزة لأي زيادة حيّة)
         var tileOrder = [];
         for (var oy = 0; oy < 100; oy++) for (var ox = 0; ox < 100; ox++) {
           // الخانات يلي تحت الجزيرة ما بينحطّ فيها بلاط — البلاط بيبلّش من شطّ الجزيرة وبيتمدّد بالبحر
@@ -1158,25 +1158,36 @@
           tileOrder.push({ x: ox, y: oy, r: Math.max(Math.abs(ox - 49.5), Math.abs(oy - 49.5)) });
         }
         tileOrder.sort(function (a, b) { return (a.r - b.r) || (a.y - b.y) || (a.x - b.x); });
-        if (COUNT > 0) {
-          var tileMesh = new THREE.InstancedMesh(
-            new THREE.BoxGeometry(TILE * 0.94, 0.5, TILE * 0.94),
-            std(0xd96f32, { roughness: 0.75 }),
-            Math.min(COUNT, 10000)
-          );
-          var dummy = new THREE.Object3D();
-          var altMat = new THREE.Color(0xcf6527), baseMat = new THREE.Color(0xd96f32), tmpC = new THREE.Color();
-          for (var tn = 0; tn < Math.min(COUNT, 10000); tn++) {
+        var tileMesh = new THREE.InstancedMesh(
+          new THREE.BoxGeometry(TILE * 0.94, 0.5, TILE * 0.94),
+          std(0xd96f32, { roughness: 0.75 }),
+          TOTAL
+        );
+        var tileDummy = new THREE.Object3D();
+        var tileAlt = new THREE.Color(0xcf6527), tileBase = new THREE.Color(0xd96f32), tileTmp = new THREE.Color();
+        var drawnTiles = 0;
+        tileMesh.count = 0;
+        // بترسم البلاطات من آخر وحدة مرسومة لحد العدد n — بتستعمل أول مرة ووقت التحديث الحي
+        function drawTilesUpTo(n) {
+          var target = Math.min(n, tileOrder.length, TOTAL);
+          for (var tn = drawnTiles; tn < target; tn++) {
             var cell = tileOrder[tn];
-            dummy.position.set((cell.x - 49.5) * TILE, 0.55, (cell.y - 49.5) * TILE);
-            dummy.updateMatrix();
-            tileMesh.setMatrixAt(tn, dummy.matrix);
-            tmpC.copy((cell.x + cell.y) % 2 === 0 ? baseMat : altMat);
-            tileMesh.setColorAt(tn, tmpC);
+            tileDummy.position.set((cell.x - 49.5) * TILE, 0.55, (cell.y - 49.5) * TILE);
+            tileDummy.updateMatrix();
+            tileMesh.setMatrixAt(tn, tileDummy.matrix);
+            tileTmp.copy((cell.x + cell.y) % 2 === 0 ? tileBase : tileAlt);
+            tileMesh.setColorAt(tn, tileTmp);
           }
-          tileMesh.castShadow = true; tileMesh.receiveShadow = true;
-          scene.add(tileMesh);
+          if (target > drawnTiles) {
+            drawnTiles = target;
+            tileMesh.count = drawnTiles;
+            tileMesh.instanceMatrix.needsUpdate = true;
+            if (tileMesh.instanceColor) tileMesh.instanceColor.needsUpdate = true;
+          }
         }
+        tileMesh.castShadow = true; tileMesh.receiveShadow = true;
+        scene.add(tileMesh);
+        drawTilesUpTo(COUNT);
 
         // علامة «البلاطة الجاية»: إطار نابض عند أول خانة فاضية
         var marker = (function () {
@@ -1197,10 +1208,14 @@
           scene.add(grp);
           return grp;
         })();
-        (function markerLabel() {
-          var cv = document.createElement("canvas");
-          cv.width = 512; cv.height = 128;
-          var c = cv.getContext("2d");
+        // لافتة «البلاطة الجاية» — بتنرسم بدالة عشان رقمها يتحدّث حيّاً مع العدّاد
+        var markerLabelCanvas = document.createElement("canvas");
+        markerLabelCanvas.width = 512; markerLabelCanvas.height = 128;
+        var markerLabelTex = new THREE.CanvasTexture(markerLabelCanvas);
+        markerLabelTex.encoding = THREE.sRGBEncoding;
+        function drawMarkerLabel() {
+          var c = markerLabelCanvas.getContext("2d");
+          c.clearRect(0, 0, 512, 128);
           c.beginPath();
           if (c.roundRect) c.roundRect(4, 4, 504, 120, 30); else c.rect(4, 4, 504, 120);
           c.fillStyle = "rgba(12,43,51,0.88)"; c.fill();
@@ -1208,14 +1223,27 @@
           c.font = "900 54px Rubik, sans-serif";
           c.textAlign = "center"; c.textBaseline = "middle";
           c.fillText("بلاطة #" + fmt.format(COUNT + 1) + " ناطرتك", 256, 66);
-          var tex = new THREE.CanvasTexture(cv);
-          tex.encoding = THREE.sRGBEncoding;
-          var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
-          spr.scale.set(15, 3.75, 1);
-          spr.position.copy(marker.position).add(new THREE.Vector3(0, 4.6, 0));
-          spr.renderOrder = 10;
-          scene.add(spr);
-        })();
+          markerLabelTex.needsUpdate = true;
+        }
+        drawMarkerLabel();
+        var markerLabelSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: markerLabelTex, transparent: true, depthTest: false }));
+        markerLabelSprite.scale.set(15, 3.75, 1);
+        markerLabelSprite.position.copy(marker.position).add(new THREE.Vector3(0, 4.6, 0));
+        markerLabelSprite.renderOrder = 10;
+        scene.add(markerLabelSprite);
+        // نقل علامة «البلاطة الجاية» ولافتتها لأول خانة فاضية حسب COUNT الحالي
+        function placeMarker() {
+          var cell = tileOrder[Math.min(COUNT, tileOrder.length - 1)];
+          marker.position.x = (cell.x - 49.5) * TILE;
+          marker.position.z = (cell.y - 49.5) * TILE;
+          markerLabelSprite.position.set(marker.position.x, 0.75 + 4.6, marker.position.z);
+        }
+        // خطّاف التحديث الحي: بيستدعيه كود جلب count.json وقت يزيد العدد
+        window.__bltApplyTiles = function () {
+          drawTilesUpTo(COUNT);
+          placeMarker();
+          drawMarkerLabel();
+        };
 
         // عوّامات حول الجزيرة
         var buoys = [];
@@ -1699,6 +1727,32 @@
       if (subBtn) subBtn.addEventListener("click", function () {
         showToast("إذا اشتركت بالقناة، بلاطتك بتنحطّ بالبحر مع الدفعة الجاية — ارجع وشوف العدّاد", 5000);
       });
+
+      // ======= التحديث الحي من count.json: العدد بيزيد لحاله بدون إعادة بناء الصفحة =======
+      // العدد الفعّال = الأكبر بين المجلب والمضمّن — المعروض ما بينزل أبداً، بلاطة محطوطة ما بتنشال
+      function applyLiveCount(n) {
+        if (n <= COUNT) return;
+        COUNT = n;
+        document.getElementById("countNow").textContent = fmt.format(COUNT);
+        document.getElementById("miniFill").style.width = (COUNT / TOTAL) * 100 + "%";
+        if (window.__bltApplyTiles) window.__bltApplyTiles();
+      }
+      function pollCount() {
+        if (!window.fetch) return;
+        fetch("count.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { if (!r.ok) throw new Error("count.json unavailable"); return r.json(); })
+          .then(function (data) {
+            if (!data) return;
+            var c = data.count;
+            // بس عدد صحيح بين 0 و 10,000 بينقبل — غير هيك بينتجاهل بصمت
+            if (typeof c === "number" && isFinite(c) && Math.floor(c) === c && c >= 0 && c <= TOTAL) {
+              applyLiveCount(Math.max(c, COUNT));
+            }
+          })
+          .catch(function () { /* فشل الجلب أو الملف مو موجود: منضل عالعدد المضمّن، بدون أي رسالة */ });
+      }
+      pollCount();
+      setInterval(pollCount, 60000);
     </script>
   </body>
 </html>
