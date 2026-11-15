@@ -453,6 +453,54 @@
           if (!ctx || muted) return;
           clank(0, 0.14, 1500); clank(0.03, 0.08, 900);
         }
+        function whaleBlow(delay) {
+          if (!ctx || muted) return;
+          var t0 = ctx.currentTime + (delay || 0);
+          // نفثة المي: ضجيج مفلتر بيفتح بقوة وبيهدا — صوت البخّ
+          var len = Math.floor(ctx.sampleRate * 1.6);
+          var nb = ctx.createBuffer(1, len, ctx.sampleRate);
+          var dd = nb.getChannelData(0);
+          for (var i = 0; i < len; i++) dd[i] = Math.random() * 2 - 1;
+          var ns = ctx.createBufferSource(); ns.buffer = nb;
+          var bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 0.6;
+          bp.frequency.setValueAtTime(3300, t0);
+          bp.frequency.exponentialRampToValueAtTime(1400, t0 + 1.25);
+          var ng = ctx.createGain();
+          ng.gain.setValueAtTime(0, t0);
+          ng.gain.linearRampToValueAtTime(0.11, t0 + 0.16);
+          ng.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.4);
+          ns.connect(bp); bp.connect(ng); ng.connect(master);
+          ns.start(t0); ns.stop(t0 + 1.55);
+        }
+        function whale(blowDelay) {
+          if (!ensure() || muted) return;
+          var t0 = ctx.currentTime + 0.05;
+          // نداء الحوت: أنين عميق بينزل وبيطلع ببطء، مع اهتزاز خفيف — بيبدأ مع الطلعة
+          var g = ctx.createGain(); g.gain.value = 0;
+          var f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 640; f.Q.value = 1.2;
+          f.connect(g); g.connect(master);
+          g.gain.setValueAtTime(0, t0);
+          g.gain.linearRampToValueAtTime(0.9, t0 + 0.6);
+          g.gain.setValueAtTime(0.9, t0 + 2.2);
+          g.gain.linearRampToValueAtTime(0, t0 + 3.2);
+          function tone(mult, type, vol) {
+            var o = ctx.createOscillator(); o.type = type;
+            o.frequency.setValueAtTime(148 * mult, t0);
+            o.frequency.exponentialRampToValueAtTime(82 * mult, t0 + 1.15);
+            o.frequency.exponentialRampToValueAtTime(120 * mult, t0 + 2.05);
+            o.frequency.exponentialRampToValueAtTime(70 * mult, t0 + 3.1);
+            var og = ctx.createGain(); og.gain.value = vol;
+            var vib = ctx.createOscillator(); vib.frequency.value = 5.2;
+            var vibG = ctx.createGain(); vibG.gain.value = 3.5 * mult;
+            vib.connect(vibG); vibG.connect(o.frequency);
+            o.connect(og); og.connect(f);
+            o.start(t0); vib.start(t0); o.stop(t0 + 3.3); vib.stop(t0 + 3.3);
+          }
+          tone(1, "sine", 0.16);
+          tone(0.5, "sine", 0.08);
+          tone(2.01, "triangle", 0.03);
+          whaleBlow(blowDelay || 0); // صوت المي بيجي متأخر شوي — مع لحظة البخّ بالضبط
+        }
         function setMuted(m) {
           muted = m;
           if (m) {
@@ -468,6 +516,7 @@
           ensure: ensure,
           rattle: rattle,
           slam: slam,
+          whale: whale,
           setMuted: setMuted,
           isMuted: function () { return muted; },
           isStarted: function () { return started; }
@@ -1323,6 +1372,213 @@
           clouds.push({ g: cl, sp: 0.8 + hash(ci * 37) * 1.0 });
         }
 
+        // ----- الحوت: بيطلع كل شوي من جهة مختلفة حوالين الجزيرة، بيبخّ مي وبيغطس -----
+        var whaleGroup = new THREE.Group(); // المكان حول الجزيرة + اتجاه السباحة
+        var whalePitch = new THREE.Group(); // ميلان الطلوع المقوّس والغطس
+        var whaleTail = null, whaleBlowMark = null;
+        var spray = null, sprayData = null;
+        var sprayPuffs = [];
+        var whaleRipples = [];
+        (function buildWhale() {
+          var skin = std(0x41648a, { roughness: 0.5 });
+          var skinDark = std(0x2f4c68, { roughness: 0.55 });
+          var bellyM = std(0xd9e7ee, { roughness: 0.65 });
+          var body = new THREE.Mesh(new THREE.SphereGeometry(1, 26, 20), skin);
+          body.scale.set(3.3, 2.7, 9.8);
+          body.castShadow = true;
+          whalePitch.add(body);
+          var bel = new THREE.Mesh(new THREE.SphereGeometry(1, 22, 16), bellyM);
+          bel.scale.set(2.95, 2.3, 8.9);
+          bel.position.y = -0.8;
+          whalePitch.add(bel);
+          var head = new THREE.Mesh(new THREE.SphereGeometry(1, 22, 16), skin);
+          head.scale.set(3.15, 2.35, 4.4);
+          head.position.set(0, -0.15, 7.4);
+          head.castShadow = true;
+          whalePitch.add(head);
+          var eyeM = std(0x14222e, { roughness: 0.35 });
+          [-1, 1].forEach(function (s) {
+            var eye = new THREE.Mesh(new THREE.SphereGeometry(0.24, 8, 8), eyeM);
+            eye.position.set(s * 2.95, 0.15, 9.3);
+            whalePitch.add(eye);
+            var fin = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), skinDark);
+            fin.scale.set(2.7, 0.3, 1.15);
+            fin.position.set(s * 3.6, -1.35, 4.2);
+            fin.rotation.z = s * -0.45;
+            fin.rotation.y = s * 0.25;
+            fin.castShadow = true;
+            whalePitch.add(fin);
+          });
+          var dorsal = new THREE.Mesh(new THREE.ConeGeometry(0.95, 1.7, 6), skinDark);
+          dorsal.scale.z = 0.35;
+          dorsal.position.set(0, 2.6, -5.6);
+          dorsal.rotation.x = -0.45;
+          whalePitch.add(dorsal);
+          // الذيل بمحور منفصل — بيرتفع وبينثني وقت الغطس
+          whaleTail = new THREE.Group();
+          whaleTail.position.set(0, 0.25, -9.0);
+          var stock = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 0.5, 3.6, 10), skin);
+          stock.rotation.x = Math.PI / 2;
+          stock.position.z = -1.6;
+          stock.castShadow = true;
+          whaleTail.add(stock);
+          var fluke = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 10), skinDark);
+          fluke.scale.set(5.8, 0.34, 1.8);
+          fluke.position.z = -3.9;
+          fluke.castShadow = true;
+          whaleTail.add(fluke);
+          whalePitch.add(whaleTail);
+          // نقطة فتحة النفخ — من هون بيطلع الرذاذ
+          whaleBlowMark = new THREE.Object3D();
+          whaleBlowMark.position.set(0, 2.3, 8.2);
+          whalePitch.add(whaleBlowMark);
+          whaleGroup.add(whalePitch);
+          whaleGroup.visible = false;
+          scene.add(whaleGroup);
+        })();
+        // رذاذ البخّ: نقاط مي بتطير لفوق وبتتفرّق وبترجع تنزل
+        (function buildSpray() {
+          var cv = document.createElement("canvas");
+          cv.width = cv.height = 64;
+          var c = cv.getContext("2d");
+          var rg = c.createRadialGradient(32, 32, 2, 32, 32, 30);
+          rg.addColorStop(0, "rgba(255,255,255,0.95)");
+          rg.addColorStop(0.5, "rgba(235,248,255,0.55)");
+          rg.addColorStop(1, "rgba(235,248,255,0)");
+          c.fillStyle = rg; c.fillRect(0, 0, 64, 64);
+          var tex = new THREE.CanvasTexture(cv);
+          var N = 170;
+          var pos = new Float32Array(N * 3);
+          sprayData = [];
+          for (var i = 0; i < N; i++) { pos[i * 3 + 1] = -60; sprayData.push({ vx: 0, vy: 0, vz: 0, life: 0 }); }
+          var geo = new THREE.BufferGeometry();
+          geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+          spray = new THREE.Points(geo, new THREE.PointsMaterial({ size: 1.8, map: tex, transparent: true, opacity: 0, depthWrite: false, color: 0xffffff }));
+          spray.frustumCulled = false;
+          scene.add(spray);
+          for (var p = 0; p < 3; p++) {
+            var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false }));
+            scene.add(spr);
+            sprayPuffs.push(spr);
+          }
+          for (var ri = 0; ri < 3; ri++) {
+            var ring = new THREE.Mesh(
+              new THREE.RingGeometry(0.93, 1.0, 40),
+              new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide })
+            );
+            ring.rotation.x = -Math.PI / 2;
+            ring.visible = false;
+            scene.add(ring);
+            whaleRipples.push(ring);
+          }
+        })();
+        function whaleKey(keys, u) {
+          for (var ki = 0; ki < keys.length - 1; ki++) {
+            if (u <= keys[ki + 1][0]) {
+              var span = keys[ki + 1][0] - keys[ki][0];
+              var f = span > 0 ? (u - keys[ki][0]) / span : 0;
+              f = f * f * (3 - 2 * f);
+              return keys[ki][1] + (keys[ki + 1][1] - keys[ki][1]) * f;
+            }
+          }
+          return keys[keys.length - 1][1];
+        }
+        var WHALE_SUB = -9, WHALE_TOP = 1.6;
+        var whaleState = { active: false, nextAt: 6, start: 0, dur: 8.5, lastAng: Math.random() * 6.28, bx: 0, bz: 0, hx: 0, hz: 0 };
+        var whaleTmpV = new THREE.Vector3();
+        function startWhale(t) {
+          var a = whaleState.lastAng + 1.6 + Math.random() * 3.2; // جهة جديدة مختلفة عن المرة الماضية دايماً
+          whaleState.lastAng = a;
+          var d = 46 + Math.random() * 13; // قريب كفاية لينشاف كبير وواضح من العرض الافتراضي
+          whaleState.bx = Math.cos(a) * d;
+          whaleState.bz = Math.sin(a) * d;
+          whaleState.hx = -Math.sin(a);
+          whaleState.hz = Math.cos(a);
+          whaleGroup.position.set(whaleState.bx, WHALE_SUB, whaleState.bz);
+          whaleGroup.rotation.y = -a;
+          whalePitch.rotation.x = 0;
+          if (whaleTail) whaleTail.rotation.x = 0;
+          whaleGroup.visible = true;
+          whaleState.active = true;
+          whaleState.start = t;
+          SoundFX.whale(2.35); // النداء مع الطلعة، وصوت المي مع لحظة البخّ
+        }
+        function updateWhale(t, dt) {
+          if (!whaleState.active) {
+            if (t >= whaleState.nextAt) startWhale(t);
+            return;
+          }
+          var u = (t - whaleState.start) / whaleState.dur;
+          if (u >= 1) {
+            whaleState.active = false;
+            whaleGroup.visible = false;
+            spray.material.opacity = 0;
+            whaleRipples.forEach(function (r) { r.visible = false; });
+            sprayPuffs.forEach(function (s) { s.material.opacity = 0; });
+            whaleState.nextAt = t + 20 + Math.random() * 20; // الطلعة الجاية بعد 20–40 ثانية
+            return;
+          }
+          // الارتفاع: طلوع ناعم، ثبات قصير عالسطح، وغطس ناعم
+          var y;
+          if (u < 0.34) { var r1 = u / 0.34; y = WHALE_SUB + (WHALE_TOP - WHALE_SUB) * (1 - Math.pow(1 - r1, 3)); }
+          else if (u < 0.58) { y = WHALE_TOP + Math.sin((u - 0.34) / 0.24 * Math.PI) * 0.45; }
+          else { var r2 = (u - 0.58) / 0.42; y = WHALE_TOP + (WHALE_SUB - WHALE_TOP) * (r2 * r2 * (3 - 2 * r2)); }
+          var glide = (u - 0.35) * 13; // بيسبح لقدّام شوي وهو طالع وغاطس
+          whaleGroup.position.set(whaleState.bx + whaleState.hx * glide, y, whaleState.bz + whaleState.hz * glide);
+          // الميلان: الراس بيطلع أول، بعدين بيقوّس ظهره وبيغطس والذيل بيودّع آخر شي
+          whalePitch.rotation.x = whaleKey([[0, 0], [0.16, -0.21], [0.36, -0.03], [0.55, 0.08], [0.74, 0.5], [0.88, 0.6], [1, 0.25]], u);
+          if (whaleTail) whaleTail.rotation.x = whaleKey([[0, 0], [0.55, 0.05], [0.78, 0.55], [0.92, 0.75], [1, 0.3]], u) + Math.sin(t * 2.1) * 0.04;
+          // البخّ: نفثة مي من فوق الراس بمنتصف الطلعة
+          var blowing = u > 0.29 && u < 0.53;
+          var bI = Math.min(Math.max(0, (u - 0.29) / 0.05), Math.max(0, (0.53 - u) / 0.07), 1);
+          spray.material.opacity = 0.95 * bI;
+          if (blowing) whaleBlowMark.getWorldPosition(whaleTmpV);
+          var posAttr = spray.geometry.getAttribute("position");
+          var arr = posAttr.array;
+          for (var si = 0; si < sprayData.length; si++) {
+            var p = sprayData[si];
+            if (p.life > 0) {
+              p.life -= dt;
+              p.vy -= 13.5 * dt;
+              arr[si * 3] += p.vx * dt;
+              arr[si * 3 + 1] += p.vy * dt;
+              arr[si * 3 + 2] += p.vz * dt;
+              if (p.life <= 0 || arr[si * 3 + 1] < 0.1) { p.life = 0; arr[si * 3 + 1] = -60; }
+            } else if (blowing && Math.random() < 0.55) {
+              p.life = 0.75 + Math.random() * 0.65;
+              p.vx = (Math.random() - 0.5) * 3.6 + whaleState.hx * 1.2;
+              p.vz = (Math.random() - 0.5) * 3.6 + whaleState.hz * 1.2;
+              p.vy = 7.5 + Math.random() * 4.5;
+              arr[si * 3] = whaleTmpV.x + (Math.random() - 0.5) * 0.7;
+              arr[si * 3 + 1] = whaleTmpV.y;
+              arr[si * 3 + 2] = whaleTmpV.z + (Math.random() - 0.5) * 0.7;
+            }
+          }
+          posAttr.needsUpdate = true;
+          // نفخات ضبابية بتكبر وبتدوب فوق فتحة النفخ
+          sprayPuffs.forEach(function (spr, idx) {
+            var pp = (u - 0.30 - idx * 0.045) / 0.16;
+            if (pp > 0 && pp < 1) {
+              whaleBlowMark.getWorldPosition(whaleTmpV);
+              spr.position.set(whaleTmpV.x, whaleTmpV.y + 0.6 + pp * 3.4, whaleTmpV.z);
+              var sc = 2.2 + pp * 6.5;
+              spr.scale.set(sc, sc * 0.8, 1);
+              spr.material.opacity = (1 - pp) * 0.5;
+            } else spr.material.opacity = 0;
+          });
+          // دوائر مي بتتوسّع حول الحوت وهو قريب من السطح
+          var nearSurface = y > WHALE_SUB + 3.5;
+          whaleRipples.forEach(function (ring, idx) {
+            if (!nearSurface) { ring.visible = false; return; }
+            ring.visible = true;
+            var rp = (t * 0.45 + idx / 3) % 1;
+            var rs = 5 + rp * 17;
+            ring.scale.set(rs, rs, 1);
+            ring.position.set(whaleGroup.position.x, 0.72, whaleGroup.position.z);
+            ring.material.opacity = (1 - rp) * 0.38 * Math.min(1, (y - WHALE_SUB - 3.5) / 3);
+          });
+        }
+
         loadProgress(0.8);
 
         // ----- نوارس بتطير حول الجزيرة -----
@@ -1745,6 +2001,7 @@
             if (salliSprite) salliSprite.material.opacity = rel < 1.0 ? 0 : rel > 3.9 ? Math.max(0, 1 - (rel - 3.9) / 0.5) : 1;
             if (rel > 4.4) chestAttempt = null;
           }
+          updateWhale(t, dt);
           renderer.render(scene, camera);
 
           frames++;
