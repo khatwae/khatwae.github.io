@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="كل روابط عبد الهادي في صفحة واحدة: موقع بلّط البحر، وقنوات هانو ونقطة وبلّط البحر وخطوة لفوق وروايات مهجورة ونهاية العالم ونبض التحدي وليش؟ على يوتيوب." />
+    <link rel="icon" href="data:," />
+    <title>روابط قنواتي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4f4f1;
+        --bg-pattern: rgba(20, 20, 25, 0.045);
+        --card: #ffffff;
+        --card-border: rgba(20, 20, 25, 0.09);
+        --text: #17171c;
+        --muted: #5d5d66;
+        --sub-btn: #e62117;
+        --sub-btn-text: #ffffff;
+        --shadow: 0 10px 30px rgba(20, 20, 25, 0.08);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e0e12;
+          --bg-pattern: rgba(255, 255, 255, 0.05);
+          --card: #191920;
+          --card-border: rgba(255, 255, 255, 0.09);
+          --text: #f4f4f6;
+          --muted: #a7a7b3;
+          --sub-btn: #e62117;
+          --sub-btn-text: #ffffff;
+          --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        font-family: "Tajawal", system-ui, sans-serif;
+        background-color: var(--bg);
+        background-image: radial-gradient(var(--bg-pattern) 1.2px, transparent 1.2px);
+        background-size: 22px 22px;
+        color: var(--text);
+        min-height: 100vh;
+      }
+      .wrap {
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 20px 18px 40px;
+      }
+      .topbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 6px;
+      }
+      .lang-btn {
+        font-family: "Tajawal", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        min-height: 40px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--card-border);
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+      }
+      .lang-btn:active { transform: scale(0.97); }
+      header.profile {
+        text-align: center;
+        padding: 10px 6px 24px;
+      }
+      .avatar {
+        width: 92px;
+        height: 92px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        background: #17171c;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Cairo", sans-serif;
+        font-weight: 900;
+        font-size: 42px;
+        line-height: 1.2;
+        border: 3px solid var(--sub-btn);
+        box-shadow: var(--shadow);
+      }
+      @media (prefers-color-scheme: dark) {
+        .avatar { background: #f4f4f6; color: #17171c; }
+      }
+      h1 {
+        font-family: "Cairo", sans-serif;
+        font-weight: 900;
+        font-size: 34px;
+        line-height: 1.25;
+        margin: 0 0 8px;
+      }
+      .tagline {
+        margin: 0 auto;
+        max-width: 400px;
+        color: var(--muted);
+        font-size: 16.5px;
+        line-height: 1.7;
+        font-weight: 500;
+      }
+      /* زر موقع بلّط البحر — الأول قبل كل القنوات */
+      .site-btn {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #0b5d8a;
+        border-radius: 18px;
+        padding: 18px;
+        margin-bottom: 22px;
+        box-shadow: 0 14px 34px rgba(11, 93, 138, 0.35);
+        text-decoration: none;
+        color: #fff;
+        transition: transform 0.15s ease;
+      }
+      .site-btn:hover { transform: translateY(-2px); }
+      .site-btn:focus-visible {
+        outline: 3px solid var(--sub-btn);
+        outline-offset: 2px;
+      }
+      .site-btn .wave {
+        flex: 0 0 auto;
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.16);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .site-btn .wave svg { width: 34px; height: 34px; }
+      .site-btn .site-info { flex: 1 1 auto; min-width: 0; }
+      .site-btn .site-name {
+        font-family: "Cairo", sans-serif;
+        font-weight: 900;
+        font-size: 23px;
+        line-height: 1.3;
+        margin: 0 0 3px;
+      }
+      .site-btn .site-desc {
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.65;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .site-btn .go {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: #fff;
+        color: #0b5d8a;
+        font-weight: 800;
+        font-size: 15px;
+        white-space: nowrap;
+      }
+      .channels {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: var(--shadow);
+        color: var(--text);
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+      .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+      .tile {
+        flex: 0 0 auto;
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: var(--accent);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Cairo", sans-serif;
+        font-weight: 900;
+        font-size: 27px;
+        line-height: 1.2;
+        padding-bottom: 4px;
+        position: relative;
+        text-decoration: none;
+      }
+      .tile .dot {
+        position: absolute;
+        top: 9px;
+        inset-inline-start: 11px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+      }
+      .info { flex: 1 1 auto; min-width: 0; }
+      .name {
+        font-family: "Cairo", sans-serif;
+        font-weight: 800;
+        font-size: 21px;
+        line-height: 1.3;
+        margin: 0 0 3px;
+      }
+      .name a { color: inherit; text-decoration: none; }
+      .desc {
+        margin: 0 0 4px;
+        color: var(--muted);
+        font-size: 14.5px;
+        line-height: 1.65;
+        font-weight: 500;
+      }
+      .handle {
+        font-size: 13px;
+        color: var(--muted);
+        direction: ltr;
+        unicode-bidi: embed;
+        font-weight: 500;
+        opacity: 0.85;
+      }
+      [dir="rtl"] .handle { text-align: right; }
+      [dir="ltr"] .handle { text-align: left; }
+      .sub {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 44px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: var(--sub-btn);
+        color: var(--sub-btn-text);
+        font-family: "Tajawal", sans-serif;
+        font-weight: 800;
+        font-size: 14.5px;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .sub svg { width: 16px; height: 16px; flex: 0 0 auto; }
+      .tile:focus-visible, .name a:focus-visible, .sub:focus-visible, .lang-btn:focus-visible {
+        outline: 3px solid var(--sub-btn);
+        outline-offset: 2px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 30px;
+        color: var(--muted);
+        font-size: 13.5px;
+        font-weight: 500;
+        line-height: 1.8;
+      }
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .card, .site-btn, header.profile { animation: rise 0.45s ease both; }
+      .card:nth-child(2) { animation-delay: 0.05s; }
+      .card:nth-child(3) { animation-delay: 0.1s; }
+      .card:nth-child(4) { animation-delay: 0.15s; }
+      .card:nth-child(5) { animation-delay: 0.2s; }
+      .card:nth-child(6) { animation-delay: 0.25s; }
+      .card:nth-child(7) { animation-delay: 0.3s; }
+      .card:nth-child(8) { animation-delay: 0.35s; }
+      @media (prefers-reduced-motion: reduce) {
+        .card, .site-btn, header.profile { animation: none; }
+        .card:hover, .site-btn:hover { transform: none; }
+      }
+      @media (max-width: 400px) {
+        .tile, .site-btn .wave { width: 50px; height: 50px; font-size: 23px; border-radius: 13px; }
+        .name { font-size: 19px; }
+        .site-btn .site-name { font-size: 20px; }
+        .sub, .site-btn .go { padding: 10px 12px; font-size: 13.5px; }
+        h1 { font-size: 29px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <button type="button" class="lang-btn" id="langBtn" aria-label="Switch language">English</button>
+      </div>
+
+      <header class="profile">
+        <div class="avatar" aria-hidden="true">ع</div>
+        <h1 data-i18n="title">روابطي وقنواتي</h1>
+        <p class="tagline" data-i18n="tagline">أهلاً فيك! أنا عبد الهادي، وهذه كل روابطي وقنواتي على يوتيوب في مكان واحد — اختر ما يعجبك وتابعه.</p>
+      </header>
+
+      <!-- أول زر: موقع بلّط البحر -->
+      <a class="site-btn" href="https://khatwae.github.io/ballat-albahr/" target="_blank" rel="noopener">
+        <span class="wave" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M2 9c2.5 0 2.5 2 5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 5-2"/><path d="M2 15c2.5 0 2.5 2 5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 5-2" opacity="0.65"/></svg>
+        </span>
+        <span class="site-info">
+          <span class="site-name" data-i18n="site_name">موقع بلّط البحر</span>
+          <p class="site-desc" data-i18n="site_desc">تابع عدّاد البلاطات لحظة بلحظة، وشوف بلاطتك على الخريطة — هدفنا 10,000 بلاطة!</p>
+        </span>
+        <span class="go" data-i18n="visit">زور الموقع</span>
+      </a>
+
+      <main class="channels">
+        <!-- هانو -->
+        <article class="card" style="--accent:#e8503a">
+          <a class="tile" href="https://www.youtube.com/@Hano89" target="_blank" rel="noopener" aria-label="هانو على يوتيوب">ه</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/@Hano89" target="_blank" rel="noopener">هانو</a></h2>
+            <p class="desc" data-i18n="hano_desc">قصص مشوّقة، خدع للعقل والبصر، ومحتوى ألعاب — بأسلوب مرح يقرّب الفكرة.</p>
+            <div class="handle">@Hano89</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/@Hano89?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- نقطة -->
+        <article class="card" style="--accent:#0d9488">
+          <a class="tile" href="https://www.youtube.com/@نقطة-ب1ع" target="_blank" rel="noopener" aria-label="نقطة على يوتيوب"><span class="dot"></span>ن</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/@نقطة-ب1ع" target="_blank" rel="noopener">نقطة</a></h2>
+            <p class="desc" data-i18n="nuqta_desc">تعلّم كيف تتعلّم: مذاكرة أذكى وعادات دراسة تصنع فرقاً حقيقياً في نتائجك.</p>
+            <div class="handle">@نقطة-ب1ع</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/@نقطة-ب1ع?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- بلّط البحر (يوتيوب) -->
+        <article class="card" style="--accent:#1d7fb8">
+          <a class="tile" href="https://www.youtube.com/@ballat.albahr" target="_blank" rel="noopener" aria-label="بلّط البحر على يوتيوب">ب</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/@ballat.albahr" target="_blank" rel="noopener">بلّط البحر</a></h2>
+            <p class="desc" data-i18n="ballat_desc">تحدٍّ تفاعلي: كل مشترك جديد يضيف بلاطة إلى البحر — هدفنا 10,000 بلاطة!</p>
+            <div class="handle">@ballat.albahr</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/@ballat.albahr?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- خطوة لفوق -->
+        <article class="card" style="--accent:#e22032">
+          <a class="tile" href="https://www.youtube.com/@Katoa_lafok" target="_blank" rel="noopener" aria-label="خطوة لفوق على يوتيوب">خ</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/@Katoa_lafok" target="_blank" rel="noopener">خطوة لفوق</a></h2>
+            <p class="desc" data-i18n="khatwa_desc">مواقع إلكترونية احترافية لأصحاب الأعمال — حضورك الرقمي يبدأ من هنا.</p>
+            <div class="handle">@Katoa_lafok</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/@Katoa_lafok?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- روايات مهجورة -->
+        <article class="card" style="--accent:#8e2a32">
+          <a class="tile" href="https://www.youtube.com/@روايات_مهجورة" target="_blank" rel="noopener" aria-label="روايات مهجورة على يوتيوب">ر</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/@روايات_مهجورة" target="_blank" rel="noopener">روايات مهجورة</a></h2>
+            <p class="desc" data-i18n="ruwayat_desc">وثائقيات وقصص حقيقية من التاريخ: كوارث وأحداث غامضة تُروى من جديد.</p>
+            <div class="handle">@روايات_مهجورة</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/@روايات_مهجورة?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- نهاية العالم -->
+        <article class="card" style="--accent:#c2410c">
+          <a class="tile" href="https://www.youtube.com/channel/UCwB1eeXBYbn_hWy-H_9gU3A" target="_blank" rel="noopener" aria-label="نهاية العالم على يوتيوب">ن</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/channel/UCwB1eeXBYbn_hWy-H_9gU3A" target="_blank" rel="noopener">نهاية العالم</a></h2>
+            <p class="desc" data-i18n="nihaya_desc">كيف تنتهي الحضارات؟ كويكبات وكوارث وأحداث غيّرت وجه الأرض — تُروى خطوة بخطوة.</p>
+            <div class="handle">End of the World</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/channel/UCwB1eeXBYbn_hWy-H_9gU3A?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- نبض التحدي -->
+        <article class="card" style="--accent:#d97706">
+          <a class="tile" href="https://www.youtube.com/channel/UCuPdXXXgM6PD2ZauwEA_ELw" target="_blank" rel="noopener" aria-label="نبض التحدي على يوتيوب">ت</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/channel/UCuPdXXXgM6PD2ZauwEA_ELw" target="_blank" rel="noopener">نبض التحدي</a></h2>
+            <p class="desc" data-i18n="nabd_desc">قناة الكويز: 20 سؤالاً من السهل إلى العبقري — اختبر ذكاءك وتحدَّ نفسك كل مرة.</p>
+            <div class="handle">Nabd Al-Tahadi</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/channel/UCuPdXXXgM6PD2ZauwEA_ELw?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+
+        <!-- ليش؟ -->
+        <article class="card" style="--accent:#16a34a">
+          <a class="tile" href="https://www.youtube.com/@gamesWorld-f1m" target="_blank" rel="noopener" aria-label="ليش؟ على يوتيوب">ل</a>
+          <div class="info">
+            <h2 class="name"><a href="https://www.youtube.com/@gamesWorld-f1m" target="_blank" rel="noopener">ليش؟</a></h2>
+            <p class="desc" data-i18n="lish_desc">أسئلة يومية وإجابات واضحة، فيديو جديد كل يوم.</p>
+            <div class="handle">@gamesWorld-f1m</div>
+          </div>
+          <a class="sub" href="https://www.youtube.com/@gamesWorld-f1m?sub_confirmation=1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.6 1 1.9.2 7.5.3 7.5.3s4.6 0 7.7-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 15.1V8.4l6.2 3.4-6.2 3.3z"/></svg>
+            <span data-i18n="subscribe">اشترك</span>
+          </a>
+        </article>
+      </main>
+
+      <footer>
+        <span data-i18n="footer">شكراً لزيارتك — نراك داخل القنوات!</span>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var strings = {
+          ar: {
+            title: "روابطي وقنواتي",
+            tagline: "أهلاً فيك! أنا عبد الهادي، وهذه كل روابطي وقنواتي على يوتيوب في مكان واحد — اختر ما يعجبك وتابعه.",
+            site_name: "موقع بلّط البحر",
+            site_desc: "تابع عدّاد البلاطات لحظة بلحظة، وشوف بلاطتك على الخريطة — هدفنا 10,000 بلاطة!",
+            visit: "زور الموقع",
+            hano_desc: "قصص مشوّقة، خدع للعقل والبصر، ومحتوى ألعاب — بأسلوب مرح يقرّب الفكرة.",
+            nuqta_desc: "تعلّم كيف تتعلّم: مذاكرة أذكى وعادات دراسة تصنع فرقاً حقيقياً في نتائجك.",
+            ballat_desc: "تحدٍّ تفاعلي: كل مشترك جديد يضيف بلاطة إلى البحر — هدفنا 10,000 بلاطة!",
+            khatwa_desc: "مواقع إلكترونية احترافية لأصحاب الأعمال — حضورك الرقمي يبدأ من هنا.",
+            ruwayat_desc: "وثائقيات وقصص حقيقية من التاريخ: كوارث وأحداث غامضة تُروى من جديد.",
+            nihaya_desc: "كيف تنتهي الحضارات؟ كويكبات وكوارث وأحداث غيّرت وجه الأرض — تُروى خطوة بخطوة.",
+            nabd_desc: "قناة الكويز: 20 سؤالاً من السهل إلى العبقري — اختبر ذكاءك وتحدَّ نفسك كل مرة.",
+            lish_desc: "أسئلة يومية وإجابات واضحة، فيديو جديد كل يوم.",
+            subscribe: "اشترك",
+            footer: "شكراً لزيارتك — نراك داخل القنوات!",
+            btn: "English"
+          },
+          en: {
+            title: "My Links & Channels",
+            tagline: "Welcome! I'm Abdulhadi, and these are all my links and YouTube channels in one place — pick what you like and follow along.",
+            site_name: "Ballat Al-Bahr Website",
+            site_desc: "Follow the tile counter live and find your tile on the map — our goal is 10,000 tiles!",
+            visit: "Visit site",
+            hano_desc: "Thrilling stories, mind and optical tricks, and gaming content — in a fun, friendly style.",
+            nuqta_desc: "Learn how to learn: smarter studying and study habits that make a real difference.",
+            ballat_desc: "An interactive challenge: every new subscriber adds a tile to the sea — our goal is 10,000 tiles!",
+            khatwa_desc: "Professional websites for business owners — your digital presence starts here.",
+            ruwayat_desc: "Documentaries and true stories from history: disasters and mysterious events retold.",
+            nihaya_desc: "How do civilizations end? Asteroids, disasters and events that changed the face of the Earth — told step by step.",
+            nabd_desc: "The quiz channel: 20 questions from easy to genius — test your smarts and challenge yourself every time.",
+            lish_desc: "Daily questions with clear answers — a new video every day.",
+            subscribe: "Subscribe",
+            footer: "Thanks for stopping by — see you on the channels!",
+            btn: "العربية"
+          }
+        };
+        var lang = "ar";
+        var btn = document.getElementById("langBtn");
+        btn.addEventListener("click", function () {
+          lang = lang === "ar" ? "en" : "ar";
+          var dict = strings[lang];
+          document.documentElement.lang = lang;
+          document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+          document.title = lang === "ar" ? "روابط قنواتي" : "My Channel Links";
+          var nodes = document.querySelectorAll("[data-i18n]");
+          for (var i = 0; i < nodes.length; i++) {
+            var key = nodes[i].getAttribute("data-i18n");
+            if (dict[key]) nodes[i].textContent = dict[key];
+          }
+          btn.textContent = dict.btn;
+        });
+      })();
+    </script>
+  </body>
+</html>
