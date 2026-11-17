@@ -908,6 +908,11 @@
         // والشجرتين المورقتين عند (10,9.5) و(14.5,2.5). مركزه (11,3) وواجهته باتجاه
         // زاوية الكاميرا الافتراضية (0.65) عشان يبين كبير وواضح دغري.
         // ممنوع أي نص/اسم/لافتة على الجامع — البناء كله أشكال هندسية بس.
+        // حالة تفاعل الجامع: الضغط عليه بيشغّل صوت «صلّوا على محمد ﷺ» + نبضة توهّج ذهبي
+        var mosqueGroup = null;    // مجموعة الجامع — للالتقاط بالضغط (raycast)
+        var mosquePulse = null;    // نبضة التوهّج الجارية: {start: ثواني, spoke: هل اشتغل الصوت}
+        var mosqueGlowLight = null;
+        var mosqueGlowMats = [];   // مواد القبّة والمآذن والأهلة الذهبية يلي بتتوهّج
         (function buildMosque() {
           var mosque = new THREE.Group();
           var stoneTexM = noiseTex("#ecd9ab", ["#dcc48e", "#f7ecc6", "#cdb27a"], 1800, 256);
@@ -921,6 +926,18 @@
           var goldM = std(0xd9a441, { roughness: 0.28, metalness: 0.85, emissive: 0x664d10, emissiveIntensity: 0.35 });
           var doorM = std(0x4a3220, { roughness: 0.7 });
           var winM = std(0x14424e, { roughness: 0.22, metalness: 0.2, emissive: 0x0a2e38, emissiveIntensity: 0.5 });
+          // مواد التوهّج الذهبي عند الضغط على الجامع: نسخ مستقلة عشان النبضة ما تأثّر على شي تاني بالمشهد
+          var domeGlowMat = turqM.clone();
+          domeGlowMat.emissive = new THREE.Color(0xd9a441);
+          domeGlowMat.emissiveIntensity = 0;
+          domeGlowMat.userData.baseEmissive = 0;
+          var minaretGlowMat = turqDark.clone();
+          minaretGlowMat.emissive = new THREE.Color(0xd9a441);
+          minaretGlowMat.emissiveIntensity = 0;
+          minaretGlowMat.userData.baseEmissive = 0;
+          var goldGlowMat = goldM.clone();
+          goldGlowMat.userData.baseEmissive = goldGlowMat.emissiveIntensity;
+          mosqueGlowMats = [domeGlowMat, minaretGlowMat, goldGlowMat];
 
           function box(w, h, d, mat, x, y, z) {
             var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
@@ -950,7 +967,7 @@
           }
           // هلال ذهبي: قوس حلقي فجوته لفوق — بينحطّ فوق القبّة والمآذن
           function crescent(rad, tube) {
-            var m = new THREE.Mesh(new THREE.TorusGeometry(rad, tube, 10, 28, Math.PI * 1.5), goldM);
+            var m = new THREE.Mesh(new THREE.TorusGeometry(rad, tube, 10, 28, Math.PI * 1.5), goldGlowMat);
             m.rotation.z = Math.PI * 0.75;
             m.castShadow = true;
             return m;
@@ -970,16 +987,16 @@
           var drumRing = new THREE.Mesh(new THREE.CylinderGeometry(4.78, 4.78, 0.34, 24), terraM);
           drumRing.position.y = 7.95; drumRing.castShadow = true;
           mosque.add(drumRing);
-          var dome = new THREE.Mesh(new THREE.SphereGeometry(4.5, 28, 18, 0, Math.PI * 2, 0, Math.PI / 2), turqM);
+          var dome = new THREE.Mesh(new THREE.SphereGeometry(4.5, 28, 18, 0, Math.PI * 2, 0, Math.PI / 2), domeGlowMat);
           dome.scale.y = 1.18;
           dome.position.y = 8.1;
           dome.castShadow = true;
           mosque.add(dome);
           // سارية ذهبية + هلال فوق القبّة
-          var finial = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.13, 1.7, 8), goldM);
+          var finial = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.13, 1.7, 8), goldGlowMat);
           finial.position.y = 13.9; finial.castShadow = true;
           mosque.add(finial);
-          var finialBall = new THREE.Mesh(new THREE.SphereGeometry(0.3, 10, 8), goldM);
+          var finialBall = new THREE.Mesh(new THREE.SphereGeometry(0.3, 10, 8), goldGlowMat);
           finialBall.position.y = 13.35;
           mosque.add(finialBall);
           var mainCrescent = crescent(0.88, 0.2);
@@ -989,7 +1006,7 @@
           // الباب المقوّس: إطار تراكوتا + باب خشبي مقوّس + درجات
           arch(3.1, 4.5, terraM, 0, 0.9, 4.0);
           arch(2.45, 4.0, doorM, 0, 0.9, 4.1);
-          box(0.12, 3.1, 0.1, goldM, 0, 2.45, 4.3);              // فاصل ذهبي بنص الباب
+          box(0.12, 3.1, 0.1, goldGlowMat, 0, 2.45, 4.3);        // فاصل ذهبي بنص الباب
           box(4.4, 0.32, 1.5, stonePlain, 0, 0.16, 5.15);
           box(3.5, 0.32, 1.05, terraM, 0, 0.48, 4.85);
           // شبابيك مقوّسة عالواجهة — إطار تراكوتا وزجاج غامق
@@ -1001,7 +1018,7 @@
           var roundWin = new THREE.Mesh(new THREE.CircleGeometry(0.62, 20), winM);
           roundWin.position.set(0, 5.55, 4.02);
           mosque.add(roundWin);
-          var roundRing = new THREE.Mesh(new THREE.TorusGeometry(0.66, 0.09, 8, 24), goldM);
+          var roundRing = new THREE.Mesh(new THREE.TorusGeometry(0.66, 0.09, 8, 24), goldGlowMat);
           roundRing.position.set(0, 5.55, 4.04);
           mosque.add(roundRing);
           // شبابيك مقوّسة عالجوانب كمان
@@ -1032,12 +1049,12 @@
             mcyl(1.14, 0.88, 0.55, terraM, 10.75);               // الشرفة
             mcyl(0.95, 0.95, 0.22, terraDark, 11.1);
             mcyl(0.46, 0.54, 1.7, stonePlain, 12.0);             // جذع علوي قصير
-            var mdome = new THREE.Mesh(new THREE.SphereGeometry(0.92, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), turqDark);
+            var mdome = new THREE.Mesh(new THREE.SphereGeometry(0.92, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), minaretGlowMat);
             mdome.scale.y = 1.3;
             mdome.position.y = 12.85;
             mdome.castShadow = true;
             g.add(mdome);
-            mcyl(0.06, 0.09, 0.9, goldM, 14.35, 8);
+            mcyl(0.06, 0.09, 0.9, goldGlowMat, 14.35, 8);
             var mc = crescent(0.42, 0.1);
             mc.position.y = 15.05;
             g.add(mc);
@@ -1047,10 +1064,26 @@
           minaret(-5.35);
           minaret(5.35);
 
+          // ضوء ذهبي خفيف فوق القبّة — بيشتغل بس مع نبضة الضغط
+          var glowLight = new THREE.PointLight(0xffc94d, 0, 48);
+          glowLight.position.set(0, 12.5, 0);
+          mosque.add(glowLight);
+          mosqueGlowLight = glowLight;
+
           mosque.position.set(11, TOP, 3);
           mosque.rotation.y = 0.65; // الواجهة باتجاه الكاميرا الافتراضية
           scene.add(mosque);
+          mosqueGroup = mosque;
         })();
+
+        // مستوى توهّج الجامع: 0 = مطفي، 1 = ذروة النبضة الذهبية (قبّة + مآذن + أهلة + ضوء)
+        function setMosqueGlow(level) {
+          for (var gi = 0; gi < mosqueGlowMats.length; gi++) {
+            var gm = mosqueGlowMats[gi];
+            gm.emissiveIntensity = gm.userData.baseEmissive + level * 0.85;
+          }
+          if (mosqueGlowLight) mosqueGlowLight.intensity = level * 1.7;
+        }
 
         // صخور
         var rockMat = std(0x939da3, { roughness: 0.95, flatShading: true });
@@ -1240,28 +1273,6 @@
             scene.add(spr);
             chestSparkles.push(spr);
           }
-        })();
-        // نص «صلّوا على محمد ﷺ» — بيطفو فوق الصندوق وقت محاولة الفتح بس
-        var salliSprite = (function () {
-          var cv = document.createElement("canvas");
-          cv.width = 640; cv.height = 176;
-          var c = cv.getContext("2d");
-          c.beginPath();
-          if (c.roundRect) c.roundRect(6, 6, 628, 164, 40); else c.rect(6, 6, 628, 164);
-          c.fillStyle = "rgba(12,43,51,0.92)"; c.fill();
-          c.strokeStyle = "#ffc94d"; c.lineWidth = 6; c.stroke();
-          c.fillStyle = "#ffe9a8";
-          c.font = "900 64px Rubik, sans-serif";
-          c.textAlign = "center"; c.textBaseline = "middle";
-          c.fillText("صلّوا على محمد ﷺ", 320, 92);
-          var tex = new THREE.CanvasTexture(cv);
-          tex.encoding = THREE.sRGBEncoding;
-          var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthTest: false }));
-          spr.scale.set(19, 5.2, 1);
-          spr.position.set(-8.5, TOP + 15.2, 2.5);
-          spr.renderOrder = 13;
-          scene.add(spr);
-          return spr;
         })();
         function chestLabelSprite() {
           var cv = document.createElement("canvas");
@@ -2284,12 +2295,20 @@
             -((cy - rect.top) / rect.height) * 2 + 1
           );
           raycaster.setFromCamera(nd, camera);
+          if (mosqueGroup) {
+            var hitMosque = raycaster.intersectObject(mosqueGroup, true);
+            if (hitMosque.length) {
+              // ضغطة الجامع: صوت «صلّوا على محمد ﷺ» + نبضة توهّج ذهبي من القبّة والمآذن (بتتنفّذ بحلقة الرسم)
+              if (!mosquePulse) mosquePulse = { start: clock.elapsedTime, spoke: false };
+              return;
+            }
+          }
           var hitChest = raycaster.intersectObject(treasureChest, true);
           if (hitChest.length) {
             flyToFn(-8.5, 2.5, 46, 1.05);
             if (!chestAttempt) {
-              // محاولة فتح: بيهزّ وبيخبط القفل، الغطا بيحاول يرتفع وبيسكر — وبيضل مقفول
-              chestAttempt = { start: clock.elapsedTime, rattled: false, slammed: false, spoke: false };
+              // محاولة فتح: بيهزّ وبيقرقع القفل، الغطا بيحاول يرتفع وبيسكر — وبيضل مقفول، وبلا أي صوت
+              chestAttempt = { start: clock.elapsedTime, slammed: false };
               showToast("عم تحاول تفتحه؟ القفل ماسك منيح 🔒 — بيفتح بس عند " + fmt.format(TOTAL) + " بلاطة… شو فيه الصندوق؟ 🤔", 4600);
             }
             return;
@@ -2372,7 +2391,6 @@
             // الصندوق: خمول خفيف — أو محاولة فتح كاملة إذا انضغط
             if (chestAttempt) {
               var el = t - chestAttempt.start;
-              if (!chestAttempt.rattled && el > 0.02) { chestAttempt.rattled = true; SoundFX.rattle(); }
               if (el < 0.65) {
                 // اهتزاز وخبطات القفل
                 var shake = Math.sin(el * 55) * 0.045 * (1 - el / 0.65);
@@ -2394,7 +2412,6 @@
                 // …وبيخبط راجع مسكّر
                 if (!chestAttempt.slammed) {
                   chestAttempt.slammed = true;
-                  SoundFX.slam();
                   if (chestLidGroup) chestLidGroup.rotation.x = 0;
                 }
                 treasureChest.position.y = TOP + Math.max(0, 0.1 - (el - 1.25) * 0.5);
@@ -2404,25 +2421,25 @@
                 treasureChest.position.y = TOP;
                 if (chestLockBody) chestLockBody.position.x = 0;
                 if (chestShackle) chestShackle.rotation.z = 0;
-                if (!chestAttempt.spoke && el > 1.5) {
-                  chestAttempt.spoke = true;
-                  playSalli(); // «صلّوا على محمد ﷺ» بصوت مسجّل + النص بيطفو فوق الصندوق
-                }
-                if (el > 4.4) chestAttempt = null;
-              }
-              // نص الصلاة بيطفو وبيختفي ببطء
-              if (salliSprite) {
-                var so = el < 1.5 ? 0 : el < 1.9 ? (el - 1.5) / 0.4 : el > 3.9 ? Math.max(0, 1 - (el - 3.9) / 0.5) : 1;
-                salliSprite.material.opacity = so;
-                salliSprite.position.y = TOP + 15.2 + (el > 1.5 ? Math.min(1, (el - 1.5) / 3) * 0.9 : 0);
+                if (el > 1.6) chestAttempt = null;
               }
               if (treasureGlow) treasureGlow.intensity = 1.1 + Math.sin(t * 6) * 0.4;
             } else {
               treasureChest.rotation.z = Math.sin(t * 1.7) * 0.03;
               treasureChest.position.y = TOP + Math.abs(Math.sin(t * 1.7)) * 0.08;
               treasureChest.position.x = -8.5;
-              if (salliSprite) salliSprite.material.opacity = Math.max(0, salliSprite.material.opacity - dt * 2);
               if (treasureGlow) treasureGlow.intensity = 0.8 + Math.sin(t * 2.3) * 0.35;
+            }
+            // نبضة الجامع: صوت «صلّوا على محمد ﷺ» مرة وحدة (بيحترم الكتم) + توهّج ذهبي بيطلع وبيهدا
+            if (mosquePulse) {
+              var mel = t - mosquePulse.start;
+              if (!mosquePulse.spoke && mel > 0.02) { mosquePulse.spoke = true; playSalli(); }
+              if (mel < 1.7) {
+                setMosqueGlow(Math.sin(Math.min(mel / 1.7, 1) * Math.PI));
+              } else {
+                setMosqueGlow(0);
+                mosquePulse = null;
+              }
             }
             if (chestRing) {
               var rs = 1 + Math.sin(t * 2.0) * 0.07;
@@ -2472,14 +2489,16 @@
               if (cl.g.position.x > 420) cl.g.position.x = -420;
             });
           }
-          // مع تقليل الحركة: محاولة الفتح بتصير بلا اهتزاز — بس خبطة القفل والصوت والنص الطافي
+          // مع تقليل الحركة: محاولة فتح الصندوق بتنتهي بصمت وهو مقفول — بلا اهتزاز وبلا أي صوت
           if (reduced && chestAttempt) {
-            var rel = t - chestAttempt.start;
-            if (!chestAttempt.rattled) { chestAttempt.rattled = true; SoundFX.rattle(); }
-            if (!chestAttempt.slammed && rel > 0.7) { chestAttempt.slammed = true; SoundFX.slam(); }
-            if (!chestAttempt.spoke && rel > 1.0) { chestAttempt.spoke = true; playSalli(); }
-            if (salliSprite) salliSprite.material.opacity = rel < 1.0 ? 0 : rel > 3.9 ? Math.max(0, 1 - (rel - 3.9) / 0.5) : 1;
-            if (rel > 4.4) chestAttempt = null;
+            if (t - chestAttempt.start > 1.6) chestAttempt = null;
+          }
+          // ومع تقليل الحركة كمان: ضغطة الجامع بتشغّل الصوت نفسه (وبيحترم الكتم) — بس التوهّج ثابت بلا نبض متحرك
+          if (reduced && mosquePulse) {
+            var mrel = t - mosquePulse.start;
+            if (!mosquePulse.spoke) { mosquePulse.spoke = true; playSalli(); }
+            setMosqueGlow(0.45);
+            if (mrel > 2.2) { setMosqueGlow(0); mosquePulse = null; }
           }
           updateWhale(t, dt);
           renderer.render(scene, camera);
