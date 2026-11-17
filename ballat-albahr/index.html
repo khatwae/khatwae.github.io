@@ -136,6 +136,34 @@
       .chip.chest { border-color: rgba(217, 119, 6, 0.55); font-weight: 800; font-size: 0.86rem; padding: 8px 14px; }
       .chip.chest .lock { font-size: 1rem; }
 
+      /* ---------- لوحة البلدان: تحت شريحة العدّاد بجهة البداية، بنفس زجاج الـ chips ---------- */
+      .countries-panel {
+        position: absolute;
+        top: calc(env(safe-area-inset-top, 0px) + 84px);
+        inset-inline-start: 10px;
+        z-index: 10;
+        display: flex; flex-direction: column; gap: 5px;
+        background: var(--hud-bg);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 8px 12px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 6px 18px rgba(6, 45, 60, 0.25);
+        max-width: min(64vw, 264px);
+        pointer-events: none;
+      }
+      .cp-row { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 800; white-space: nowrap; }
+      .cp-flag { width: 26px; height: 18px; border-radius: 3px; border: 1px solid rgba(0, 0, 0, 0.18); flex: none; }
+      .cp-count { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 900; }
+      .cp-tag { background: var(--yt); color: #fff; font-size: 0.6rem; font-weight: 800; padding: 2px 7px; border-radius: 999px; flex: none; }
+      @media (max-width: 700px) {
+        .countries-panel { top: calc(env(safe-area-inset-top, 0px) + 78px); padding: 6px 9px; gap: 4px; border-radius: 13px; }
+        .cp-row { font-size: 0.74rem; gap: 5px; }
+        .cp-flag { width: 22px; height: 15px; }
+        .cp-tag { font-size: 0.54rem; padding: 1px 5px; }
+      }
+
       /* ---------- أزرار اللعب السفلية ---------- */
       .sub-btn {
         position: absolute;
@@ -283,7 +311,7 @@
         <button type="button" class="chip" id="counterChip" aria-label="عداد يوتيوب: اضغط لعرض البحر كله">
           <span class="play">▶</span>
           <span class="c-txt">
-            <span class="c-num"><span id="countNow">8</span> / 10,000</span>
+            <span class="c-num"><span id="countNow">13</span> / 10,000</span>
             <span class="c-lab">بلاطة بالبحر · يوتيوب</span>
             <span class="mini-bar"><i id="miniFill"></i></span>
           </span>
@@ -292,6 +320,8 @@
           <span class="lock">🔒</span><span>شو فيه الصندوق؟</span>
         </div>
       </div>
+
+      <div class="countries-panel" id="countriesPanel" aria-label="بلدان المتابعين على البلاطات"></div>
 
       <a class="sub-btn" id="subBtn" href="https://www.youtube.com/@ballat.albahr?sub_confirmation=1" target="_blank" rel="noopener" aria-label="اشترك بقناة بلط البحر على يوتيوب">
         <span class="play">▶</span><span>اشترك بالقناة</span>
@@ -315,9 +345,98 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 8; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 8 مشتركين = 8 بلاطات مرسومة، والجاية رقم 9
+      var COUNT = 13; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 13 مشترك = 13 بلاطة مرسومة، والجاية رقم 14
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
+
+      // ======= أعلام البلدان على البلاطات (حسب تعليقات المتابعين) =======
+      // قيمة افتراضية مضمّنة — نفس محتوى countries.json بالضبط — عشان الأعلام تبين حتى قبل أول جلب.
+      // قاعدة دائمة: علم انحطّ مرة ما بينشال أبداً. معلّقو يوتيوب إلهم الأولوية بأول البلاطات الفاضية
+      // وأعلامهم مميّزة (ذهبي + شارة)؛ أعلام انستغرام/فيسبوك/تيك توك عادية تماماً.
+      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" } };
+      var COUNTRY_NAMES = { SY: "سوريا", IQ: "العراق", PS: "فلسطين", EG: "مصر", JO: "الأردن", SA: "السعودية", LB: "لبنان", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", KW: "الكويت", QA: "قطر", AE: "الإمارات", OM: "عُمان", BH: "البحرين", TR: "تركيا" };
+      function countryName(code) { return COUNTRY_NAMES[code] || code; }
+      function drawStar(c, cx, cy, r, color) {
+        c.fillStyle = color;
+        c.beginPath();
+        for (var i = 0; i < 10; i++) {
+          var ang = -Math.PI / 2 + i * Math.PI / 5;
+          var rad = i % 2 === 0 ? r : r * 0.42;
+          var px = cx + Math.cos(ang) * rad, py = cy + Math.sin(ang) * rad;
+          if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
+        }
+        c.closePath(); c.fill();
+      }
+      // بيرسم أي علم على context بمقاس w×h — بينستعمل للبلاطات (texture) ولأعلام اللوحة الصغيرة
+      function drawFlagTo(c, w, h, code) {
+        function band(colors) {
+          for (var i = 0; i < 3; i++) { c.fillStyle = colors[i]; c.fillRect(0, Math.floor(h * i / 3), w, Math.ceil(h / 3) + 1); }
+        }
+        if (code === "SY") {
+          // علم سوريا الجديد حصراً: أخضر فوق، أبيض بالنص، أسود تحت، وثلاث نجوم حمراء بالشريط الأبيض
+          band(["#007a3d", "#ffffff", "#000000"]);
+          [0.28, 0.5, 0.72].forEach(function (fx) { drawStar(c, w * fx, h / 2, h * 0.115, "#ce1126"); });
+        } else if (code === "IQ") {
+          // علم العراق: أحمر فوق، أبيض بالنص، أسود تحت، و«الله أكبر» بالأخضر بالنص
+          band(["#ce1126", "#ffffff", "#000000"]);
+          c.fillStyle = "#007a3d";
+          c.font = "900 " + Math.round(h * 0.24) + "px Rubik, sans-serif";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          c.fillText("الله أكبر", w / 2, h / 2 + h * 0.01);
+        } else if (code === "TN") {
+          // علم تونس: خلفية حمراء، قرص أبيض بالوسط، وهلال ونجمة حمراء داخل القرص
+          c.fillStyle = "#e70013"; c.fillRect(0, 0, w, h);
+          var tcx = w / 2, tcy = h / 2, tR = h * 0.26;
+          c.fillStyle = "#ffffff";
+          c.beginPath(); c.arc(tcx, tcy, tR, 0, Math.PI * 2); c.fill();
+          // الهلال الأحمر: دائرة حمراء بتنقص منها دائرة بيضاء مزاحة
+          c.fillStyle = "#e70013";
+          c.beginPath(); c.arc(tcx, tcy, tR * 0.8, 0, Math.PI * 2); c.fill();
+          c.fillStyle = "#ffffff";
+          c.beginPath(); c.arc(tcx + tR * 0.24, tcy, tR * 0.66, 0, Math.PI * 2); c.fill();
+          // النجمة الحمراء بقلب الهلال
+          drawStar(c, tcx + tR * 0.14, tcy, tR * 0.44, "#e70013");
+        } else if (code === "SA") {
+          // علم السعودية: خلفية خضراء، الشهادة بالأبيض، وسيف أبيض تحتها
+          c.fillStyle = "#006c35"; c.fillRect(0, 0, w, h);
+          c.fillStyle = "#ffffff";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          var shahada = "لا إله إلا الله محمد رسول الله";
+          var fs = Math.round(h * 0.21);
+          c.font = "700 " + fs + "px Rubik, sans-serif";
+          while (fs > 6 && c.measureText(shahada).width > w * 0.94) {
+            fs -= 1;
+            c.font = "700 " + fs + "px Rubik, sans-serif";
+          }
+          c.fillText(shahada, w / 2, h * 0.36);
+          // السيف الأبيض تحت الشهادة: نصل طويل أفقي + مقبض قصير
+          var sy = h * 0.68, sx0 = w * 0.16, sx1 = w * 0.84, st = Math.max(2, h * 0.045);
+          c.beginPath();
+          c.moveTo(sx0, sy);
+          c.lineTo(sx1 - st * 1.6, sy - st / 2);
+          c.lineTo(sx1, sy);
+          c.lineTo(sx1 - st * 1.6, sy + st / 2);
+          c.closePath(); c.fill();
+          // واقي اليد + المقبض عند بداية النصل
+          c.fillRect(sx0 - st * 0.5, sy - st * 1.5, st * 0.9, st * 3);
+          c.fillRect(sx0 - st * 3.4, sy - st * 0.55, st * 2.9, st * 1.1);
+        } else if (code === "PS") {
+          // علم فلسطين (جاهز للاستخدام المستقبلي): أسود/أبيض/أخضر + مثلث أحمر
+          band(["#000000", "#ffffff", "#007a3d"]);
+          c.fillStyle = "#ce1126";
+          c.beginPath(); c.moveTo(0, 0); c.lineTo(w * 0.42, h / 2); c.lineTo(0, h); c.closePath(); c.fill();
+        } else {
+          // بديل عام لأي كود غير معروف: لون ثابت من الكود + رمز الكود
+          var palette = ["#12809e", "#d96f32", "#3e9e57", "#7a4fa3", "#c4502e", "#2e6da4"];
+          var sum = 0; for (var i = 0; i < code.length; i++) sum += code.charCodeAt(i);
+          c.fillStyle = palette[sum % palette.length]; c.fillRect(0, 0, w, h);
+          c.fillStyle = "#ffffff";
+          c.font = "900 " + Math.round(h * 0.42) + "px Rubik, sans-serif";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          c.fillText(code, w / 2, h / 2);
+        }
+      }
+
       requestAnimationFrame(function () {
         document.getElementById("miniFill").style.width = (COUNT / TOTAL) * 100 + "%";
       });
@@ -1332,9 +1451,105 @@
           marker.position.z = cell.wz;
           markerLabelSprite.position.set(marker.position.x, MARKER_Y + 4.6, marker.position.z);
         }
+        // ----- أعلام البلدان: مستوى فوق سطح البلاطة مباشرة بنفس موضعها من tileOrder -----
+        // البلاطة رقم n هي tileOrder[n-1]. أعلام يوتيوب مميّزة: إطار ذهبي + توهّج ذهبي +
+        // علم أكبر ومرفوع شوي + شارة يوتيوب حمراء بزاوية البلاطة. باقي المصادر: علم مستوٍ عادي.
+        var flagGroup = new THREE.Group();
+        scene.add(flagGroup);
+        var renderedFlags = {}; // علم انرسم مرة ما بينشال ولا بينعاد
+        var flagGlows = [];
+        var flagGlowTex = (function () {
+          var cv = document.createElement("canvas");
+          cv.width = cv.height = 128;
+          var c = cv.getContext("2d");
+          var rg = c.createRadialGradient(64, 64, 6, 64, 64, 64);
+          rg.addColorStop(0, "rgba(255,201,77,0.85)");
+          rg.addColorStop(0.55, "rgba(255,180,40,0.38)");
+          rg.addColorStop(1, "rgba(255,180,40,0)");
+          c.fillStyle = rg; c.fillRect(0, 0, 128, 128);
+          return new THREE.CanvasTexture(cv);
+        })();
+        var ytBadgeTex = (function () {
+          var cv = document.createElement("canvas");
+          cv.width = cv.height = 96;
+          var c = cv.getContext("2d");
+          c.beginPath();
+          if (c.roundRect) c.roundRect(6, 6, 84, 84, 22); else c.rect(6, 6, 84, 84);
+          c.fillStyle = "#ff0033"; c.fill();
+          c.strokeStyle = "#ffffff"; c.lineWidth = 5; c.stroke();
+          c.fillStyle = "#ffffff";
+          c.beginPath(); c.moveTo(36, 28); c.lineTo(36, 68); c.lineTo(70, 48); c.closePath(); c.fill();
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          return tex;
+        })();
+        function addFlagForTile(num, entry) {
+          if (renderedFlags[num] || !entry || !entry.code) return;
+          var idx = num - 1;
+          if (idx < 0 || idx >= tileOrder.length || idx >= drawnTiles) return; // البلاطة لسا ما انرسمت — بتنحطّ وقت تنرسم
+          var cell = tileOrder[idx];
+          var yt = entry.source === "youtube";
+          var fw = yt ? TILE * 0.94 : TILE * 0.82;
+          var fh = fw * 2 / 3;
+          var baseY = TILE_Y + 0.62; // سطح البلاطة ~1.8 — العلم فوقه مباشرة
+          var grp = new THREE.Group();
+          grp.position.set(cell.wx, 0, cell.wz);
+          if (yt) {
+            var glow = new THREE.Mesh(
+              new THREE.PlaneGeometry(TILE * 1.32, TILE * 1.06),
+              new THREE.MeshBasicMaterial({ map: flagGlowTex, transparent: true, opacity: 0.55, depthWrite: false })
+            );
+            glow.rotation.x = -Math.PI / 2;
+            glow.position.y = baseY + 0.015;
+            grp.add(glow);
+            flagGlows.push(glow);
+            var frame = new THREE.Mesh(
+              new THREE.PlaneGeometry(fw + 0.36, fh + 0.36),
+              new THREE.MeshBasicMaterial({ color: 0xffc233 })
+            );
+            frame.rotation.x = -Math.PI / 2;
+            frame.position.y = baseY + 0.03;
+            grp.add(frame);
+          }
+          var fcv = document.createElement("canvas");
+          fcv.width = 256; fcv.height = 171;
+          drawFlagTo(fcv.getContext("2d"), 256, 171, entry.code);
+          var ftex = new THREE.CanvasTexture(fcv);
+          ftex.encoding = THREE.sRGBEncoding;
+          ftex.anisotropy = 4;
+          var flag = new THREE.Mesh(
+            new THREE.PlaneGeometry(fw, fh),
+            new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.85 })
+          );
+          flag.rotation.x = -Math.PI / 2;
+          flag.position.y = baseY + (yt ? 0.22 : 0.045); // أعلام يوتيوب مرفوعة شوي عن البلاطة
+          flag.receiveShadow = true;
+          grp.add(flag);
+          if (yt) {
+            var badge = new THREE.Mesh(
+              new THREE.PlaneGeometry(1.25, 1.25),
+              new THREE.MeshBasicMaterial({ map: ytBadgeTex, transparent: true })
+            );
+            badge.rotation.x = -Math.PI / 2;
+            badge.position.set(fw / 2 - 0.35, baseY + 0.3, -fh / 2 + 0.35);
+            grp.add(badge);
+          }
+          flagGroup.add(grp);
+          renderedFlags[num] = true;
+        }
+        function applyCountryFlags() {
+          Object.keys(COUNTRIES).forEach(function (k) {
+            var n = parseInt(k, 10);
+            if (isFinite(n)) addFlagForTile(n, COUNTRIES[k]);
+          });
+        }
+        window.__bltApplyCountries = applyCountryFlags;
+        applyCountryFlags();
+
         // خطّاف التحديث الحي: بيستدعيه كود جلب count.json وقت يزيد العدد
         window.__bltApplyTiles = function () {
           drawTilesUpTo(COUNT);
+          applyCountryFlags();
           placeMarker();
           drawMarkerLabel();
         };
@@ -2042,6 +2257,7 @@
             var mpulse = 1 + Math.sin(t * 3.2) * 0.055;
             marker.scale.set(mpulse, 1, mpulse);
             if (marker.userData.inner) marker.userData.inner.material.opacity = 0.3 + (Math.sin(t * 3.2) * 0.5 + 0.5) * 0.32;
+            flagGlows.forEach(function (g) { g.material.opacity = 0.42 + (Math.sin(t * 2.6) * 0.5 + 0.5) * 0.25; });
             clouds.forEach(function (cl) {
               cl.g.position.x += dt * cl.sp;
               if (cl.g.position.x > 420) cl.g.position.x = -420;
@@ -2112,6 +2328,78 @@
       }
       pollCount();
       setInterval(pollCount, 60000);
+
+      // ======= لوحة البلدان + التحديث الحي من countries.json — نفس نمط count.json بالضبط =======
+      // مسار نسبي + ?t= لكسر الكاش + cache:'no-store' + إعادة جلب كل 60 ثانية + فشل صامت.
+      // الدمج إضافي فقط: علم انحطّ مرة ما بينشال ولا بيتبدّل أبداً.
+      function renderCountriesPanel() {
+        var panel = document.getElementById("countriesPanel");
+        if (!panel) return;
+        var agg = {};
+        Object.keys(COUNTRIES).forEach(function (k) {
+          var e = COUNTRIES[k];
+          if (!e || !e.code) return;
+          if (!agg[e.code]) agg[e.code] = { count: 0, yt: false };
+          agg[e.code].count++;
+          if (e.source === "youtube") agg[e.code].yt = true;
+        });
+        panel.innerHTML = "";
+        var codes = Object.keys(agg);
+        var firstSeen = codes.slice();
+        codes.sort(function (a, b) {
+          if (agg[b].count !== agg[a].count) return agg[b].count - agg[a].count;
+          return firstSeen.indexOf(a) - firstSeen.indexOf(b);
+        });
+        codes.forEach(function (code) {
+          var row = document.createElement("div");
+          row.className = "cp-row";
+          var cv = document.createElement("canvas");
+          cv.width = 52; cv.height = 36; cv.className = "cp-flag";
+          cv.setAttribute("aria-hidden", "true");
+          drawFlagTo(cv.getContext("2d"), 52, 36, code);
+          row.appendChild(cv);
+          var nm = document.createElement("span");
+          nm.className = "cp-name"; nm.textContent = countryName(code);
+          row.appendChild(nm);
+          var ct = document.createElement("span");
+          ct.className = "cp-count"; ct.textContent = fmt.format(agg[code].count);
+          row.appendChild(ct);
+          if (agg[code].yt) {
+            var tag = document.createElement("span");
+            tag.className = "cp-tag"; tag.textContent = "▶ يوتيوب";
+            row.appendChild(tag);
+          }
+          panel.appendChild(row);
+        });
+        panel.style.display = panel.children.length ? "" : "none";
+      }
+      renderCountriesPanel();
+      function pollCountries() {
+        if (!window.fetch) return;
+        fetch("countries.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { if (!r.ok) throw new Error("countries.json unavailable"); return r.json(); })
+          .then(function (data) {
+            if (!data || typeof data !== "object") return;
+            var changed = false;
+            Object.keys(data).forEach(function (k) {
+              var n = parseInt(k, 10);
+              var e = data[k];
+              if (!isFinite(n) || n < 1 || n > TOTAL) return;
+              if (!e || typeof e.code !== "string" || !e.code) return;
+              if (COUNTRIES[k]) return; // محطوطة من قبل — بتضلّ متل ما هي
+              var src = ["youtube", "instagram", "facebook", "tiktok"].indexOf(e.source) >= 0 ? e.source : "youtube";
+              COUNTRIES[k] = { code: e.code.toUpperCase(), source: src };
+              changed = true;
+            });
+            if (changed) {
+              if (window.__bltApplyCountries) window.__bltApplyCountries();
+              renderCountriesPanel();
+            }
+          })
+          .catch(function () { /* فشل الجلب أو الملف مو موجود: الأعلام المضمّنة بتضلّ ظاهرة، بدون أي رسالة */ });
+      }
+      pollCountries();
+      setInterval(pollCountries, 60000);
     </script>
   </body>
 </html>
