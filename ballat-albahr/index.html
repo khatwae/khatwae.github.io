@@ -464,6 +464,17 @@
         } else if (code === "YE") {
           // علم اليمن: أحمر/أبيض/أسود
           band(["#ce1126", "#ffffff", "#000000"]);
+        } else if (code === "LY") {
+          // علم ليبيا: أحمر فوق، أسود بالنص (ضعف الارتفاع)، أخضر تحت، وهلال ونجمة بيضاء بوسط الشريط الأسود
+          c.fillStyle = "#ce1126"; c.fillRect(0, 0, w, h * 0.25);
+          c.fillStyle = "#000000"; c.fillRect(0, h * 0.25, w, h * 0.5);
+          c.fillStyle = "#007a3d"; c.fillRect(0, h * 0.75, w, h * 0.25);
+          var lcx = w / 2, lcy = h / 2, lR = h * 0.14;
+          c.fillStyle = "#ffffff";
+          c.beginPath(); c.arc(lcx, lcy, lR, 0, Math.PI * 2); c.fill();
+          c.fillStyle = "#000000";
+          c.beginPath(); c.arc(lcx + lR * 0.28, lcy, lR * 0.92, 0, Math.PI * 2); c.fill();
+          drawStar(c, lcx + lR * 0.62, lcy, lR * 0.42, "#ffffff");
         } else {
           // بديل عام لأي كود غير معروف: لون ثابت من الكود + رمز الكود
           var palette = ["#12809e", "#d96f32", "#3e9e57", "#7a4fa3", "#c4502e", "#2e6da4"];
