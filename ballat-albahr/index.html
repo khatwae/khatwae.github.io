@@ -345,7 +345,7 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 13; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 13 مشترك = 13 بلاطة مرسومة، والجاية رقم 14
+      var COUNT = 29; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 29 مشترك = 29 بلاطة مرسومة، والجاية رقم 30
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
 
@@ -353,7 +353,7 @@
       // قيمة افتراضية مضمّنة — نفس محتوى countries.json بالضبط — عشان الأعلام تبين حتى قبل أول جلب.
       // قاعدة دائمة: علم انحطّ مرة ما بينشال أبداً. معلّقو يوتيوب إلهم الأولوية بأول البلاطات الفاضية
       // وأعلامهم مميّزة (ذهبي + شارة)؛ أعلام انستغرام/فيسبوك/تيك توك عادية تماماً.
-      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" } };
+      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" } };
       var COUNTRY_NAMES = { SY: "سوريا", IQ: "العراق", PS: "فلسطين", EG: "مصر", JO: "الأردن", SA: "السعودية", LB: "لبنان", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", KW: "الكويت", QA: "قطر", AE: "الإمارات", OM: "عُمان", BH: "البحرين", TR: "تركيا" };
       function countryName(code) { return COUNTRY_NAMES[code] || code; }
       function drawStar(c, cx, cy, r, color) {
@@ -361,6 +361,18 @@
         c.beginPath();
         for (var i = 0; i < 10; i++) {
           var ang = -Math.PI / 2 + i * Math.PI / 5;
+          var rad = i % 2 === 0 ? r : r * 0.42;
+          var px = cx + Math.cos(ang) * rad, py = cy + Math.sin(ang) * rad;
+          if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
+        }
+        c.closePath(); c.fill();
+      }
+      function drawStar7(c, cx, cy, r, color) {
+        // نجمة سباعية (علم الأردن): 7 رؤوس، نقطة لفوق، مثل drawStar بس بـ 7 نقاط
+        c.fillStyle = color;
+        c.beginPath();
+        for (var i = 0; i < 14; i++) {
+          var ang = -Math.PI / 2 + i * Math.PI / 7;
           var rad = i % 2 === 0 ? r : r * 0.42;
           var px = cx + Math.cos(ang) * rad, py = cy + Math.sin(ang) * rad;
           if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
@@ -443,6 +455,15 @@
           band(["#000000", "#ffffff", "#007a3d"]);
           c.fillStyle = "#ce1126";
           c.beginPath(); c.moveTo(0, 0); c.lineTo(w * 0.42, h / 2); c.lineTo(0, h); c.closePath(); c.fill();
+        } else if (code === "JO") {
+          // علم الأردن (المادة 4 من الدستور): أسود/أبيض/أخضر + مثلث أحمر قاعدته كامل الارتفاع وقمّته بنصف الطول، ونجمة بيضاء سباعية بمركز ثقل المثلث
+          band(["#000000", "#ffffff", "#007a3d"]);
+          c.fillStyle = "#ce1126";
+          c.beginPath(); c.moveTo(0, 0); c.lineTo(w * 0.5, h / 2); c.lineTo(0, h); c.closePath(); c.fill();
+          drawStar7(c, w / 6, h / 2, Math.max(w / 28, h * 0.085), "#ffffff");
+        } else if (code === "YE") {
+          // علم اليمن: أحمر/أبيض/أسود
+          band(["#ce1126", "#ffffff", "#000000"]);
         } else {
           // بديل عام لأي كود غير معروف: لون ثابت من الكود + رمز الكود
           var palette = ["#12809e", "#d96f32", "#3e9e57", "#7a4fa3", "#c4502e", "#2e6da4"];
