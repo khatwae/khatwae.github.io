@@ -223,6 +223,14 @@
         height: 3px; border-radius: 2px; background: #e23b3b;
         transform: rotate(-38deg);
       }
+      .cambtns button.quality {
+        width: auto; height: auto;
+        border-radius: 999px;
+        font-size: 0.72rem; font-weight: 800;
+        padding: 9px 13px;
+        white-space: nowrap;
+        align-self: center;
+      }
 
       .hint {
         position: absolute;
@@ -333,6 +341,7 @@
         <button type="button" id="zoomIn" aria-label="تقريب الكاميرا">+</button>
         <button type="button" id="zoomOut" aria-label="إبعاد الكاميرا">−</button>
         <button type="button" id="camReset" class="small" aria-label="إعادة ضبط الكاميرا">⌖</button>
+        <button type="button" id="qualityBtn" class="quality" aria-label="تبديل جودة العرض بين تلقائي وخفيفة وعالية">الجودة: تلقائي</button>
       </div>
 
       <div class="stick" id="stick" aria-hidden="true"><div class="knob" id="stickKnob"></div></div>
@@ -346,7 +355,7 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 13; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 13 مشترك = 13 بلاطة مرسومة، والجاية رقم 14
+      var COUNT = 41; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 41 مشترك = 41 بلاطة مرسومة، والجاية رقم 42
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
 
@@ -354,7 +363,7 @@
       // قيمة افتراضية مضمّنة — نفس محتوى countries.json بالضبط — عشان الأعلام تبين حتى قبل أول جلب.
       // قاعدة دائمة: علم انحطّ مرة ما بينشال أبداً. معلّقو يوتيوب إلهم الأولوية بأول البلاطات الفاضية
       // وأعلامهم مميّزة (ذهبي + شارة)؛ أعلام انستغرام/فيسبوك/تيك توك عادية تماماً.
-      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" } };
+      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" } };
       var COUNTRY_NAMES = { SY: "سوريا", IQ: "العراق", PS: "فلسطين", EG: "مصر", JO: "الأردن", SA: "السعودية", LB: "لبنان", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", KW: "الكويت", QA: "قطر", AE: "الإمارات", OM: "عُمان", BH: "البحرين", TR: "تركيا" };
       function countryName(code) { return COUNTRY_NAMES[code] || code; }
       function drawStar(c, cx, cy, r, color) {
@@ -741,15 +750,35 @@
 
       var camGoal = null, resetCamFn = null, flyToFn = null;
 
+      // ======= نظام الجودة: ثلاث حالات (تلقائي/عالية/خفيفة) — بيخفّف الحمل على الأجهزة الضعيفة بدون تغيير شكل المشهد =======
+      var QUALITY = "auto";
+      try {
+        var savedQ = window.localStorage.getItem("blt-quality");
+        if (savedQ === "high" || savedQ === "lite" || savedQ === "auto") QUALITY = savedQ;
+      } catch (e) {}
+      try {
+        var qm = /[?&]q=(lite|high|auto)\b/.exec(window.location.search || "");
+        if (qm) QUALITY = qm[1];
+      } catch (e) {}
+      function isWeakDevice() {
+        var cores = navigator.hardwareConcurrency || 8;
+        var mem = navigator.deviceMemory || 8;
+        var mobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent || "");
+        var dpr = window.devicePixelRatio || 1;
+        return cores <= 4 || mem <= 4 || (mobile && dpr >= 2.5);
+      }
+      var EFFECTIVE_QUALITY = QUALITY === "auto" ? (isWeakDevice() ? "lite" : "high") : QUALITY;
+      var LITE = EFFECTIVE_QUALITY === "lite";
+
       function initWorld() {
         if (typeof THREE === "undefined") throw new Error("no three");
 
-        var renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        var renderer = new THREE.WebGLRenderer({ antialias: !LITE, powerPreference: "high-performance" });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, LITE ? 1 : 1.5));
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.12;
-        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.enabled = !LITE;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         glHost.appendChild(renderer.domElement);
 
@@ -1587,7 +1616,7 @@
             "}"
           ].join("\n")
         });
-        var water = new THREE.Mesh(new THREE.PlaneGeometry(760, 760, 150, 150), waterMat);
+        var water = new THREE.Mesh(new THREE.PlaneGeometry(760, 760, LITE ? 64 : 150, LITE ? 64 : 150), waterMat);
         water.rotation.x = -Math.PI / 2;
         water.position.y = 0;
         scene.add(water);
@@ -1827,21 +1856,24 @@
           var grp = new THREE.Group();
           grp.position.set(cell.wx, 0, cell.wz);
           if (yt) {
-            // هالة ذهبية كبيرة على المي حوالين البلاطة — بتنشاف من بعيد
-            var glow = new THREE.Mesh(
-              new THREE.PlaneGeometry(TILE * 2.35, TILE * 2.35),
-              new THREE.MeshBasicMaterial({ map: flagGlowTex, transparent: true, opacity: 0.95, depthWrite: false })
-            );
-            glow.rotation.x = -Math.PI / 2;
-            glow.position.y = baseY + 0.015;
-            grp.add(glow);
-            flagGlows.push(glow);
-            // هالة عمودية (sprite دايماً مواجه الكاميرا) — توهّج بينقرا من مسافة الكاميرا الافتراضية والموبايل
-            var halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: flagGlowTex, transparent: true, opacity: 0.42, depthWrite: false }));
-            halo.scale.set(TILE * 2.1, TILE * 2.1, 1);
-            halo.position.y = baseY + 1.15;
-            grp.add(halo);
-            flagHalos.push(halo);
+            // بالوضع الخفيف: بلا هالة ولا توهّج ذهبي (أغلى عناصر البلاطة الذهبية رسماً) — بيضل السطح الذهبي والأشرطة والعلم والشارة المسطّحة
+            if (!LITE) {
+              // هالة ذهبية كبيرة على المي حوالين البلاطة — بتنشاف من بعيد
+              var glow = new THREE.Mesh(
+                new THREE.PlaneGeometry(TILE * 2.35, TILE * 2.35),
+                new THREE.MeshBasicMaterial({ map: flagGlowTex, transparent: true, opacity: 0.95, depthWrite: false })
+              );
+              glow.rotation.x = -Math.PI / 2;
+              glow.position.y = baseY + 0.015;
+              grp.add(glow);
+              flagGlows.push(glow);
+              // هالة عمودية (sprite دايماً مواجه الكاميرا) — توهّج بينقرا من مسافة الكاميرا الافتراضية والموبايل
+              var halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: flagGlowTex, transparent: true, opacity: 0.42, depthWrite: false }));
+              halo.scale.set(TILE * 2.1, TILE * 2.1, 1);
+              halo.position.y = baseY + 1.15;
+              grp.add(halo);
+              flagHalos.push(halo);
+            }
             // قاعدة ذهبية صلبة تحت العلم — أسمك وأعلى من سطح البلاطة العادية بوضوح
             var goldMat = new THREE.MeshStandardMaterial({ color: 0xffb800, metalness: 0.85, roughness: 0.22, emissive: 0xff9500, emissiveIntensity: 0.55 });
             flagFrames.push(goldMat);
@@ -1865,8 +1897,8 @@
             });
           }
           var fcv = document.createElement("canvas");
-          fcv.width = 256; fcv.height = 171;
-          drawFlagTo(fcv.getContext("2d"), 256, 171, entry.code);
+          fcv.width = LITE ? 128 : 256; fcv.height = LITE ? 86 : 171;
+          drawFlagTo(fcv.getContext("2d"), LITE ? 128 : 256, LITE ? 86 : 171, entry.code);
           var ftex = new THREE.CanvasTexture(fcv);
           ftex.encoding = THREE.sRGBEncoding;
           ftex.anisotropy = 4;
@@ -1887,13 +1919,15 @@
             badge.rotation.x = -Math.PI / 2;
             badge.position.set(fw / 2 - 0.55, baseY + 0.86, -fh / 2 + 0.55);
             grp.add(badge);
-            // …ونسخة واقفة (sprite) فوق الزاوية — دايماً مواجهة الكاميرا ومقروءة من بعيد وعلى الموبايل
-            var badgeSpr = new THREE.Sprite(new THREE.SpriteMaterial({ map: ytBadgeTex, transparent: true, depthWrite: false }));
-            badgeSpr.scale.set(2.5, 2.5, 1);
-            badgeSpr.position.set(fw / 2 - 0.35, baseY + 2.15, -fh / 2 + 0.35);
-            badgeSpr.renderOrder = 9;
-            grp.add(badgeSpr);
-            flagBadges.push(badgeSpr);
+            // …ونسخة واقفة (sprite) فوق الزاوية — دايماً مواجهة الكاميرا ومقروءة من بعيد وعلى الموبايل (بتتخطّى بالوضع الخفيف)
+            if (!LITE) {
+              var badgeSpr = new THREE.Sprite(new THREE.SpriteMaterial({ map: ytBadgeTex, transparent: true, depthWrite: false }));
+              badgeSpr.scale.set(2.5, 2.5, 1);
+              badgeSpr.position.set(fw / 2 - 0.35, baseY + 2.15, -fh / 2 + 0.35);
+              badgeSpr.renderOrder = 9;
+              grp.add(badgeSpr);
+              flagBadges.push(badgeSpr);
+            }
           }
           flagGroup.add(grp);
           renderedFlags[num] = true;
@@ -2025,7 +2059,7 @@
           rg.addColorStop(1, "rgba(235,248,255,0)");
           c.fillStyle = rg; c.fillRect(0, 0, 64, 64);
           var tex = new THREE.CanvasTexture(cv);
-          var N = 440;
+          var N = LITE ? 60 : 440;
           var pos = new Float32Array(N * 3);
           sprayData = [];
           for (var i = 0; i < N; i++) { pos[i * 3 + 1] = -60; sprayData.push({ vx: 0, vy: 0, vz: 0, life: 0 }); }
@@ -2217,7 +2251,7 @@
         (function () {
           var gullMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, side: THREE.DoubleSide });
           var tipMat = new THREE.MeshStandardMaterial({ color: 0xdfe9ec, roughness: 0.9, side: THREE.DoubleSide });
-          for (var gi = 0; gi < 6; gi++) {
+          for (var gi = 0; gi < (LITE ? 2 : 6); gi++) {
             var bird = new THREE.Group();
             var bbody = new THREE.Mesh(new THREE.SphereGeometry(0.55, 10, 8), gullMat);
             bbody.scale.set(1, 0.75, 2.1);
@@ -2500,7 +2534,12 @@
         // ----- حلقة الرسم -----
         var clock = new THREE.Clock();
         var frames = 0;
+        var renderTick = 0;
+        var rafRunning = false;
         function animate() {
+          // الصفحة مخفية: بتوقف حلقة الرسم كلياً (بلا بطارية ولا حمل على الفاضي) وبترجع من مستمع visibilitychange
+          if (document.hidden) { rafRunning = false; return; }
+          rafRunning = true;
           requestAnimationFrame(animate);
           var dt = Math.min(0.05, clock.getDelta());
           var t = clock.elapsedTime;
@@ -2720,7 +2759,9 @@
             if (mrel > 2.2) { setMosqueGlow(0); mosquePulse = null; }
           }
           updateWhale(t, dt);
-          renderer.render(scene, camera);
+          // بالوضع الخفيف: الرسم كل إطار ثانٍ بس (~30fps) — الحركة مبنية على الزمن فبتبقى صحيحة
+          renderTick++;
+          if (!LITE || renderTick % 2 === 1) renderer.render(scene, camera);
 
           frames++;
           if (frames === 3) {
@@ -2732,6 +2773,13 @@
           }
         }
         animate();
+        // رجوع التبويب للواجهة: إعادة تشغيل حلقة الرسم مرة وحدة (بلا حلقتين مزدوجتين)
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden && !rafRunning) {
+            clock.getDelta(); // تصفير الفجوة الزمنية عشان ما تقفز الحركة
+            animate();
+          }
+        });
       }
 
       try {
@@ -2749,6 +2797,18 @@
       if (subBtn) subBtn.addEventListener("click", function () {
         showToast("إذا اشتركت بالقناة، بلاطتك بتنحطّ بالبحر مع الدفعة الجاية — ارجع وشوف العدّاد", 5000);
       });
+
+      // زر الجودة: بيدوّر تلقائي ← خفيفة ← عالية، بيحفظ الاختيار وبيععيد تحميل الصفحة
+      // (الهندسة والظلال و antialias بتنقرر وقت إنشاء الـ renderer)
+      var qualityBtn = document.getElementById("qualityBtn");
+      if (qualityBtn) {
+        qualityBtn.textContent = QUALITY === "lite" ? "الجودة: خفيفة" : QUALITY === "high" ? "الجودة: عالية" : "الجودة: تلقائي (" + (LITE ? "خفيفة" : "عالية") + ")";
+        qualityBtn.addEventListener("click", function () {
+          var nextQ = QUALITY === "auto" ? "lite" : QUALITY === "lite" ? "high" : "auto";
+          try { window.localStorage.setItem("blt-quality", nextQ); } catch (e) {}
+          window.location.reload();
+        });
+      }
 
       // ======= التحديث الحي من count.json: العدد بيزيد لحاله بدون إعادة بناء الصفحة =======
       // العدد الفعّال = الأكبر بين المجلب والمضمّن — المعروض ما بينزل أبداً، بلاطة محطوطة ما بتنشال
