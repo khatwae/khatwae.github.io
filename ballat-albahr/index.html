@@ -1452,33 +1452,38 @@
           markerLabelSprite.position.set(marker.position.x, MARKER_Y + 4.6, marker.position.z);
         }
         // ----- أعلام البلدان: مستوى فوق سطح البلاطة مباشرة بنفس موضعها من tileOrder -----
-        // البلاطة رقم n هي tileOrder[n-1]. أعلام يوتيوب مميّزة: إطار ذهبي + توهّج ذهبي +
-        // علم أكبر ومرفوع شوي + شارة يوتيوب حمراء بزاوية البلاطة. باقي المصادر: علم مستوٍ عادي.
+        // البلاطة رقم n هي tileOrder[n-1]. أعلام يوتيوب مميّزة بوضوح من أول نظرة: قاعدة وإطار ذهبي
+        // سميك ولامع حوالين حافة البلاطة كاملة + هالة ذهبية قوية نابضة + علم أكبر ومرفوع فوق الإطار +
+        // شارة يوتيوب حمراء كبيرة (مسطّحة وواقفة). باقي المصادر: علم مستوٍ عادي بلا أي ذهبي.
         var flagGroup = new THREE.Group();
         scene.add(flagGroup);
         var renderedFlags = {}; // علم انرسم مرة ما بينشال ولا بينعاد
         var flagGlows = [];
+        var flagHalos = [];
+        var flagFrames = [];
+        var flagBadges = [];
         var flagGlowTex = (function () {
           var cv = document.createElement("canvas");
-          cv.width = cv.height = 128;
+          cv.width = cv.height = 256;
           var c = cv.getContext("2d");
-          var rg = c.createRadialGradient(64, 64, 6, 64, 64, 64);
-          rg.addColorStop(0, "rgba(255,201,77,0.85)");
-          rg.addColorStop(0.55, "rgba(255,180,40,0.38)");
-          rg.addColorStop(1, "rgba(255,180,40,0)");
-          c.fillStyle = rg; c.fillRect(0, 0, 128, 128);
+          var rg = c.createRadialGradient(128, 128, 8, 128, 128, 128);
+          rg.addColorStop(0, "rgba(255,214,64,0.98)");
+          rg.addColorStop(0.35, "rgba(255,184,0,0.78)");
+          rg.addColorStop(0.62, "rgba(255,158,0,0.42)");
+          rg.addColorStop(1, "rgba(255,150,0,0)");
+          c.fillStyle = rg; c.fillRect(0, 0, 256, 256);
           return new THREE.CanvasTexture(cv);
         })();
         var ytBadgeTex = (function () {
           var cv = document.createElement("canvas");
-          cv.width = cv.height = 96;
+          cv.width = cv.height = 160;
           var c = cv.getContext("2d");
           c.beginPath();
-          if (c.roundRect) c.roundRect(6, 6, 84, 84, 22); else c.rect(6, 6, 84, 84);
+          if (c.roundRect) c.roundRect(8, 8, 144, 144, 38); else c.rect(8, 8, 144, 144);
           c.fillStyle = "#ff0033"; c.fill();
-          c.strokeStyle = "#ffffff"; c.lineWidth = 5; c.stroke();
+          c.strokeStyle = "#ffffff"; c.lineWidth = 10; c.stroke();
           c.fillStyle = "#ffffff";
-          c.beginPath(); c.moveTo(36, 28); c.lineTo(36, 68); c.lineTo(70, 48); c.closePath(); c.fill();
+          c.beginPath(); c.moveTo(58, 44); c.lineTo(58, 116); c.lineTo(118, 80); c.closePath(); c.fill();
           var tex = new THREE.CanvasTexture(cv);
           tex.encoding = THREE.sRGBEncoding;
           return tex;
@@ -1495,21 +1500,42 @@
           var grp = new THREE.Group();
           grp.position.set(cell.wx, 0, cell.wz);
           if (yt) {
+            // هالة ذهبية كبيرة على المي حوالين البلاطة — بتنشاف من بعيد
             var glow = new THREE.Mesh(
-              new THREE.PlaneGeometry(TILE * 1.32, TILE * 1.06),
-              new THREE.MeshBasicMaterial({ map: flagGlowTex, transparent: true, opacity: 0.55, depthWrite: false })
+              new THREE.PlaneGeometry(TILE * 2.35, TILE * 2.35),
+              new THREE.MeshBasicMaterial({ map: flagGlowTex, transparent: true, opacity: 0.95, depthWrite: false })
             );
             glow.rotation.x = -Math.PI / 2;
             glow.position.y = baseY + 0.015;
             grp.add(glow);
             flagGlows.push(glow);
-            var frame = new THREE.Mesh(
-              new THREE.PlaneGeometry(fw + 0.36, fh + 0.36),
-              new THREE.MeshBasicMaterial({ color: 0xffc233 })
-            );
-            frame.rotation.x = -Math.PI / 2;
-            frame.position.y = baseY + 0.03;
-            grp.add(frame);
+            // هالة عمودية (sprite دايماً مواجه الكاميرا) — توهّج بينقرا من مسافة الكاميرا الافتراضية والموبايل
+            var halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: flagGlowTex, transparent: true, opacity: 0.42, depthWrite: false }));
+            halo.scale.set(TILE * 2.1, TILE * 2.1, 1);
+            halo.position.y = baseY + 1.15;
+            grp.add(halo);
+            flagHalos.push(halo);
+            // قاعدة ذهبية صلبة تحت العلم — أسمك وأعلى من سطح البلاطة العادية بوضوح
+            var goldMat = new THREE.MeshStandardMaterial({ color: 0xffb800, metalness: 0.85, roughness: 0.22, emissive: 0xff9500, emissiveIntensity: 0.55 });
+            flagFrames.push(goldMat);
+            var slab = new THREE.Mesh(new THREE.BoxGeometry(TILE * 1.04, 0.34, TILE * 1.04), goldMat);
+            slab.position.y = baseY + 0.17;
+            slab.castShadow = true; slab.receiveShadow = true;
+            grp.add(slab);
+            // إطار ذهبي سميك ولامع حوالين حافة البلاطة كاملة: 4 قضبان ثلاثية الأبعاد، مو طبقة مسطّحة
+            var barLen = TILE * 1.04, barT = 0.68, barH = 0.62, barOff = barLen / 2 - barT / 2;
+            [[0, -barOff], [0, barOff]].forEach(function (b) {
+              var bar = new THREE.Mesh(new THREE.BoxGeometry(barLen, barH, barT), goldMat);
+              bar.position.set(b[0], baseY + 0.42, b[1]);
+              bar.castShadow = true;
+              grp.add(bar);
+            });
+            [[-barOff, 0], [barOff, 0]].forEach(function (b) {
+              var bar = new THREE.Mesh(new THREE.BoxGeometry(barT, barH, barLen), goldMat);
+              bar.position.set(b[0], baseY + 0.42, b[1]);
+              bar.castShadow = true;
+              grp.add(bar);
+            });
           }
           var fcv = document.createElement("canvas");
           fcv.width = 256; fcv.height = 171;
@@ -1522,17 +1548,25 @@
             new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.85 })
           );
           flag.rotation.x = -Math.PI / 2;
-          flag.position.y = baseY + (yt ? 0.22 : 0.045); // أعلام يوتيوب مرفوعة شوي عن البلاطة
+          flag.position.y = baseY + (yt ? 0.78 : 0.045); // أعلام يوتيوب مرفوعة بوضوح فوق إطارها الذهبي، والعادية على سطح بلاطتها
           flag.receiveShadow = true;
           grp.add(flag);
           if (yt) {
+            // شارة يوتيوب كبيرة: مسطّحة فوق زاوية العلم (أكتر من ضعف الحجم القديم)…
             var badge = new THREE.Mesh(
-              new THREE.PlaneGeometry(1.25, 1.25),
+              new THREE.PlaneGeometry(2.15, 2.15),
               new THREE.MeshBasicMaterial({ map: ytBadgeTex, transparent: true })
             );
             badge.rotation.x = -Math.PI / 2;
-            badge.position.set(fw / 2 - 0.35, baseY + 0.3, -fh / 2 + 0.35);
+            badge.position.set(fw / 2 - 0.55, baseY + 0.86, -fh / 2 + 0.55);
             grp.add(badge);
+            // …ونسخة واقفة (sprite) فوق الزاوية — دايماً مواجهة الكاميرا ومقروءة من بعيد وعلى الموبايل
+            var badgeSpr = new THREE.Sprite(new THREE.SpriteMaterial({ map: ytBadgeTex, transparent: true, depthWrite: false }));
+            badgeSpr.scale.set(2.5, 2.5, 1);
+            badgeSpr.position.set(fw / 2 - 0.35, baseY + 2.15, -fh / 2 + 0.35);
+            badgeSpr.renderOrder = 9;
+            grp.add(badgeSpr);
+            flagBadges.push(badgeSpr);
           }
           flagGroup.add(grp);
           renderedFlags[num] = true;
@@ -2257,7 +2291,18 @@
             var mpulse = 1 + Math.sin(t * 3.2) * 0.055;
             marker.scale.set(mpulse, 1, mpulse);
             if (marker.userData.inner) marker.userData.inner.material.opacity = 0.3 + (Math.sin(t * 3.2) * 0.5 + 0.5) * 0.32;
-            flagGlows.forEach(function (g) { g.material.opacity = 0.42 + (Math.sin(t * 2.6) * 0.5 + 0.5) * 0.25; });
+            var ytPulse = Math.sin(t * 2.6) * 0.5 + 0.5;
+            flagGlows.forEach(function (g) { g.material.opacity = 0.72 + ytPulse * 0.28; });
+            flagHalos.forEach(function (h) {
+              h.material.opacity = 0.3 + ytPulse * 0.24;
+              var hs = TILE * (2.0 + ytPulse * 0.35);
+              h.scale.set(hs, hs, 1);
+            });
+            flagFrames.forEach(function (m) { m.emissiveIntensity = 0.45 + ytPulse * 0.65; });
+            flagBadges.forEach(function (b) {
+              var bs = 2.5 + ytPulse * 0.22;
+              b.scale.set(bs, bs, 1);
+            });
             clouds.forEach(function (cl) {
               cl.g.position.x += dt * cl.sp;
               if (cl.g.position.x > 420) cl.g.position.x = -420;
