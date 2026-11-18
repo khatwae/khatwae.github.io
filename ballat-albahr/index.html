@@ -510,6 +510,20 @@
           c.fillStyle = "#000000";
           c.beginPath(); c.arc(cresX + lR * 0.38, lcy, lR * 0.84, 0, Math.PI * 2); c.fill();
           drawStar(c, lcx + w * 0.075, lcy, lR * 0.58, "#ffffff");
+        } else if (code === "DZ") {
+          // علم الجزائر: نصفان عموديان متساويان — أخضر جهة السارية (يسار)، أبيض جهة الطيران (يمين)، وهلال ونجمة حمراء بالوسط
+          // الهلال يفتح باتجاه اليمين (جهة الطيران) والنجمة برأس واحد للأعلى — حسب القانون 63-145 لسنة 1963
+          c.fillStyle = "#006233"; c.fillRect(0, 0, w / 2, h);
+          c.fillStyle = "#ffffff"; c.fillRect(w / 2, 0, w - w / 2, h);
+          // الهلال الأحمر: قرص أحمر تُقتطع منه دائرة مزاحة لليمين (مسار واحد بقاعدة evenodd)
+          var dcx = w / 2, dcy = h / 2, dR = h * 0.25;
+          c.fillStyle = "#d21034";
+          c.beginPath();
+          c.arc(dcx, dcy, dR, 0, Math.PI * 2);
+          c.arc(dcx + dR * 0.32, dcy, dR * 0.8, 0, Math.PI * 2, true);
+          c.fill("evenodd");
+          // النجمة الحمراء الخماسية بقلب الهلال، برأس واحد للأعلى
+          drawStar(c, dcx + dR * 0.28, dcy, dR * 0.5, "#d21034");
         } else {
           // بديل عام لأي كود غير معروف: لون ثابت من الكود + رمز الكود
           var palette = ["#12809e", "#d96f32", "#3e9e57", "#7a4fa3", "#c4502e", "#2e6da4"];
