@@ -194,12 +194,16 @@
         display: inline-flex; align-items: center; justify-content: center;
         font-size: 0.66rem;
       }
+      /* شريط التحكم: لاصق بحافة الشاشة اليسرى (فيزيائياً) بنص الارتفاع — بعيد عن الجزيرة وعن باقي العناصر */
       .cambtns {
         position: absolute;
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
-        inset-inline-end: 14px;
+        left: 10px;
+        right: auto;
+        top: 50%;
+        transform: translateY(-50%);
         z-index: 10;
         display: flex; flex-direction: column; gap: 8px;
+        align-items: center;
       }
       .cambtns button {
         width: 48px; height: 48px; border-radius: 50%;
@@ -223,13 +227,30 @@
         height: 3px; border-radius: 2px; background: #e23b3b;
         transform: rotate(-38deg);
       }
-      .cambtns button.quality {
-        width: auto; height: auto;
+      /* زر الجودة: برّا شريط التحكم، لحاله أسفل اليسار — مشان عرضه ما يوسّع الشريط ويبعّد الدوائر عن الحافة */
+      .quality-btn {
+        position: absolute;
+        left: 12px;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+        z-index: 10;
+        border: 1px solid var(--line);
+        background: var(--hud-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: var(--ink);
+        font-family: inherit;
         border-radius: 999px;
         font-size: 0.72rem; font-weight: 800;
         padding: 9px 13px;
         white-space: nowrap;
-        align-self: center;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(6, 45, 60, 0.28);
+      }
+      .quality-btn:active { transform: scale(0.94); }
+      @media (max-width: 700px) {
+        .cambtns { left: 8px; gap: 7px; }
+        .cambtns button { width: 44px; height: 44px; }
+        .quality-btn { left: 10px; }
       }
 
       .hint {
@@ -341,8 +362,9 @@
         <button type="button" id="zoomIn" aria-label="تقريب الكاميرا">+</button>
         <button type="button" id="zoomOut" aria-label="إبعاد الكاميرا">−</button>
         <button type="button" id="camReset" class="small" aria-label="إعادة ضبط الكاميرا">⌖</button>
-        <button type="button" id="qualityBtn" class="quality" aria-label="تبديل جودة العرض بين تلقائي وخفيفة وعالية">الجودة: تلقائي</button>
       </div>
+
+      <button type="button" id="qualityBtn" class="quality-btn" aria-label="تبديل جودة العرض بين تلقائي وخفيفة وعالية">الجودة: تلقائي</button>
 
       <div class="stick" id="stick" aria-hidden="true"><div class="knob" id="stickKnob"></div></div>
       <div class="hint" id="hint">اسحب لتدوّر حول الجزيرة · قرّب وبعّد بإصبعين · جرّب تفتح صندوق الكنز</div>
