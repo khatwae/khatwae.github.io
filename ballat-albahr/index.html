@@ -377,7 +377,7 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 69; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 69 مشترك = 69 بلاطة مرسومة، والجاية رقم 70
+      var COUNT = 84; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 84 مشترك = 84 بلاطة مرسومة، والجاية رقم 85
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
 
@@ -385,7 +385,7 @@
       // قيمة افتراضية مضمّنة — نفس محتوى countries.json بالضبط — عشان الأعلام تبين حتى قبل أول جلب.
       // قاعدة دائمة: علم انحطّ مرة ما بينشال أبداً. معلّقو يوتيوب إلهم الأولوية بأول البلاطات الفاضية
       // وأعلامهم مميّزة (ذهبي + شارة)؛ أعلام انستغرام/فيسبوك/تيك توك عادية تماماً.
-      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" }, "37": { code: "SY", source: "youtube" }, "38": { code: "SY", source: "youtube" }, "39": { code: "SY", source: "youtube" }, "40": { code: "SA", source: "youtube" }, "41": { code: "TN", source: "youtube" }, "42": { code: "MA", source: "youtube" }, "43": { code: "DZ", source: "youtube" }, "44": { code: "JO", source: "youtube" }, "45": { code: "JO", source: "youtube" }, "46": { code: "JO", source: "youtube" }, "47": { code: "JO", source: "youtube" }, "48": { code: "JO", source: "youtube" }, "49": { code: "SY", source: "instagram" }, "50": { code: "SY", source: "instagram" }, "51": { code: "JO", source: "youtube" }, "52": { code: "SY", source: "youtube" }, "53": { code: "JO", source: "youtube" }, "54": { code: "SY", source: "instagram" }, "55": { code: "JO", source: "instagram" }, "56": { code: "JO", source: "instagram" }, "57": { code: "SY", source: "youtube" }, "58": { code: "SY", source: "youtube" }, "59": { code: "PS", source: "youtube" }, "60": { code: "DZ", source: "youtube" }, "61": { code: "SY", source: "youtube" }, "62": { code: "SA", source: "youtube" }, "63": { code: "SY", source: "youtube" }, "64": { code: "SY", source: "instagram" }, "65": { code: "MA", source: "instagram" }, "66": { code: "SY", source: "instagram" }, "67": { code: "DZ", source: "instagram" }, "68": { code: "SY", source: "instagram" }, "69": { code: "SY", source: "instagram" } };
+      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" }, "37": { code: "SY", source: "youtube" }, "38": { code: "SY", source: "youtube" }, "39": { code: "SY", source: "youtube" }, "40": { code: "SA", source: "youtube" }, "41": { code: "TN", source: "youtube" }, "42": { code: "MA", source: "youtube" }, "43": { code: "DZ", source: "youtube" }, "44": { code: "JO", source: "youtube" }, "45": { code: "JO", source: "youtube" }, "46": { code: "JO", source: "youtube" }, "47": { code: "JO", source: "youtube" }, "48": { code: "JO", source: "youtube" }, "49": { code: "SY", source: "instagram" }, "50": { code: "SY", source: "instagram" }, "51": { code: "JO", source: "youtube" }, "52": { code: "SY", source: "youtube" }, "53": { code: "JO", source: "youtube" }, "54": { code: "SY", source: "instagram" }, "55": { code: "JO", source: "instagram" }, "56": { code: "JO", source: "instagram" }, "57": { code: "SY", source: "youtube" }, "58": { code: "SY", source: "youtube" }, "59": { code: "PS", source: "youtube" }, "60": { code: "DZ", source: "youtube" }, "61": { code: "SY", source: "youtube" }, "62": { code: "SA", source: "youtube" }, "63": { code: "SY", source: "youtube" }, "64": { code: "SY", source: "instagram" }, "65": { code: "MA", source: "instagram" }, "66": { code: "SY", source: "instagram" }, "67": { code: "DZ", source: "instagram" }, "68": { code: "SY", source: "instagram" }, "69": { code: "SY", source: "instagram" }, "70": { code: "LY", source: "youtube" }, "71": { code: "JO", source: "youtube" }, "72": { code: "JO", source: "instagram" }, "73": { code: "JO", source: "instagram" }, "74": { code: "JO", source: "instagram" }, "75": { code: "JO", source: "instagram" }, "76": { code: "SY", source: "youtube" }, "77": { code: "MA", source: "youtube" }, "78": { code: "LY", source: "youtube" }, "79": { code: "TN", source: "youtube" }, "80": { code: "SY", source: "youtube" }, "81": { code: "EG", source: "youtube" }, "82": { code: "SY", source: "youtube" }, "83": { code: "PS", source: "youtube" }, "84": { code: "SY", source: "youtube" } };
       var COUNTRY_NAMES = { SY: "سوريا", IQ: "العراق", PS: "فلسطين", EG: "مصر", JO: "الأردن", SA: "السعودية", LB: "لبنان", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", KW: "الكويت", QA: "قطر", AE: "الإمارات", OM: "عُمان", BH: "البحرين", TR: "تركيا" };
       function countryName(code) { return COUNTRY_NAMES[code] || code; }
       function drawStar(c, cx, cy, r, color) {
@@ -524,6 +524,67 @@
           c.fill("evenodd");
           // النجمة الحمراء الخماسية بقلب الهلال، برأس واحد للأعلى
           drawStar(c, dcx + dR * 0.28, dcy, dR * 0.5, "#d21034");
+        } else if (code === "LB") {
+          // علم لبنان: أحمر فوق (ربع الارتفاع)، أبيض بالنص (نصف الارتفاع)، أحمر تحت (ربع الارتفاع)، وأرزة خضراء بالوسط
+          c.fillStyle = "#ed1c24"; c.fillRect(0, 0, w, Math.ceil(h * 0.25));
+          c.fillStyle = "#ffffff"; c.fillRect(0, Math.floor(h * 0.25), w, Math.ceil(h * 0.5) + 1);
+          c.fillStyle = "#ed1c24"; c.fillRect(0, Math.floor(h * 0.75), w, Math.ceil(h * 0.25) + 1);
+          // الأرزة المبسّطة: طبقات مثلثة خضراء + جذع صغير، بقلب الشريط الأبيض
+          var lbx = w / 2, lby = h / 2;
+          c.fillStyle = "#00A651";
+          // الطبقة السفلية العريضة
+          c.beginPath();
+          c.moveTo(lbx - w * 0.17, lby + h * 0.11);
+          c.lineTo(lbx + w * 0.17, lby + h * 0.11);
+          c.lineTo(lbx, lby - h * 0.01);
+          c.closePath(); c.fill();
+          // الطبقة الوسطى
+          c.beginPath();
+          c.moveTo(lbx - w * 0.125, lby + h * 0.03);
+          c.lineTo(lbx + w * 0.125, lby + h * 0.03);
+          c.lineTo(lbx, lby - h * 0.09);
+          c.closePath(); c.fill();
+          // الطبقة العلوية (القمة)
+          c.beginPath();
+          c.moveTo(lbx - w * 0.075, lby - h * 0.05);
+          c.lineTo(lbx + w * 0.075, lby - h * 0.05);
+          c.lineTo(lbx, lby - h * 0.17);
+          c.closePath(); c.fill();
+          // الجذع
+          c.fillRect(lbx - w * 0.016, lby + h * 0.11, w * 0.032, h * 0.075);
+        } else if (code === "KW") {
+          // علم الكويت: ثلاث شرائط متساوية — أخضر فوق، أبيض بالنص، أحمر تحت — وشبه منحرف أسود من جهة السارية
+          band(["#007a3d", "#ffffff", "#ce1126"]);
+          // شبه المنحرف الأسود: حافته عند السارية بكامل الارتفاع، وبيضيق لحافة أقصر عند 0.28 من العرض بين ربع الارتفاع وثلاثة أرباعه
+          c.fillStyle = "#000000";
+          c.beginPath();
+          c.moveTo(0, 0);
+          c.lineTo(w * 0.28, h * 0.25);
+          c.lineTo(w * 0.28, h * 0.75);
+          c.lineTo(0, h);
+          c.closePath(); c.fill();
+        } else if (code === "EG") {
+          // علم مصر: ثلاث شرائط متساوية — أحمر فوق، أبيض بالنص، أسود تحت — ونسر صلاح الدين الذهبي بقلب الشريط الأبيض
+          band(["#ce1126", "#ffffff", "#000000"]);
+          var egx = w / 2, egy = h / 2;
+          c.fillStyle = "#C09300";
+          // الجناحان المفرودان
+          c.beginPath();
+          c.moveTo(egx - w * 0.25, egy - h * 0.055);
+          c.lineTo(egx - w * 0.055, egy - h * 0.105);
+          c.lineTo(egx + w * 0.055, egy - h * 0.105);
+          c.lineTo(egx + w * 0.25, egy - h * 0.055);
+          c.lineTo(egx + w * 0.185, egy + h * 0.02);
+          c.lineTo(egx + w * 0.045, egy);
+          c.lineTo(egx - w * 0.045, egy);
+          c.lineTo(egx - w * 0.185, egy + h * 0.02);
+          c.closePath(); c.fill();
+          // الجسم العمودي
+          c.fillRect(egx - w * 0.034, egy - h * 0.115, w * 0.068, h * 0.185);
+          // الرأس متّجه لجهة السارية (اليسار)
+          c.beginPath(); c.arc(egx - w * 0.048, egy - h * 0.105, h * 0.042, 0, Math.PI * 2); c.fill();
+          // القاعدة (لوحة الاسم) تحت الجسم
+          c.fillRect(egx - w * 0.095, egy + h * 0.075, w * 0.19, h * 0.038);
         } else {
           // بديل عام لأي كود غير معروف: لون ثابت من الكود + رمز الكود
           var palette = ["#12809e", "#d96f32", "#3e9e57", "#7a4fa3", "#c4502e", "#2e6da4"];
