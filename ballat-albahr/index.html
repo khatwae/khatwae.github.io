@@ -377,7 +377,7 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 138; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 138 مشترك = 138 بلاطة مرسومة، والجاية رقم 139
+      var COUNT = 139; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 139 مشترك = 139 بلاطة مرسومة، والجاية رقم 140
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
 
@@ -385,7 +385,7 @@
       // قيمة افتراضية مضمّنة — نفس محتوى countries.json بالضبط — عشان الأعلام تبين حتى قبل أول جلب.
       // قاعدة دائمة: علم انحطّ مرة ما بينشال أبداً. معلّقو يوتيوب إلهم الأولوية بأول البلاطات الفاضية
       // وأعلامهم مميّزة (ذهبي + شارة)؛ أعلام انستغرام/فيسبوك/تيك توك عادية تماماً.
-      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" }, "37": { code: "SY", source: "youtube" }, "38": { code: "SY", source: "youtube" }, "39": { code: "SY", source: "youtube" }, "40": { code: "SA", source: "youtube" }, "41": { code: "TN", source: "youtube" }, "42": { code: "MA", source: "youtube" }, "43": { code: "DZ", source: "youtube" }, "44": { code: "JO", source: "youtube" }, "45": { code: "JO", source: "youtube" }, "46": { code: "JO", source: "youtube" }, "47": { code: "JO", source: "youtube" }, "48": { code: "JO", source: "youtube" }, "49": { code: "SY", source: "instagram" }, "50": { code: "SY", source: "instagram" }, "51": { code: "JO", source: "youtube" }, "52": { code: "SY", source: "youtube" }, "53": { code: "JO", source: "youtube" }, "54": { code: "SY", source: "instagram" }, "55": { code: "JO", source: "instagram" }, "56": { code: "JO", source: "instagram" }, "57": { code: "SY", source: "youtube" }, "58": { code: "SY", source: "youtube" }, "59": { code: "PS", source: "youtube" }, "60": { code: "DZ", source: "youtube" }, "61": { code: "SY", source: "youtube" }, "62": { code: "SA", source: "youtube" }, "63": { code: "SY", source: "youtube" }, "64": { code: "SY", source: "instagram" }, "65": { code: "MA", source: "instagram" }, "66": { code: "SY", source: "instagram" }, "67": { code: "DZ", source: "instagram" }, "68": { code: "SY", source: "instagram" }, "69": { code: "SY", source: "instagram" }, "70": { code: "LY", source: "youtube" }, "71": { code: "JO", source: "youtube" }, "72": { code: "JO", source: "instagram" }, "73": { code: "JO", source: "instagram" }, "74": { code: "JO", source: "instagram" }, "75": { code: "JO", source: "instagram" }, "76": { code: "SY", source: "youtube" }, "77": { code: "MA", source: "youtube" }, "78": { code: "LY", source: "youtube" }, "79": { code: "TN", source: "youtube" }, "80": { code: "SY", source: "youtube" }, "81": { code: "EG", source: "youtube" }, "82": { code: "SY", source: "youtube" }, "83": { code: "PS", source: "youtube" }, "84": { code: "SY", source: "youtube" }, "85": { code: "KW", source: "youtube" }, "86": { code: "MA", source: "youtube" }, "87": { code: "PS", source: "youtube" }, "88": { code: "YE", source: "youtube" }, "89": { code: "LB", source: "youtube" }, "90": { code: "SY", source: "youtube" }, "91": { code: "YE", source: "youtube" }, "92": { code: "SY", source: "youtube" }, "93": { code: "LB", source: "youtube" }, "94": { code: "JO", source: "youtube" }, "95": { code: "JO", source: "youtube" }, "96": { code: "SY", source: "youtube" }, "97": { code: "SY", source: "youtube" }, "98": { code: "SY", source: "youtube" }, "99": { code: "SY", source: "youtube" }, "100": { code: "JO", source: "youtube" }, "101": { code: "SY", source: "youtube" }, "102": { code: "IQ", source: "youtube" }, "103": { code: "JO", source: "youtube" }, "104": { code: "SY", source: "youtube" }, "105": { code: "SY", source: "youtube" }, "106": { code: "SY", source: "youtube" }, "107": { code: "SY", source: "youtube" }, "108": { code: "IQ", source: "youtube" }, "109": { code: "SY", source: "youtube" }, "110": { code: "TR", source: "youtube" }, "111": { code: "IQ", source: "youtube" }, "112": { code: "SY", source: "youtube" }, "113": { code: "SY", source: "instagram" }, "114": { code: "MA", source: "instagram" }, "115": { code: "JO", source: "youtube" }, "116": { code: "SY", source: "instagram" }, "117": { code: "LB", source: "youtube" }, "118": { code: "JO", source: "youtube" }, "119": { code: "MA", source: "youtube" }, "120": { code: "SY", source: "youtube" }, "121": { code: "JO", source: "youtube" }, "122": { code: "SY", source: "youtube" }, "123": { code: "EG", source: "youtube" }, "124": { code: "YE", source: "youtube" }, "125": { code: "JO", source: "youtube" }, "126": { code: "DZ", source: "youtube" }, "127": { code: "SY", source: "youtube" }, "128": { code: "JO", source: "youtube" }, "129": { code: "SY", source: "youtube" }, "130": { code: "TN", source: "youtube" }, "131": { code: "KR", source: "youtube" }, "132": { code: "SY", source: "youtube" }, "133": { code: "IQ", source: "youtube" }, "134": { code: "PS", source: "instagram" }, "135": { code: "DZ", source: "instagram" }, "136": { code: "LY", source: "instagram" }, "137": { code: "SY", source: "instagram" }, "138": { code: "SY", source: "instagram" } };
+      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" }, "37": { code: "SY", source: "youtube" }, "38": { code: "SY", source: "youtube" }, "39": { code: "SY", source: "youtube" }, "40": { code: "SA", source: "youtube" }, "41": { code: "TN", source: "youtube" }, "42": { code: "MA", source: "youtube" }, "43": { code: "DZ", source: "youtube" }, "44": { code: "JO", source: "youtube" }, "45": { code: "JO", source: "youtube" }, "46": { code: "JO", source: "youtube" }, "47": { code: "JO", source: "youtube" }, "48": { code: "JO", source: "youtube" }, "49": { code: "SY", source: "instagram" }, "50": { code: "SY", source: "instagram" }, "51": { code: "JO", source: "youtube" }, "52": { code: "SY", source: "youtube" }, "53": { code: "JO", source: "youtube" }, "54": { code: "SY", source: "instagram" }, "55": { code: "JO", source: "instagram" }, "56": { code: "JO", source: "instagram" }, "57": { code: "SY", source: "youtube" }, "58": { code: "SY", source: "youtube" }, "59": { code: "PS", source: "youtube" }, "60": { code: "DZ", source: "youtube" }, "61": { code: "SY", source: "youtube" }, "62": { code: "SA", source: "youtube" }, "63": { code: "SY", source: "youtube" }, "64": { code: "SY", source: "instagram" }, "65": { code: "MA", source: "instagram" }, "66": { code: "SY", source: "instagram" }, "67": { code: "DZ", source: "instagram" }, "68": { code: "SY", source: "instagram" }, "69": { code: "SY", source: "instagram" }, "70": { code: "LY", source: "youtube" }, "71": { code: "JO", source: "youtube" }, "72": { code: "JO", source: "instagram" }, "73": { code: "JO", source: "instagram" }, "74": { code: "JO", source: "instagram" }, "75": { code: "JO", source: "instagram" }, "76": { code: "SY", source: "youtube" }, "77": { code: "MA", source: "youtube" }, "78": { code: "LY", source: "youtube" }, "79": { code: "TN", source: "youtube" }, "80": { code: "SY", source: "youtube" }, "81": { code: "EG", source: "youtube" }, "82": { code: "SY", source: "youtube" }, "83": { code: "PS", source: "youtube" }, "84": { code: "SY", source: "youtube" }, "85": { code: "KW", source: "youtube" }, "86": { code: "MA", source: "youtube" }, "87": { code: "PS", source: "youtube" }, "88": { code: "YE", source: "youtube" }, "89": { code: "LB", source: "youtube" }, "90": { code: "SY", source: "youtube" }, "91": { code: "YE", source: "youtube" }, "92": { code: "SY", source: "youtube" }, "93": { code: "LB", source: "youtube" }, "94": { code: "JO", source: "youtube" }, "95": { code: "JO", source: "youtube" }, "96": { code: "SY", source: "youtube" }, "97": { code: "SY", source: "youtube" }, "98": { code: "SY", source: "youtube" }, "99": { code: "SY", source: "youtube" }, "100": { code: "JO", source: "youtube" }, "101": { code: "SY", source: "youtube" }, "102": { code: "IQ", source: "youtube" }, "103": { code: "JO", source: "youtube" }, "104": { code: "SY", source: "youtube" }, "105": { code: "SY", source: "youtube" }, "106": { code: "SY", source: "youtube" }, "107": { code: "SY", source: "youtube" }, "108": { code: "IQ", source: "youtube" }, "109": { code: "SY", source: "youtube" }, "110": { code: "TR", source: "youtube" }, "111": { code: "IQ", source: "youtube" }, "112": { code: "SY", source: "youtube" }, "113": { code: "SY", source: "instagram" }, "114": { code: "MA", source: "instagram" }, "115": { code: "JO", source: "youtube" }, "116": { code: "SY", source: "instagram" }, "117": { code: "LB", source: "youtube" }, "118": { code: "JO", source: "youtube" }, "119": { code: "MA", source: "youtube" }, "120": { code: "SY", source: "youtube" }, "121": { code: "JO", source: "youtube" }, "122": { code: "SY", source: "youtube" }, "123": { code: "EG", source: "youtube" }, "124": { code: "YE", source: "youtube" }, "125": { code: "JO", source: "youtube" }, "126": { code: "DZ", source: "youtube" }, "127": { code: "SY", source: "youtube" }, "128": { code: "JO", source: "youtube" }, "129": { code: "SY", source: "youtube" }, "130": { code: "TN", source: "youtube" }, "131": { code: "KR", source: "youtube" }, "132": { code: "SY", source: "youtube" }, "133": { code: "IQ", source: "youtube" }, "134": { code: "PS", source: "instagram" }, "135": { code: "DZ", source: "instagram" }, "136": { code: "LY", source: "instagram" }, "137": { code: "SY", source: "instagram" }, "138": { code: "SY", source: "instagram" }, "139": { code: "EG", source: "instagram" } };
       var COUNTRY_NAMES = { SY: "سوريا", IQ: "العراق", PS: "فلسطين", EG: "مصر", JO: "الأردن", SA: "السعودية", LB: "لبنان", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", KW: "الكويت", QA: "قطر", AE: "الإمارات", OM: "عُمان", BH: "البحرين", TR: "تركيا", KR: "كوريا الجنوبية" };
       function countryName(code) { return COUNTRY_NAMES[code] || code; }
       function drawStar(c, cx, cy, r, color) {
@@ -1143,7 +1143,9 @@
         // ----- الجامع: انبنى عالمكان الفاضي بالجهة الشرقية بعد إزالة النخلة عند (12.5,-9)
         // والشجرتين المورقتين عند (10,9.5) و(14.5,2.5). مركزه (11,3) وواجهته باتجاه
         // زاوية الكاميرا الافتراضية (0.65) عشان يبين كبير وواضح دغري.
-        // ممنوع أي نص/اسم/لافتة على الجامع — البناء كله أشكال هندسية بس.
+        // البناء نفسه أشكال هندسية بس — اسم الجامع «جامع قدس الدول العربية» بينحطّ
+        // على لافتة خشبية واقفة قدّامه على الرمل (مجموعة مستقلة على الـ scene،
+        // مو جزء من مجموعة الجامع) — شوف mosqueSign تحت.
         // حالة تفاعل الجامع: الضغط عليه بيشغّل صوت «صلّوا على محمد ﷺ» + نبضة توهّج ذهبي
         var mosqueGroup = null;    // مجموعة الجامع — للالتقاط بالضغط (raycast)
         var mosquePulse = null;    // نبضة التوهّج الجارية: {start: ثواني, spoke: هل اشتغل الصوت}
@@ -1320,6 +1322,59 @@
           }
           if (mosqueGlowLight) mosqueGlowLight.intensity = level * 1.7;
         }
+
+        // ----- لافتة اسم الجامع الخشبية: «جامع قدس الدول العربية» -----
+        // لوحة خشبية واقفة على رمل الجزيرة قدّام الجامع، بنفس نمط لافتة الجزيرة
+        // («بلّط البحر»): لوح خشبي بإطار بنّي ونصّ فاتح مرسوم على كانفس +
+        // THREE.CanvasTexture، واللوح (11×2.4) محمول على عمودين. النصّ بسطر
+        // واحد بخط Rubik 900 مع تصغير تلقائي للقياس إذا لزم، وبدون أي
+        // letter-spacing مشان وصل الحروف العربية. اللافتة بتنبنى بعد جاهزية
+        // الخطوط مشان الحروف تطلع موصولة صح، وبتنضاف كمجموعة مستقلة على
+        // الـ scene (مو على mosqueGroup) مشان ما تأثّر على التقاط الضغط على
+        // الجامع (raycast). موقعها (11.5, TOP, 12) واتجاهها 0.65 — نفس واجهة
+        // الجامع باتجاه الكاميرا الافتراضية — يعني على يسار باب الجامع من جهة
+        // الكاميرا مشان الباب يضلّ باين، وبعيدة عن الشخصية والصندوق وحلقة
+        // البلاطات، وبتضلّ تحت مستوى نظر الكاميرا الافتراضية مشان ما تغطّيها
+        // لوحة الدول (DOM) على شاشة الموبايل.
+        function mosqueSign() {
+          var cv = document.createElement("canvas");
+          cv.width = 1024; cv.height = 224;
+          var c = cv.getContext("2d");
+          c.fillStyle = "#a4713b"; c.fillRect(6, 6, 1012, 212);
+          c.strokeStyle = "#7a5230"; c.lineWidth = 10; c.strokeRect(6, 6, 1012, 212);
+          c.fillStyle = "#fff7e8";
+          var mfs = 96;
+          c.font = "900 " + mfs + "px Rubik, sans-serif";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          while (mfs > 40 && c.measureText("جامع قدس الدول العربية").width > 1024 * 0.9) {
+            mfs -= 4;
+            c.font = "900 " + mfs + "px Rubik, sans-serif";
+          }
+          c.fillText("جامع قدس الدول العربية", 512, 116);
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          var sign = new THREE.Group();
+          var poleMat = std(0x7a5230);
+          [-3.6, 3.6].forEach(function (px) {
+            var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.3, 3.6, 8), poleMat);
+            pole.position.set(px, 1.8, 0);
+            pole.castShadow = true;
+            sign.add(pole);
+          });
+          var boardMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(11, 2.4, 0.3),
+            [std(0x7a5230), std(0x7a5230), std(0x7a5230), std(0x7a5230),
+             new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9 }), std(0x7a5230)]
+          );
+          boardMesh.position.set(0, 3.9, 0);
+          boardMesh.castShadow = true;
+          sign.add(boardMesh);
+          sign.position.set(11.5, TOP, 12);
+          sign.rotation.y = 0.65;
+          scene.add(sign);
+        }
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(mosqueSign);
+        else mosqueSign();
 
         // صخور
         var rockMat = std(0x939da3, { roughness: 0.95, flatShading: true });
