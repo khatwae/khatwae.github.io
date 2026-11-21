@@ -164,6 +164,83 @@
         .cp-tag { font-size: 0.54rem; padding: 1px 5px; }
       }
 
+      /* ---------- زر طيّ لوحة البلدان: اللوحة بتنطوي وبتنفتح، والزر بيضل ثابت برّا قائمة البلدان ---------- */
+      .cp-toggle {
+        pointer-events: auto;
+        display: flex; align-items: center; justify-content: space-between; gap: 8px;
+        width: 100%;
+        background: none; border: none;
+        font-family: inherit; color: var(--ink);
+        font-size: 0.86rem; font-weight: 900;
+        padding: 2px 0 4px;
+        cursor: pointer;
+      }
+      .cp-toggle:active { transform: scale(0.97); }
+      .cp-arrow { font-size: 0.68rem; color: var(--ink-soft); flex: none; }
+      .cp-list { display: flex; flex-direction: column; gap: 5px; }
+      .countries-panel.collapsed .cp-list { display: none; }
+      @media (max-width: 700px) {
+        .cp-toggle { font-size: 0.78rem; padding: 1px 0 3px; }
+        .cp-list { gap: 4px; }
+      }
+
+      /* ---------- صندوق البحث عن الاسم: بيوصّل الزائر لبلاطته ---------- */
+      .search-box {
+        position: absolute;
+        top: calc(env(safe-area-inset-top, 0px) + 10px);
+        left: 50%; transform: translateX(-50%);
+        z-index: 11;
+        width: min(380px, 40vw);
+        display: flex; flex-direction: column; gap: 6px;
+      }
+      .search-form {
+        display: flex; gap: 6px;
+        background: var(--hud-bg);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 5px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 6px 18px rgba(6, 45, 60, 0.25);
+      }
+      .search-input {
+        flex: 1; min-width: 0;
+        border: none; background: transparent;
+        font-family: inherit; font-size: 16px; font-weight: 700;
+        color: var(--ink);
+        padding: 6px 12px;
+        outline: none;
+      }
+      .search-input::placeholder { color: var(--ink-soft); }
+      .search-btn {
+        flex: none;
+        border: none; cursor: pointer;
+        background: #12809e; color: #fff;
+        font-family: inherit; font-weight: 900; font-size: 0.9rem;
+        border-radius: 999px;
+        padding: 8px 16px;
+      }
+      .search-btn:active { transform: scale(0.95); }
+      .search-result {
+        background: var(--hud-bg);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 8px 12px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        box-shadow: 0 6px 18px rgba(6, 45, 60, 0.25);
+        font-size: 0.88rem; font-weight: 700; color: var(--ink);
+        display: flex; align-items: center; gap: 9px;
+        line-height: 1.5;
+      }
+      .search-result[hidden] { display: none; }
+      .search-result .sr-flag { width: 40px; height: 28px; border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.18); flex: none; }
+      .search-result .sr-name { font-weight: 900; }
+      @media (max-width: 860px) {
+        .search-box { top: calc(env(safe-area-inset-top, 0px) + 72px); width: min(430px, 94vw); }
+        .countries-panel { top: calc(env(safe-area-inset-top, 0px) + 128px); }
+      }
+
       /* ---------- أزرار اللعب السفلية ---------- */
       .sub-btn {
         position: absolute;
@@ -350,7 +427,20 @@
         </div>
       </div>
 
-      <div class="countries-panel" id="countriesPanel" aria-label="بلدان المتابعين على البلاطات"></div>
+      <div class="countries-panel" id="countriesPanel" aria-label="بلدان المتابعين على البلاطات">
+        <button type="button" class="cp-toggle" id="countriesToggle" aria-expanded="true" aria-controls="countriesList" aria-label="طيّ أو فتح لوحة أعلام البلدان">
+          <span>أعلام البلدان</span><span class="cp-arrow" aria-hidden="true">▲</span>
+        </button>
+        <div class="cp-list" id="countriesList"></div>
+      </div>
+
+      <div class="search-box" id="searchBox">
+        <form class="search-form" id="searchForm" role="search">
+          <input type="search" class="search-input" id="searchInput" placeholder="دوّر على اسمك بالخريطة…" aria-label="ابحث عن اسمك لتلاقي بلاطتك" autocomplete="off" dir="auto" />
+          <button type="submit" class="search-btn" aria-label="بحث عن الاسم">🔍 دوّر</button>
+        </form>
+        <div class="search-result" id="searchResult" role="status" hidden></div>
+      </div>
 
       <a class="sub-btn" id="subBtn" href="https://www.youtube.com/@ballat.albahr?sub_confirmation=1" target="_blank" rel="noopener" aria-label="اشترك بقناة بلط البحر على يوتيوب">
         <span class="play">▶</span><span>اشترك بالقناة</span>
@@ -377,7 +467,7 @@
     <script>
       // ======= بيانات التحدي =======
       var TOTAL = 10000;
-      var COUNT = 139; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 139 مشترك = 139 بلاطة مرسومة، والجاية رقم 140
+      var COUNT = 147; // مشتركون جدد على يوتيوب من يوم الإطلاق = بلاطات بالبحر — 147 مشترك = 147 بلاطة مرسومة، والجاية رقم 148
       var fmt = new Intl.NumberFormat("ar-JO-u-nu-latn");
       document.getElementById("countNow").textContent = fmt.format(COUNT);
 
@@ -385,7 +475,11 @@
       // قيمة افتراضية مضمّنة — نفس محتوى countries.json بالضبط — عشان الأعلام تبين حتى قبل أول جلب.
       // قاعدة دائمة: علم انحطّ مرة ما بينشال أبداً. معلّقو يوتيوب إلهم الأولوية بأول البلاطات الفاضية
       // وأعلامهم مميّزة (ذهبي + شارة)؛ أعلام انستغرام/فيسبوك/تيك توك عادية تماماً.
-      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" }, "37": { code: "SY", source: "youtube" }, "38": { code: "SY", source: "youtube" }, "39": { code: "SY", source: "youtube" }, "40": { code: "SA", source: "youtube" }, "41": { code: "TN", source: "youtube" }, "42": { code: "MA", source: "youtube" }, "43": { code: "DZ", source: "youtube" }, "44": { code: "JO", source: "youtube" }, "45": { code: "JO", source: "youtube" }, "46": { code: "JO", source: "youtube" }, "47": { code: "JO", source: "youtube" }, "48": { code: "JO", source: "youtube" }, "49": { code: "SY", source: "instagram" }, "50": { code: "SY", source: "instagram" }, "51": { code: "JO", source: "youtube" }, "52": { code: "SY", source: "youtube" }, "53": { code: "JO", source: "youtube" }, "54": { code: "SY", source: "instagram" }, "55": { code: "JO", source: "instagram" }, "56": { code: "JO", source: "instagram" }, "57": { code: "SY", source: "youtube" }, "58": { code: "SY", source: "youtube" }, "59": { code: "PS", source: "youtube" }, "60": { code: "DZ", source: "youtube" }, "61": { code: "SY", source: "youtube" }, "62": { code: "SA", source: "youtube" }, "63": { code: "SY", source: "youtube" }, "64": { code: "SY", source: "instagram" }, "65": { code: "MA", source: "instagram" }, "66": { code: "SY", source: "instagram" }, "67": { code: "DZ", source: "instagram" }, "68": { code: "SY", source: "instagram" }, "69": { code: "SY", source: "instagram" }, "70": { code: "LY", source: "youtube" }, "71": { code: "JO", source: "youtube" }, "72": { code: "JO", source: "instagram" }, "73": { code: "JO", source: "instagram" }, "74": { code: "JO", source: "instagram" }, "75": { code: "JO", source: "instagram" }, "76": { code: "SY", source: "youtube" }, "77": { code: "MA", source: "youtube" }, "78": { code: "LY", source: "youtube" }, "79": { code: "TN", source: "youtube" }, "80": { code: "SY", source: "youtube" }, "81": { code: "EG", source: "youtube" }, "82": { code: "SY", source: "youtube" }, "83": { code: "PS", source: "youtube" }, "84": { code: "SY", source: "youtube" }, "85": { code: "KW", source: "youtube" }, "86": { code: "MA", source: "youtube" }, "87": { code: "PS", source: "youtube" }, "88": { code: "YE", source: "youtube" }, "89": { code: "LB", source: "youtube" }, "90": { code: "SY", source: "youtube" }, "91": { code: "YE", source: "youtube" }, "92": { code: "SY", source: "youtube" }, "93": { code: "LB", source: "youtube" }, "94": { code: "JO", source: "youtube" }, "95": { code: "JO", source: "youtube" }, "96": { code: "SY", source: "youtube" }, "97": { code: "SY", source: "youtube" }, "98": { code: "SY", source: "youtube" }, "99": { code: "SY", source: "youtube" }, "100": { code: "JO", source: "youtube" }, "101": { code: "SY", source: "youtube" }, "102": { code: "IQ", source: "youtube" }, "103": { code: "JO", source: "youtube" }, "104": { code: "SY", source: "youtube" }, "105": { code: "SY", source: "youtube" }, "106": { code: "SY", source: "youtube" }, "107": { code: "SY", source: "youtube" }, "108": { code: "IQ", source: "youtube" }, "109": { code: "SY", source: "youtube" }, "110": { code: "TR", source: "youtube" }, "111": { code: "IQ", source: "youtube" }, "112": { code: "SY", source: "youtube" }, "113": { code: "SY", source: "instagram" }, "114": { code: "MA", source: "instagram" }, "115": { code: "JO", source: "youtube" }, "116": { code: "SY", source: "instagram" }, "117": { code: "LB", source: "youtube" }, "118": { code: "JO", source: "youtube" }, "119": { code: "MA", source: "youtube" }, "120": { code: "SY", source: "youtube" }, "121": { code: "JO", source: "youtube" }, "122": { code: "SY", source: "youtube" }, "123": { code: "EG", source: "youtube" }, "124": { code: "YE", source: "youtube" }, "125": { code: "JO", source: "youtube" }, "126": { code: "DZ", source: "youtube" }, "127": { code: "SY", source: "youtube" }, "128": { code: "JO", source: "youtube" }, "129": { code: "SY", source: "youtube" }, "130": { code: "TN", source: "youtube" }, "131": { code: "KR", source: "youtube" }, "132": { code: "SY", source: "youtube" }, "133": { code: "IQ", source: "youtube" }, "134": { code: "PS", source: "instagram" }, "135": { code: "DZ", source: "instagram" }, "136": { code: "LY", source: "instagram" }, "137": { code: "SY", source: "instagram" }, "138": { code: "SY", source: "instagram" }, "139": { code: "EG", source: "instagram" } };
+      var COUNTRIES = { "1": { code: "SY", source: "instagram" }, "2": { code: "TN", source: "instagram" }, "3": { code: "SA", source: "instagram" }, "4": { code: "SY", source: "instagram" }, "5": { code: "SY", source: "instagram" }, "6": { code: "SY", source: "instagram" }, "7": { code: "IQ", source: "instagram" }, "10": { code: "SY", source: "youtube" }, "11": { code: "IQ", source: "youtube" }, "12": { code: "TN", source: "tiktok" }, "13": { code: "MA", source: "facebook" }, "14": { code: "SY", source: "youtube" }, "15": { code: "JO", source: "youtube" }, "16": { code: "JO", source: "youtube" }, "17": { code: "JO", source: "youtube" }, "18": { code: "JO", source: "youtube" }, "19": { code: "JO", source: "youtube" }, "20": { code: "SY", source: "youtube" }, "21": { code: "SY", source: "youtube" }, "22": { code: "JO", source: "youtube" }, "23": { code: "SY", source: "youtube" }, "24": { code: "SY", source: "youtube" }, "25": { code: "PS", source: "youtube" }, "26": { code: "SY", source: "youtube" }, "27": { code: "SY", source: "youtube" }, "28": { code: "YE", source: "youtube" }, "29": { code: "IQ", source: "instagram" }, "30": { code: "IQ", source: "youtube" }, "31": { code: "SY", source: "youtube" }, "32": { code: "IQ", source: "youtube" }, "33": { code: "IQ", source: "youtube" }, "34": { code: "SY", source: "youtube" }, "35": { code: "SY", source: "youtube" }, "36": { code: "LY", source: "youtube" }, "37": { code: "SY", source: "youtube" }, "38": { code: "SY", source: "youtube" }, "39": { code: "SY", source: "youtube" }, "40": { code: "SA", source: "youtube" }, "41": { code: "TN", source: "youtube" }, "42": { code: "MA", source: "youtube" }, "43": { code: "DZ", source: "youtube" }, "44": { code: "JO", source: "youtube" }, "45": { code: "JO", source: "youtube" }, "46": { code: "JO", source: "youtube" }, "47": { code: "JO", source: "youtube" }, "48": { code: "JO", source: "youtube" }, "49": { code: "SY", source: "instagram" }, "50": { code: "SY", source: "instagram" }, "51": { code: "JO", source: "youtube" }, "52": { code: "SY", source: "youtube" }, "53": { code: "JO", source: "youtube" }, "54": { code: "SY", source: "instagram" }, "55": { code: "JO", source: "instagram" }, "56": { code: "JO", source: "instagram" }, "57": { code: "SY", source: "youtube" }, "58": { code: "SY", source: "youtube" }, "59": { code: "PS", source: "youtube" }, "60": { code: "DZ", source: "youtube" }, "61": { code: "SY", source: "youtube" }, "62": { code: "SA", source: "youtube" }, "63": { code: "SY", source: "youtube" }, "64": { code: "SY", source: "instagram" }, "65": { code: "MA", source: "instagram" }, "66": { code: "SY", source: "instagram" }, "67": { code: "DZ", source: "instagram" }, "68": { code: "SY", source: "instagram" }, "69": { code: "SY", source: "instagram" }, "70": { code: "LY", source: "youtube" }, "71": { code: "JO", source: "youtube" }, "72": { code: "JO", source: "instagram" }, "73": { code: "JO", source: "instagram" }, "74": { code: "JO", source: "instagram" }, "75": { code: "JO", source: "instagram" }, "76": { code: "SY", source: "youtube" }, "77": { code: "MA", source: "youtube" }, "78": { code: "LY", source: "youtube" }, "79": { code: "TN", source: "youtube" }, "80": { code: "SY", source: "youtube" }, "81": { code: "EG", source: "youtube" }, "82": { code: "SY", source: "youtube" }, "83": { code: "PS", source: "youtube" }, "84": { code: "SY", source: "youtube" }, "85": { code: "KW", source: "youtube" }, "86": { code: "MA", source: "youtube" }, "87": { code: "PS", source: "youtube" }, "88": { code: "YE", source: "youtube" }, "89": { code: "LB", source: "youtube" }, "90": { code: "SY", source: "youtube" }, "91": { code: "YE", source: "youtube" }, "92": { code: "SY", source: "youtube" }, "93": { code: "LB", source: "youtube" }, "94": { code: "JO", source: "youtube" }, "95": { code: "JO", source: "youtube" }, "96": { code: "SY", source: "youtube" }, "97": { code: "SY", source: "youtube" }, "98": { code: "SY", source: "youtube" }, "99": { code: "SY", source: "youtube" }, "100": { code: "JO", source: "youtube" }, "101": { code: "SY", source: "youtube" }, "102": { code: "IQ", source: "youtube" }, "103": { code: "JO", source: "youtube" }, "104": { code: "SY", source: "youtube" }, "105": { code: "SY", source: "youtube" }, "106": { code: "SY", source: "youtube" }, "107": { code: "SY", source: "youtube" }, "108": { code: "IQ", source: "youtube" }, "109": { code: "SY", source: "youtube" }, "110": { code: "TR", source: "youtube" }, "111": { code: "IQ", source: "youtube" }, "112": { code: "SY", source: "youtube" }, "113": { code: "SY", source: "instagram" }, "114": { code: "MA", source: "instagram" }, "115": { code: "JO", source: "youtube" }, "116": { code: "SY", source: "instagram" }, "117": { code: "LB", source: "youtube" }, "118": { code: "JO", source: "youtube" }, "119": { code: "MA", source: "youtube" }, "120": { code: "SY", source: "youtube" }, "121": { code: "JO", source: "youtube" }, "122": { code: "SY", source: "youtube" }, "123": { code: "EG", source: "youtube" }, "124": { code: "YE", source: "youtube" }, "125": { code: "JO", source: "youtube" }, "126": { code: "DZ", source: "youtube" }, "127": { code: "SY", source: "youtube" }, "128": { code: "JO", source: "youtube" }, "129": { code: "SY", source: "youtube" }, "130": { code: "TN", source: "youtube" }, "131": { code: "KR", source: "youtube" }, "132": { code: "SY", source: "youtube" }, "133": { code: "IQ", source: "youtube" }, "134": { code: "PS", source: "instagram" }, "135": { code: "DZ", source: "instagram" }, "136": { code: "LY", source: "instagram" }, "137": { code: "SY", source: "instagram" }, "138": { code: "SY", source: "instagram" }, "139": { code: "EG", source: "instagram" }, "140": { code: "YE", source: "youtube" }, "141": { code: "SY", source: "youtube" }, "142": { code: "EG", source: "youtube" }, "143": { code: "IQ", source: "youtube" }, "144": { code: "SY", source: "instagram" }, "145": { code: "MA", source: "instagram" }, "146": { code: "SY", source: "instagram" }, "147": { code: "SY", source: "instagram" } };
+      // ======= أسماء المعلّقين على بلاطاتهم (جنب أعلام بلدانهم) =======
+      // قيمة افتراضية مضمّنة — نفس محتوى names.json بالضبط — عشان الأسماء تبين حتى قبل أول جلب.
+      // الاسم بينجلب حيّاً من names.json وبينضاف فوقها (اسم انحطّ مرة ما بينشال).
+      var NAMES = { "1": "Amir", "2": "MED AMIN GHARBI", "3": "『 أَثَرُ عَلِيّ 』", "4": "آلَسِلَطِآنِ آبًوٌ بًکْر", "5": "Flower Narcissus", "6": "~melad hammadh~", "7": "عباس احمد", "10": "@gamesWorld-f1m", "11": "@MHMP-o9t", "12": "@ala.taleb42", "13": "Mohamed SA", "14": "@خالدالزوكاني-ج9ص", "15": "@Justmalk-y2l", "16": "@زعيمماينكرافت-ث1ك", "17": "@GhazalAlmassri-e8d", "18": "@Rayan_jo-d8u", "19": "@husseintal3415", "20": "@إبراهيممندو-ذ4ش", "21": "@AhmadAli-jn3hj", "22": "@أميوسف-ب4ع7ذ", "23": "@Amanialhamwy", "24": "@طهتركماني-ش2د", "25": "@dianaatawneh7269", "26": "@نزارظاهر-989", "27": "@عائشةسرحة-ض5ي", "28": "@هيئةمكافحةشحاتيناللايكات", "29": "رقيه 🐆🩷", "30": "@لابوبوَٕ-ك4ل", "31": "@TahaAhmad-e5i", "32": "@انسمحمد-ر3ت6ل", "33": "@hasan-999-o4f", "34": "@galalgalal3725", "35": "@mmmmm2083", "36": "@احمدميلاد-ث6ع", "37": "@إسلامزعبي-ج3ع", "38": "@مؤمن-ش5ك", "39": "@سلطانالشمري-ع7ت", "40": "@سبحانالله-ق4ح9ط", "41": "@HassinSoulaimen", "42": "@LatifaChourti", "43": "@Mr_Louia_Ball", "44": "@نوحَالقضاة-ض7ث", "45": "@كرمتركمان-ع9ز", "46": "@hamzaali-z2d4e", "47": "@AnasAli-g8o5n", "48": "@يمانصالحه-ت6ع", "49": "لاكي 100K", "50": "اسامة الزعبي", "51": "@صابرينالرواشده", "52": "@WagehKhadour", "53": "@khaledshourrab-v7h", "54": "Nayf123", "55": "Brhoom Erood", "56": "Eliana Rosie", "57": "@PlatinumMobile-kb5dq", "58": "@HseenAliii", "59": "@noorosama7958", "60": "@عبدالمالكبوكثير-ق4ث8ظ", "61": "@MouazenMouazen", "62": "@makkial-saihati6324", "63": "@MkMkk-x9r", "64": "MEMET", "65": "ZOU___VS", "66": "موتاوز", "67": "(no display name — author_id 17841457674706195)", "68": "Fryaz M Abo Alshamlat", "69": "♡♬ⒻⒶⒽⒺⒹ♪♡", "70": "@MonaMelad-i5r", "71": "@AdamAhmad-w9v", "72": "lyana qanu", "73": "Hashem Alnajjar", "74": "الشاعر العظيم", "75": "Mira ALashhab", "76": "@AlaaAmare-z4u", "77": "@AhmedamineYahia-n4d5n", "78": "@طيبه-ط25", "79": "@TouiliSalwa-s8b", "80": "@Yaseralnmr", "81": "@تالينعمر-ر6ر", "82": "@gfyfyyyfyfycycycy8477", "83": "@yaqin_alatrsh", "84": "@DoaaPrincess-g4c", "85": "@mashalalajmi5275", "86": "@RoroChida", "87": "@hto_Tube", "88": "@LanaLamaGaming-t6d", "89": "@Daneel-i3j", "90": "@تيسيرمنعم-ث2غ", "91": "@lma-moskoo", "92": "@TaegrT-b8c", "93": "@NouraElakees", "94": "@SohadAhmad-k8s", "95": "@Bushraanwar-sj7py", "96": "@Nadalives-l9c", "97": "@alnms-YT", "98": "@AdamAbosaad", "99": "@Ghosonq23", "100": "@الفريدموبايل-ج7ح", "101": "@زعيم-ض6ز", "102": "@rawaa-h1s", "103": "@Omar-k9j8p", "104": "@صاعقه-ز2ذ", "105": "@أحفاد_بني_أُميَّة-ق9ب3ب", "106": "@SuperMish777", "107": "@محمدأحمد-ح5ف3ف", "108": "@حسينالشيخ-ب4ظ", "109": "@غصون-ش3س", "110": "@ayhamgame", "111": "@saifAL-mshhadani", "112": "@عليالعلي-ذ5ع8ز", "113": "جبوري", "114": "ibtissam aghribou", "115": "@NorDmg", "116": "Alaa Nour", "117": "@Alihajhassan-d8f", "118": "@Move_translath", "119": "@NouraWaache", "120": "@عليلاحمد-م1م", "121": "@ScbArt", "122": "@raghoodk6472", "123": "@عمر-و5ز9ف", "124": "@ذوالقرنينوليد", "125": "@IssaMohammed-g5p", "126": "@MajdaamelToumi", "127": "@MemeAlHammoud-k2g", "128": "@QaesAlshrfat", "129": "@معاذالأصطوره-خ3ج", "130": "@ziedab8654", "131": "@امكام", "132": "@تيك1-م9ن", "133": "@مباركالزهيري", "134": "Laith", "135": "ماشل", "136": "نور حافظ", "137": "محمد ساهر بقبق", "138": "زهره شام", "139": "omar", "140": "@AhmedSaleem-p7q7b", "141": "@همممالم", "142": "@NouraFarag-n7t", "143": "@حسنجاسم-ث9ص", "144": "معتصم رمضان", "145": "Itatc_hi otc_hiha", "146": "مجد العلي", "147": "Selena Alzelaa" };
       var COUNTRY_NAMES = { SY: "سوريا", IQ: "العراق", PS: "فلسطين", EG: "مصر", JO: "الأردن", SA: "السعودية", LB: "لبنان", YE: "اليمن", LY: "ليبيا", TN: "تونس", DZ: "الجزائر", MA: "المغرب", SD: "السودان", KW: "الكويت", QA: "قطر", AE: "الإمارات", OM: "عُمان", BH: "البحرين", TR: "تركيا", KR: "كوريا الجنوبية" };
       function countryName(code) { return COUNTRY_NAMES[code] || code; }
       function drawStar(c, cx, cy, r, color) {
@@ -2031,10 +2125,12 @@
           marker.position.z = cell.wz;
           markerLabelSprite.position.set(marker.position.x, MARKER_Y + 4.6, marker.position.z);
         }
-        // ----- أعلام البلدان: مستوى فوق سطح البلاطة مباشرة بنفس موضعها من tileOrder -----
-        // البلاطة رقم n هي tileOrder[n-1]. أعلام يوتيوب مميّزة بوضوح من أول نظرة: قاعدة وإطار ذهبي
-        // سميك ولامع حوالين حافة البلاطة كاملة + هالة ذهبية قوية نابضة + علم أكبر ومرفوع فوق الإطار +
-        // شارة يوتيوب حمراء كبيرة (مسطّحة وواقفة). باقي المصادر: علم مستوٍ عادي بلا أي ذهبي.
+        // ----- أعلام البلدان على ساريات: كل علم مرفوع على سارية رفيعة طالعة من بلاطته -----
+        // (طلب المتابعين على انستغرام: العلم ما يكون على الأرض) — البلاطة رقم n هي tileOrder[n-1].
+        // الساريات رفيعة وموحّدة الارتفاع، والأعلام كلها بنفس المقاس وبنفس الارتفاع وبترفرف واقفة
+        // بأعلى السارية ومواجهة لبرّا (بعيداً عن الجزيرة). تمييز يوتيوب الذهبي بيضلّ على البلاطة
+        // نفسها: قاعدة وإطار ذهبي سميك ولامع + توهّج وهالة نابضة + شارة يوتيوب. وتحت كل علم
+        // لافتة صغيرة باسم صاحب البلاطة (من NAMES) معلّقة على السارية.
         var flagGroup = new THREE.Group();
         scene.add(flagGroup);
         var renderedFlags = {}; // علم انرسم مرة ما بينشال ولا بينعاد
@@ -2068,17 +2164,76 @@
           tex.encoding = THREE.sRGBEncoding;
           return tex;
         })();
+        var flagCloths = []; // الأعلام الواقفة — بتترفرف بحلقة الرسم حول سارياتها
+        var tileFlagGroups = {}; // رقم البلاطة ← { grp, yt } — عشان لافتات الأسماء تنعلّق على السارية
+        var renderedNames = {}; // اسم انرسم مرة ما بينشال ولا بينعاد
+        var POLE_TOP = 7.4; // ارتفاع موحّد لقمّة كل سارية — كل الأعلام بنفس الارتفاع
+        var FLAG_W = TILE * 0.88, FLAG_H = FLAG_W * 2 / 3;
+        var poleGeo = new THREE.CylinderGeometry(0.09, 0.13, 1, 8);
+        var poleMat = std(0xd8dee2, { roughness: 0.35, metalness: 0.75 });
+        var poleMatYt = std(0xffc233, { roughness: 0.3, metalness: 0.8, emissive: 0xff9500, emissiveIntensity: 0.25 });
+        var finialGeo = new THREE.SphereGeometry(0.24, 10, 8);
+        var flagGeoShared = new THREE.PlaneGeometry(FLAG_W, FLAG_H);
+        flagGeoShared.translate(FLAG_W / 2, 0, 0); // محور الرفرفة عند السارية: حافة العلم اليسرى هي الأصل
+        // لافتة الاسم: لوحة داكنة صغيرة بنص أبيض عريض — الاسم الطويل بيصغر خطّه وبعده بيُختصر بنقاط
+        function makeNameSprite(name, yt) {
+          var W = LITE ? 256 : 512, H = LITE ? 64 : 128;
+          var cv = document.createElement("canvas");
+          cv.width = W; cv.height = H;
+          var c = cv.getContext("2d");
+          c.beginPath();
+          if (c.roundRect) c.roundRect(3, 3, W - 6, H - 6, H * 0.32); else c.rect(3, 3, W - 6, H - 6);
+          c.fillStyle = "rgba(10,38,48,0.88)"; c.fill();
+          c.lineWidth = LITE ? 3 : 5;
+          c.strokeStyle = yt ? "#ffc233" : "rgba(255,255,255,0.6)";
+          c.stroke();
+          var label = String(name || "");
+          var maxW = W - (LITE ? 28 : 44);
+          var fs = LITE ? 27 : 54, minFs = LITE ? 11 : 22;
+          function setFont() { c.font = "800 " + fs + "px Rubik, sans-serif"; }
+          setFont();
+          while (fs > minFs && c.measureText(label).width > maxW) { fs -= 2; setFont(); }
+          if (c.measureText(label).width > maxW) {
+            while (label.length > 1 && c.measureText(label + "…").width > maxW) label = label.slice(0, -1);
+            label = label + "…";
+          }
+          c.fillStyle = "#ffffff";
+          c.textAlign = "center"; c.textBaseline = "middle";
+          c.fillText(label, W / 2, H / 2 + (LITE ? 1 : 2));
+          var tex = new THREE.CanvasTexture(cv);
+          tex.encoding = THREE.sRGBEncoding;
+          tex.anisotropy = 4;
+          var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+          spr.scale.set(6.8, 6.8 * H / W, 1);
+          return spr;
+        }
+        function attachNameLabel(num) {
+          if (renderedNames[num]) return;
+          var rec = tileFlagGroups[num];
+          var nm = NAMES[num];
+          if (!rec || !nm) return;
+          var spr = makeNameSprite(nm, rec.yt);
+          spr.position.set(0, 3.2, 0); // معلّقة على السارية تحت العلم وفوق البلاطة
+          rec.grp.add(spr);
+          renderedNames[num] = true;
+        }
+        function applyNames() {
+          Object.keys(NAMES).forEach(function (k) {
+            var n = parseInt(k, 10);
+            if (isFinite(n)) attachNameLabel(n);
+          });
+        }
+        window.__bltApplyNames = applyNames;
         function addFlagForTile(num, entry) {
           if (renderedFlags[num] || !entry || !entry.code) return;
           var idx = num - 1;
           if (idx < 0 || idx >= tileOrder.length || idx >= drawnTiles) return; // البلاطة لسا ما انرسمت — بتنحطّ وقت تنرسم
           var cell = tileOrder[idx];
           var yt = entry.source === "youtube";
-          var fw = yt ? TILE * 0.94 : TILE * 0.82;
-          var fh = fw * 2 / 3;
-          var baseY = TILE_Y + 0.62; // سطح البلاطة ~1.8 — العلم فوقه مباشرة
+          var baseY = TILE_Y + 0.62; // سطح البلاطة ~1.8 — قاعدة التمييز الذهبي فوقه مباشرة
           var grp = new THREE.Group();
           grp.position.set(cell.wx, 0, cell.wz);
+          grp.rotation.y = Math.atan2(cell.wx, cell.wz); // واجهة العلم لبرّا — بعيداً عن الجزيرة، باتجاه مين بيقرّب عليها
           if (yt) {
             // بالوضع الخفيف: بلا هالة ولا توهّج ذهبي (أغلى عناصر البلاطة الذهبية رسماً) — بيضل السطح الذهبي والأشرطة والعلم والشارة المسطّحة
             if (!LITE) {
@@ -2120,6 +2275,18 @@
               grp.add(bar);
             });
           }
+          // السارية: عمود رفيع طالع من سطح البلاطة (ومن القاعدة الذهبية لبلاطات يوتيوب) لارتفاع موحّد
+          var poleBase = yt ? baseY + 0.34 : TILE_Y + 0.55;
+          var poleLen = POLE_TOP - poleBase;
+          var pole = new THREE.Mesh(poleGeo, yt ? poleMatYt : poleMat);
+          pole.scale.y = poleLen;
+          pole.position.y = poleBase + poleLen / 2;
+          pole.castShadow = !LITE;
+          grp.add(pole);
+          var finial = new THREE.Mesh(finialGeo, yt ? poleMatYt : poleMat);
+          finial.position.y = POLE_TOP + 0.1;
+          grp.add(finial);
+          // العلم واقف بأعلى السارية: نفس رسمة drawFlagTo، حافته عند السارية وبيرفرف حولها بحلقة الرسم
           var fcv = document.createElement("canvas");
           fcv.width = LITE ? 128 : 256; fcv.height = LITE ? 86 : 171;
           drawFlagTo(fcv.getContext("2d"), LITE ? 128 : 256, LITE ? 86 : 171, entry.code);
@@ -2127,27 +2294,27 @@
           ftex.encoding = THREE.sRGBEncoding;
           ftex.anisotropy = 4;
           var flag = new THREE.Mesh(
-            new THREE.PlaneGeometry(fw, fh),
-            new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.85 })
+            flagGeoShared,
+            new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.85, side: THREE.DoubleSide })
           );
-          flag.rotation.x = -Math.PI / 2;
-          flag.position.y = baseY + (yt ? 0.78 : 0.045); // أعلام يوتيوب مرفوعة بوضوح فوق إطارها الذهبي، والعادية على سطح بلاطتها
-          flag.receiveShadow = true;
+          flag.position.set(0.05, POLE_TOP - 0.22 - FLAG_H / 2, 0);
+          flag.castShadow = !LITE;
           grp.add(flag);
+          flagCloths.push({ mesh: flag, phase: hash(num * 3.7) * 6.28 });
           if (yt) {
-            // شارة يوتيوب كبيرة: مسطّحة فوق زاوية العلم (أكتر من ضعف الحجم القديم)…
+            // شارة يوتيوب مسطّحة على زاوية القاعدة الذهبية نفسها (التمييز الذهبي بيضلّ على البلاطة)…
             var badge = new THREE.Mesh(
-              new THREE.PlaneGeometry(2.15, 2.15),
+              new THREE.PlaneGeometry(1.9, 1.9),
               new THREE.MeshBasicMaterial({ map: ytBadgeTex, transparent: true })
             );
             badge.rotation.x = -Math.PI / 2;
-            badge.position.set(fw / 2 - 0.55, baseY + 0.86, -fh / 2 + 0.55);
+            badge.position.set(TILE * 0.33, baseY + 0.36, TILE * 0.33);
             grp.add(badge);
-            // …ونسخة واقفة (sprite) فوق الزاوية — دايماً مواجهة الكاميرا ومقروءة من بعيد وعلى الموبايل (بتتخطّى بالوضع الخفيف)
+            // …ونسخة واقفة (sprite) فوق زاوية القاعدة — دايماً مواجهة الكاميرا ومقروءة من بعيد وعلى الموبايل (بتتخطّى بالوضع الخفيف)
             if (!LITE) {
               var badgeSpr = new THREE.Sprite(new THREE.SpriteMaterial({ map: ytBadgeTex, transparent: true, depthWrite: false }));
               badgeSpr.scale.set(2.5, 2.5, 1);
-              badgeSpr.position.set(fw / 2 - 0.35, baseY + 2.15, -fh / 2 + 0.35);
+              badgeSpr.position.set(TILE * 0.36, baseY + 1.7, TILE * 0.36);
               badgeSpr.renderOrder = 9;
               grp.add(badgeSpr);
               flagBadges.push(badgeSpr);
@@ -2155,6 +2322,8 @@
           }
           flagGroup.add(grp);
           renderedFlags[num] = true;
+          tileFlagGroups[num] = { grp: grp, yt: yt };
+          attachNameLabel(num); // لافتة اسم صاحب البلاطة على السارية — إذا إله اسم
         }
         function applyCountryFlags() {
           Object.keys(COUNTRIES).forEach(function (k) {
@@ -2172,6 +2341,38 @@
           placeMarker();
           drawMarkerLabel();
         };
+
+        // ----- إبراز بلاطة البحث: توهّج + حلقة ذهبية نابضة عند البلاطة المطلوبة، والكاميرا بتطير لعندها -----
+        var searchHi = (function () {
+          var grp = new THREE.Group();
+          var glow = new THREE.Mesh(
+            new THREE.PlaneGeometry(TILE * 2.3, TILE * 2.3),
+            new THREE.MeshBasicMaterial({ map: flagGlowTex, transparent: true, opacity: 0.85, depthWrite: false })
+          );
+          glow.rotation.x = -Math.PI / 2;
+          glow.position.y = 0.04;
+          grp.add(glow);
+          var ring = new THREE.Mesh(
+            new THREE.RingGeometry(TILE * 0.74, TILE * 1.0, 44),
+            new THREE.MeshBasicMaterial({ color: 0xffd23e, transparent: true, opacity: 0.95, side: THREE.DoubleSide, depthWrite: false })
+          );
+          ring.rotation.x = -Math.PI / 2;
+          ring.position.y = 0.1;
+          grp.add(ring);
+          grp.visible = false;
+          scene.add(grp);
+          return { grp: grp, ring: ring, glow: glow };
+        })();
+        window.__bltFindTile = function (num) {
+          var idx = num - 1;
+          if (idx < 0 || idx >= tileOrder.length) return;
+          var cell = tileOrder[idx];
+          searchHi.grp.position.set(cell.wx, TILE_Y + 0.62, cell.wz);
+          searchHi.grp.visible = true;
+          flyToFn(cell.wx, cell.wz, 38, 1.02);
+          lastInteract = performance.now();
+        };
+        window.__bltClearFind = function () { searchHi.grp.visible = false; };
 
         // عوّامات حول الجزيرة
         var buoys = [];
@@ -2586,6 +2787,7 @@
         });
         document.getElementById("camReset").addEventListener("click", function () {
           resetCamFn(); lastInteract = performance.now();
+          searchHi.grp.visible = false; // رجوع الكاميرا للوضع الافتراضي بيلغي إبراز بلاطة البحث
         });
         document.getElementById("counterChip").addEventListener("click", function () {
           flyToFn(0, 0, 190, 1.05);
@@ -2949,6 +3151,18 @@
               var bs = 2.5 + ytPulse * 0.22;
               b.scale.set(bs, bs, 1);
             });
+            // رفرفة الأعلام الواقفة حول سارياتها — كل علم بطور مختلف عشان ما يتحركوا كأنهم واحد
+            flagCloths.forEach(function (fc) {
+              fc.mesh.rotation.y = Math.sin(t * 2.3 + fc.phase) * 0.16;
+            });
+            // نبض إبراز بلاطة البحث (توهّج + حلقة) طالما البلاطة مبرزة
+            if (searchHi.grp.visible) {
+              var shp = Math.sin(t * 3.4) * 0.5 + 0.5;
+              var shs = 1 + shp * 0.18;
+              searchHi.ring.scale.set(shs, shs, 1);
+              searchHi.ring.material.opacity = 0.6 + shp * 0.4;
+              searchHi.glow.material.opacity = 0.5 + shp * 0.45;
+            }
             clouds.forEach(function (cl) {
               cl.g.position.x += dt * cl.sp;
               if (cl.g.position.x > 420) cl.g.position.x = -420;
@@ -3065,7 +3279,8 @@
       // الدمج إضافي فقط: علم انحطّ مرة ما بينشال ولا بيتبدّل أبداً.
       function renderCountriesPanel() {
         var panel = document.getElementById("countriesPanel");
-        if (!panel) return;
+        var list = document.getElementById("countriesList");
+        if (!panel || !list) return;
         var agg = {};
         Object.keys(COUNTRIES).forEach(function (k) {
           var e = COUNTRIES[k];
@@ -3074,7 +3289,7 @@
           agg[e.code].count++;
           if (e.source === "youtube") agg[e.code].yt = true;
         });
-        panel.innerHTML = "";
+        list.innerHTML = ""; // القائمة الداخلية بس بتنمسح — زر الطيّ برّاتها وبيضل ثابت بعد كل إعادة رسم
         var codes = Object.keys(agg);
         var firstSeen = codes.slice();
         codes.sort(function (a, b) {
@@ -3100,11 +3315,21 @@
             tag.className = "cp-tag"; tag.textContent = "▶ يوتيوب";
             row.appendChild(tag);
           }
-          panel.appendChild(row);
+          list.appendChild(row);
         });
-        panel.style.display = panel.children.length ? "" : "none";
+        panel.style.display = list.children.length ? "" : "none";
       }
       renderCountriesPanel();
+      // زر طيّ/فتح لوحة البلدان: بيخفي القائمة وبيخلّي الزر — الحالة الافتراضية مفتوحة
+      var cpToggle = document.getElementById("countriesToggle");
+      if (cpToggle) cpToggle.addEventListener("click", function () {
+        var panel = document.getElementById("countriesPanel");
+        if (!panel) return;
+        var collapsed = panel.classList.toggle("collapsed");
+        cpToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+        var arrow = cpToggle.querySelector(".cp-arrow");
+        if (arrow) arrow.textContent = collapsed ? "▼" : "▲";
+      });
       function pollCountries() {
         if (!window.fetch) return;
         fetch("countries.json?t=" + Date.now(), { cache: "no-store" })
@@ -3131,6 +3356,104 @@
       }
       pollCountries();
       setInterval(pollCountries, 60000);
+
+      // ======= التحديث الحي من names.json — نفس نمط countries.json بالضبط =======
+      // مسار نسبي + ?t= لكسر الكاش + cache:'no-store' + إعادة جلب كل 60 ثانية + فشل صامت.
+      // الدمج إضافي فقط: اسم انحطّ مرة ما بينشال ولا بيتبدّل أبداً.
+      function pollNames() {
+        if (!window.fetch) return;
+        fetch("names.json?t=" + Date.now(), { cache: "no-store" })
+          .then(function (r) { if (!r.ok) throw new Error("names.json unavailable"); return r.json(); })
+          .then(function (data) {
+            if (!data || typeof data !== "object") return;
+            var changed = false;
+            Object.keys(data).forEach(function (k) {
+              var n = parseInt(k, 10);
+              if (!isFinite(n) || n < 1 || n > TOTAL) return;
+              if (typeof data[k] !== "string" || !data[k]) return;
+              if (NAMES[k]) return; // محطوط من قبل — بيضلّ متل ما هو
+              NAMES[k] = data[k];
+              changed = true;
+            });
+            if (changed && window.__bltApplyNames) window.__bltApplyNames();
+          })
+          .catch(function () { /* فشل الجلب أو الملف مو موجود: الأسماء المضمّنة بتضلّ ظاهرة، بدون أي رسالة */ });
+      }
+      pollNames();
+      setInterval(pollNames, 60000);
+
+      // ======= بحث الأسماء: الزائر بيكتب اسمه والموقع بيوصّله لبلاطته =======
+      // مطابقة جزئية متسامحة: مع أو بدون @، وبلا حساسية لحالة الأحرف اللاتينية.
+      // إذا في أكتر من نتيجة، كل ضغطة «دوّر» بنفس الاسم بتنقّل للنتيجة اللي بعدها.
+      var searchForm = document.getElementById("searchForm");
+      var searchInput = document.getElementById("searchInput");
+      var searchResult = document.getElementById("searchResult");
+      var lastQuery = null, matchList = [], matchIdx = 0;
+      function normName(s) {
+        return String(s || "").replace(/^\s*@+\s*/, "").trim().toLowerCase();
+      }
+      function closeSearchResult() {
+        var x = document.createElement("button");
+        x.type = "button";
+        x.className = "search-btn";
+        x.textContent = "✕";
+        x.setAttribute("aria-label", "إغلاق نتيجة البحث");
+        x.style.padding = "4px 11px";
+        x.style.marginInlineStart = "auto";
+        x.addEventListener("click", function () { searchResult.hidden = true; });
+        return x;
+      }
+      function doSearch() {
+        var q = normName(searchInput.value);
+        if (!q) { searchResult.hidden = true; return; }
+        if (q !== lastQuery) {
+          lastQuery = q;
+          matchList = [];
+          matchIdx = 0;
+          Object.keys(NAMES).forEach(function (k) {
+            var n = parseInt(k, 10);
+            if (!isFinite(n)) return;
+            if (normName(NAMES[k]).indexOf(q) >= 0) matchList.push(n);
+          });
+          matchList.sort(function (a, b) { return a - b; });
+        }
+        searchResult.innerHTML = "";
+        searchResult.hidden = false;
+        if (!matchList.length) {
+          var msg = document.createElement("span");
+          msg.textContent = "ما لقينا هالاسم 😕 تأكّد من الإملاء — بس يلي اشترك وعلّق بكون إله اسم على بلاطته";
+          searchResult.appendChild(msg);
+          searchResult.appendChild(closeSearchResult());
+          return;
+        }
+        var num = matchList[matchIdx % matchList.length];
+        var shown = matchIdx % matchList.length;
+        matchIdx++;
+        var entry = COUNTRIES[num];
+        if (entry && entry.code) {
+          var fcv2 = document.createElement("canvas");
+          fcv2.width = 80; fcv2.height = 56; fcv2.className = "sr-flag";
+          fcv2.setAttribute("aria-hidden", "true");
+          drawFlagTo(fcv2.getContext("2d"), 80, 56, entry.code);
+          searchResult.appendChild(fcv2);
+        }
+        var txt = document.createElement("span");
+        var nmEl = document.createElement("span");
+        nmEl.className = "sr-name";
+        nmEl.textContent = NAMES[num];
+        txt.appendChild(nmEl);
+        txt.appendChild(document.createTextNode(" — بلاطة #" + fmt.format(num) + (entry && entry.code ? " · " + countryName(entry.code) : "")));
+        if (matchList.length > 1) {
+          txt.appendChild(document.createTextNode(" (" + fmt.format(shown + 1) + " من " + fmt.format(matchList.length) + " — دوّر مرة تانية لتشوف اللي بعدها)"));
+        }
+        searchResult.appendChild(txt);
+        searchResult.appendChild(closeSearchResult());
+        if (window.__bltFindTile) window.__bltFindTile(num);
+      }
+      if (searchForm) searchForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        doSearch();
+      });
     </script>
   </body>
 </html>
